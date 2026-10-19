@@ -1,29 +1,29 @@
-import { defineConfig } from "vite";
-import { resolve } from "path";
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
   // Relative base path ensures builds work seamlessly on GitHub Pages
-  base: "./",
+  base: './',
 
   // Directory for static assets (images, SVGs, audio, etc.)
-  publicDir: "public",
+  publicDir: 'public',
 
   server: {
     port: 3000,
-    open: true,
+    open: true
   },
 
   build: {
-    outDir: "dist",
-    assetsDir: "assets",
+    outDir: 'dist',
+    assetsDir: 'assets',
     sourcemap: true,
     // Ensures clean dist folder on build
-    emptyOutDir: true,
+    emptyOutDir: true
   },
 
   resolve: {
     alias: {
-      "@": resolve(import.meta.dirname, "src"),
-    },
-  },
+      '@': resolve(import.meta.dirname, 'src')
+    }
+  }
 });
