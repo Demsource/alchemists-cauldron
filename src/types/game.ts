@@ -24,7 +24,7 @@ interface IRecipe {
   magicPower: IRecipeRange;
 }
 
-interface IGameState {
+export interface IGameState {
   status: GameStatus;
   score: number;
   timeLeft: number;
@@ -36,7 +36,7 @@ interface IGameState {
   lastReactionId?: string | null; // Level 3+
 }
 
-interface IReaction {
+export interface IReaction {
   id: string;
   name: string;
   difficulty: Exclude<Difficulty, "easy">;
