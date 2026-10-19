@@ -1,5 +1,5 @@
-type Difficulty = "easy" | "medium" | "hard"; // Level 2+
-type GameStatus = "menu" | "playing" | "paused" | "game-over";
+type Difficulty = 'easy' | 'medium' | 'hard'; // Level 2+
+type GameStatus = 'menu' | 'playing' | 'paused' | 'game-over';
 
 interface IIngredient {
   id: string;
@@ -24,7 +24,7 @@ interface IRecipe {
   magicPower: IRecipeRange;
 }
 
-interface IGameState {
+export interface IGameState {
   status: GameStatus;
   score: number;
   timeLeft: number;
@@ -36,16 +36,12 @@ interface IGameState {
   lastReactionId?: string | null; // Level 3+
 }
 
-interface IReaction {
+export interface IReaction {
   id: string;
   name: string;
-  difficulty: Exclude<Difficulty, "easy">;
+  difficulty: Exclude<Difficulty, 'easy'>;
   isActive: (ingredients: IIngredient[]) => boolean;
-  apply: (values: {
-    temperature: number;
-    density: number;
-    magicPower: number;
-  }) => {
+  apply: (values: { temperature: number; density: number; magicPower: number }) => {
     temperature: number;
     density: number;
     magicPower: number;
