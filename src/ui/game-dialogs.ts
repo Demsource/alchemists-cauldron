@@ -46,7 +46,7 @@ function renderNameField(): HTMLFormElement {
   input.id = 'player-name';
   input.name = 'playerName';
   input.type = 'text';
-  input.autocomplete = 'nickname';
+  input.setAttribute('autocomplete', 'nickname');
   input.placeholder = 'Alchemist name…';
   input.minLength = PLAYER_NAME_MIN;
   input.maxLength = PLAYER_NAME_MAX;
