@@ -1,21 +1,6 @@
-import {
-  getPreviewActions,
-  getPreviewBars,
-  getPreviewCauldron,
-  getPreviewHud,
-  getPreviewMode,
-  getPreviewRecipe,
-  getPreviewShelf,
-  PREVIEW_GAME_OVER,
-  PREVIEW_LEADERBOARD,
-  PREVIEW_MENU
-} from './dev/preview';
-import { openLeaderboardDialog } from './ui/leaderboard';
-import { openMenuDialog } from './ui/menu';
 import { renderActions } from './ui/actions';
 import { renderBars } from './ui/bars';
 import { renderCauldron } from './ui/cauldron';
-import { openGameOverDialog, openHelpDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderHud } from './ui/hud';
 import { renderLayout } from './ui/layout';
 import { renderRecipePanel } from './ui/recipe-panel';
@@ -25,25 +10,51 @@ const mount = document.querySelector<HTMLDivElement>('#app');
 
 if (mount) {
   const layout = renderLayout(mount);
-  const previewMode = getPreviewMode();
-  layout.root.dataset.preview = previewMode;
 
-  renderHud(layout.hud, getPreviewHud(previewMode));
-  renderShelf(layout.shelf, getPreviewShelf(previewMode));
-  renderCauldron(layout.stage, getPreviewCauldron(previewMode));
-  renderRecipePanel(layout.recipe, getPreviewRecipe(previewMode));
-  renderBars(layout.bars, getPreviewBars(previewMode));
-  renderActions(layout.actions, getPreviewActions(previewMode));
-
-  if (previewMode === 'pause') {
-    openPauseDialog(layout.dialogRoot);
-  } else if (previewMode === 'gameover') {
-    openGameOverDialog(layout.dialogRoot, PREVIEW_GAME_OVER);
-  } else if (previewMode === 'help') {
-    openHelpDialog(layout.dialogRoot);
-  } else if (previewMode === 'menu') {
-    openMenuDialog(layout.dialogRoot, PREVIEW_MENU);
-  } else if (previewMode === 'leaderboard') {
-    openLeaderboardDialog(layout.dialogRoot, PREVIEW_LEADERBOARD);
-  }
+  renderHud(layout.hud, {
+    isActive: false,
+    score: 0,
+    timeLeft: 0,
+    timeTotal: 150,
+    lives: 0,
+    maxLives: 3
+  });
+  renderShelf(layout.shelf, { items: [], isBlocked: false, showValues: true });
+  renderCauldron(layout.stage, { ingredients: [], capacity: 4 });
+  renderRecipePanel(layout.recipe, { recipe: null, added: 0, capacity: 4 });
+  renderBars(layout.bars, [
+    {
+      key: 'temperature',
+      label: 'Temperature',
+      value: 0,
+      min: -100,
+      max: 100,
+      target: null,
+      isInTarget: false
+    },
+    {
+      key: 'density',
+      label: 'Density',
+      value: 0,
+      min: -50,
+      max: 100,
+      target: null,
+      isInTarget: false
+    },
+    {
+      key: 'magic',
+      label: 'Magic Power',
+      value: 0,
+      min: -50,
+      max: 150,
+      target: null,
+      isInTarget: false
+    }
+  ]);
+  renderActions(layout.actions, {
+    isPlaying: false,
+    canBrew: false,
+    showPourOut: false,
+    canPourOut: false
+  });
 }
