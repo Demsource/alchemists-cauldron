@@ -6,6 +6,7 @@
 
 import type { ICauldronView } from '../ui/cauldron';
 import type { IHudView } from '../ui/hud';
+import type { IRecipePanelView } from '../ui/recipe-panel';
 import type { IShelfView } from '../ui/shelf';
 
 const PREVIEW_MODES = [
@@ -121,6 +122,23 @@ export function getPreviewCauldron(mode: PreviewMode): ICauldronView {
       { id: 'dragon-tears', name: 'Dragon Tears' },
       { id: 'fairy-dust', name: 'Fairy Dust' }
     ]
+  };
+}
+
+export function getPreviewRecipe(mode: PreviewMode): IRecipePanelView {
+  if (isStartLike(mode)) {
+    return { recipe: null, added: 0, capacity: 4 };
+  }
+
+  return {
+    added: 2,
+    capacity: 4,
+    recipe: {
+      name: 'Frost Acid',
+      temperature: { min: -13, max: -3 },
+      density: { min: 13, max: 23 },
+      magicPower: { min: 31, max: 41 }
+    }
   };
 }
 

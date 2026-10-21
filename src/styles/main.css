@@ -917,6 +917,176 @@ button:disabled {
   text-align: center;
 }
 
+/* ==========================================================================
+   Recipe panel
+   ========================================================================== */
+
+.recipe {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--space-5) var(--space-4);
+  transform: rotate(0.6deg);
+}
+
+.recipe__corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  color: var(--color-parchment-edge);
+  pointer-events: none;
+}
+
+.recipe__corner--tl {
+  top: 6px;
+  left: 6px;
+}
+
+.recipe__corner--tr {
+  top: 6px;
+  right: 6px;
+  transform: scaleX(-1);
+}
+
+.recipe__corner--bl {
+  bottom: 6px;
+  left: 6px;
+  transform: scaleY(-1);
+}
+
+.recipe__corner--br {
+  right: 6px;
+  bottom: 6px;
+  transform: scale(-1);
+}
+
+.recipe__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+  text-align: center;
+}
+
+.recipe__kicker {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.recipe__flask {
+  width: 44px;
+  height: 44px;
+  color: var(--color-ink-muted);
+}
+
+.recipe__name {
+  font-size: var(--fs-xl);
+  font-weight: 900;
+  color: var(--color-ink);
+}
+
+.recipe__hint {
+  font-size: var(--fs-sm);
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+.recipe__divider {
+  width: 80%;
+  height: 16px;
+  margin: 0 auto;
+  color: var(--color-parchment-edge);
+}
+
+.recipe__ranges {
+  display: flex;
+  flex-direction: column;
+}
+
+.recipe__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: var(--border-width) solid rgb(138 106 54 / 40%);
+}
+
+.recipe__row-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.recipe__row-label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.recipe__row-range {
+  font-family: var(--font-numeric);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.recipe__row--temperature .recipe__row-icon,
+.recipe__row--temperature .recipe__row-range {
+  color: #a23a17;
+}
+
+.recipe__row--density .recipe__row-icon,
+.recipe__row--density .recipe__row-range {
+  color: #1d5f78;
+}
+
+.recipe__row--magic .recipe__row-icon,
+.recipe__row--magic .recipe__row-range {
+  color: #5b2f8c;
+}
+
+.recipe__counter {
+  display: flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  margin-top: auto;
+  border: var(--border-width) solid var(--color-parchment-edge);
+  border-radius: var(--radius-sm);
+}
+
+.recipe__counter-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+
+.recipe__counter-value {
+  font-family: var(--font-numeric);
+  font-size: var(--fs-xl);
+  font-variant-numeric: tabular-nums;
+  color: #2f5a14;
+}
+
+.recipe__counter--full .recipe__counter-value {
+  color: #a2261b;
+}
+
+.recipe--empty .recipe__row-range {
+  color: var(--color-ink-muted);
+}
+
 .dialog-root:empty {
   display: none;
 }
