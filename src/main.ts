@@ -5,11 +5,13 @@ import {
   getPreviewHud,
   getPreviewMode,
   getPreviewRecipe,
-  getPreviewShelf
+  getPreviewShelf,
+  PREVIEW_GAME_OVER
 } from './dev/preview';
 import { renderActions } from './ui/actions';
 import { renderBars } from './ui/bars';
 import { renderCauldron } from './ui/cauldron';
+import { openGameOverDialog, openHelpDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderHud } from './ui/hud';
 import { renderLayout } from './ui/layout';
 import { renderRecipePanel } from './ui/recipe-panel';
@@ -28,4 +30,12 @@ if (mount) {
   renderRecipePanel(layout.recipe, getPreviewRecipe(previewMode));
   renderBars(layout.bars, getPreviewBars(previewMode));
   renderActions(layout.actions, getPreviewActions(previewMode));
+
+  if (previewMode === 'pause') {
+    openPauseDialog(layout.dialogRoot);
+  } else if (previewMode === 'gameover') {
+    openGameOverDialog(layout.dialogRoot, PREVIEW_GAME_OVER);
+  } else if (previewMode === 'help') {
+    openHelpDialog(layout.dialogRoot);
+  }
 }

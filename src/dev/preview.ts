@@ -7,6 +7,7 @@
 import type { IActionsView } from '../ui/actions';
 import type { IBarView } from '../ui/bars';
 import type { ICauldronView } from '../ui/cauldron';
+import type { IGameOverView } from '../ui/game-dialogs';
 import type { IHudView } from '../ui/hud';
 import type { IRecipePanelView } from '../ui/recipe-panel';
 import type { IShelfView } from '../ui/shelf';
@@ -182,6 +183,12 @@ export function getPreviewActions(mode: PreviewMode): IActionsView {
   const isPlaying = !isStartLike(mode);
   return { isPlaying, canBrew: isPlaying, showPourOut: false, canPourOut: isPlaying };
 }
+
+export const PREVIEW_GAME_OVER: IGameOverView = {
+  score: 1450,
+  reason: 'time',
+  isTopResult: true
+};
 
 export function getPreviewHud(mode: PreviewMode): IHudView {
   switch (mode) {

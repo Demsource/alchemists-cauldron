@@ -1480,6 +1480,95 @@ button:disabled {
   }
 }
 
+/* ==========================================================================
+   Pause / Game Over / Help content
+   ========================================================================== */
+
+.dialog__text {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+.game-over__reason {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-danger);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.game-over__score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-over__score-label {
+  color: var(--color-heading);
+}
+
+.game-over__score-value {
+  font-family: var(--font-numeric);
+  font-size: var(--fs-3xl);
+  line-height: 1.1;
+  color: var(--color-accent-strong);
+  text-shadow: var(--glow-text);
+}
+
+.name-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: left;
+}
+
+.name-form__label {
+  color: var(--color-heading);
+  text-align: center;
+}
+
+.name-form__hint {
+  font-size: var(--fs-sm);
+  color: var(--color-text-dim);
+}
+
+.name-form__error {
+  min-height: 1.4em;
+  font-size: var(--fs-sm);
+  color: var(--color-danger);
+}
+
+.name-form__input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.help__section {
+  text-align: left;
+}
+
+.help__title {
+  margin-bottom: var(--space-1);
+  font-size: var(--fs-lg);
+  color: #5a1a12;
+}
+
+.help__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
+
+.help__item {
+  font-size: var(--fs-md);
+  color: var(--color-ink);
+}
+
+.help__item::marker {
+  color: var(--color-parchment-edge);
+}
+
 .dialog-root:empty {
   display: none;
 }
