@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feat/ui-layout] # change to main when merging later
+    branches: [story-1] # change to main when merging later
   workflow_dispatch:
 
 jobs:
