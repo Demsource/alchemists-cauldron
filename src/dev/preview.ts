@@ -4,6 +4,7 @@
  * This whole folder is removed once the UI phase is finished.
  */
 
+import type { IBarView } from '../ui/bars';
 import type { ICauldronView } from '../ui/cauldron';
 import type { IHudView } from '../ui/hud';
 import type { IRecipePanelView } from '../ui/recipe-panel';
@@ -140,6 +141,40 @@ export function getPreviewRecipe(mode: PreviewMode): IRecipePanelView {
       magicPower: { min: 31, max: 41 }
     }
   };
+}
+
+export function getPreviewBars(mode: PreviewMode): IBarView[] {
+  const isStart = isStartLike(mode);
+
+  return [
+    {
+      key: 'temperature',
+      label: 'Temperature',
+      value: isStart ? 0 : 37,
+      min: -100,
+      max: 100,
+      target: isStart ? null : { min: -13, max: -3 },
+      isInTarget: false
+    },
+    {
+      key: 'density',
+      label: 'Density',
+      value: isStart ? 0 : 17,
+      min: -50,
+      max: 100,
+      target: isStart ? null : { min: 13, max: 23 },
+      isInTarget: !isStart
+    },
+    {
+      key: 'magic',
+      label: 'Magic Power',
+      value: isStart ? 0 : 22,
+      min: -50,
+      max: 150,
+      target: isStart ? null : { min: 31, max: 41 },
+      isInTarget: false
+    }
+  ];
 }
 
 export function getPreviewHud(mode: PreviewMode): IHudView {

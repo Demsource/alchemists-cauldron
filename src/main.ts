@@ -1,10 +1,12 @@
 import {
+  getPreviewBars,
   getPreviewCauldron,
   getPreviewHud,
   getPreviewMode,
   getPreviewRecipe,
   getPreviewShelf
 } from './dev/preview';
+import { renderBars } from './ui/bars';
 import { renderCauldron } from './ui/cauldron';
 import { renderHud } from './ui/hud';
 import { renderLayout } from './ui/layout';
@@ -22,4 +24,5 @@ if (mount) {
   renderShelf(layout.shelf, getPreviewShelf(previewMode));
   renderCauldron(layout.stage, getPreviewCauldron(previewMode));
   renderRecipePanel(layout.recipe, getPreviewRecipe(previewMode));
+  renderBars(layout.bars, getPreviewBars(previewMode));
 }
