@@ -1,0 +1,201 @@
+/* ==========================================================================
+   Base animations (CSS only — no timers for decorative effects)
+   Success / explosion / shake / floating icons are added in Level 3 (US 3.5).
+   ========================================================================== */
+
+/* --- Cauldron ambience --------------------------------------------------- */
+
+.cauldron__bubble {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bubble-rise 2.4s ease-in infinite;
+}
+
+.cauldron__bubble:nth-of-type(2) {
+  animation-duration: 3.1s;
+  animation-delay: -1.2s;
+}
+
+.cauldron__bubble:nth-of-type(3) {
+  animation-duration: 2.7s;
+  animation-delay: -0.6s;
+}
+
+.cauldron__liquid {
+  animation: liquid-shimmer 4s ease-in-out infinite;
+}
+
+.cauldron__rune {
+  animation: rune-glow 3s ease-in-out infinite;
+}
+
+.cauldron__fire {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fire-flicker 1.6s ease-in-out infinite alternate;
+}
+
+.cauldron--empty .cauldron__bubble {
+  animation-play-state: paused;
+}
+
+.decor__flame {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: flame-flicker 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes bubble-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.4);
+  }
+
+  30% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-26px) scale(1.1);
+  }
+}
+
+@keyframes liquid-shimmer {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.82;
+  }
+}
+
+@keyframes rune-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px #8fdc4a);
+  }
+}
+
+@keyframes fire-flicker {
+  from {
+    opacity: 0.25;
+    transform: scaleX(0.92);
+  }
+
+  to {
+    opacity: 0.45;
+    transform: scaleX(1.05);
+  }
+}
+
+@keyframes flame-flicker {
+  from {
+    transform: scale(1, 1) rotate(-2deg);
+  }
+
+  to {
+    transform: scale(0.9, 1.08) rotate(2deg);
+  }
+}
+
+/* --- Title & primary call to action -------------------------------------- */
+
+.app-title__text {
+  animation: title-glow 5s ease-in-out infinite;
+}
+
+.actions__primary[data-action='start'] {
+  animation: cta-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 8px rgb(143 220 74 / 35%);
+  }
+
+  50% {
+    text-shadow:
+      0 0 14px rgb(143 220 74 / 60%),
+      0 0 28px rgb(143 220 74 / 25%);
+  }
+}
+
+@keyframes cta-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 30px rgb(0 0 0 / 55%),
+      0 0 12px rgb(143 220 74 / 35%);
+  }
+
+  50% {
+    box-shadow:
+      0 10px 30px rgb(0 0 0 / 55%),
+      0 0 26px rgb(143 220 74 / 65%);
+  }
+}
+
+/* --- Low timer ----------------------------------------------------------- */
+
+.hud__block--low .hud__time,
+.hud__block--low .hud__icon {
+  display: inline-block;
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+/* --- Dialogs ------------------------------------------------------------- */
+
+.dialog[open] {
+  animation: dialog-in var(--duration-base) var(--ease-out);
+}
+
+.dialog[open]::backdrop {
+  animation: backdrop-in var(--duration-base) ease-out;
+}
+
+.dialog__emblem {
+  animation: rune-glow 3s ease-in-out infinite;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
