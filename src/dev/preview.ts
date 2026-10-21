@@ -4,6 +4,7 @@
  * This whole folder is removed once the UI phase is finished.
  */
 
+import type { IActionsView } from '../ui/actions';
 import type { IBarView } from '../ui/bars';
 import type { ICauldronView } from '../ui/cauldron';
 import type { IHudView } from '../ui/hud';
@@ -175,6 +176,11 @@ export function getPreviewBars(mode: PreviewMode): IBarView[] {
       isInTarget: false
     }
   ];
+}
+
+export function getPreviewActions(mode: PreviewMode): IActionsView {
+  const isPlaying = !isStartLike(mode);
+  return { isPlaying, canBrew: isPlaying, showPourOut: false, canPourOut: isPlaying };
 }
 
 export function getPreviewHud(mode: PreviewMode): IHudView {

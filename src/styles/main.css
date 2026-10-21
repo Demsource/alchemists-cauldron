@@ -1248,6 +1248,78 @@ button:disabled {
   color: var(--color-text-muted);
 }
 
+/* ==========================================================================
+   Footer actions
+   ========================================================================== */
+
+.actions__side {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.actions__side--right {
+  justify-content: flex-end;
+}
+
+.actions__center {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: center;
+}
+
+.actions__icon-btn {
+  color: var(--color-heading);
+}
+
+.actions__icon-btn .icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 10px;
+  background: var(--texture-stone);
+  border: var(--frame-width) solid var(--color-frame);
+  border-radius: var(--radius-round);
+  box-shadow: var(--shadow-panel);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.actions__icon-btn:hover .icon {
+  color: var(--color-accent-strong);
+  border-color: var(--color-accent);
+  box-shadow: var(--glow-accent);
+}
+
+.actions__icon-label {
+  font-family: var(--font-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.actions__primary {
+  min-width: min(360px, 100%);
+}
+
+.actions__ornament {
+  width: 22px;
+  height: 22px;
+  opacity: 0.8;
+}
+
+.actions__pour-out {
+  color: var(--color-density);
+}
+
+.actions__btn-icon {
+  width: 22px;
+  height: 22px;
+}
+
 .dialog-root:empty {
   display: none;
 }
@@ -1335,6 +1407,41 @@ button:disabled {
   .bars {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3);
+  }
+
+  .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: var(--z-base);
+    grid-template-areas:
+      'center center'
+      'left right';
+    grid-template-columns: 1fr 1fr;
+    padding: var(--space-2) 0;
+    background: linear-gradient(transparent, var(--color-bg-deep) 30%);
+  }
+
+  .actions__side--left {
+    grid-area: left;
+  }
+
+  .actions__center {
+    grid-area: center;
+  }
+
+  .actions__side--right {
+    grid-area: right;
+  }
+
+  .actions__primary {
+    width: 100%;
+    padding-inline: var(--space-4);
+  }
+
+  .actions__icon-btn .icon {
+    width: 44px;
+    height: 44px;
+    padding: 8px;
   }
 }
 
