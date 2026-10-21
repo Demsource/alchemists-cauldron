@@ -1,4 +1,5 @@
-import { getPreviewHud, getPreviewMode, getPreviewShelf } from './dev/preview';
+import { getPreviewCauldron, getPreviewHud, getPreviewMode, getPreviewShelf } from './dev/preview';
+import { renderCauldron } from './ui/cauldron';
 import { renderHud } from './ui/hud';
 import { renderLayout } from './ui/layout';
 import { renderShelf } from './ui/shelf';
@@ -12,4 +13,5 @@ if (mount) {
 
   renderHud(layout.hud, getPreviewHud(previewMode));
   renderShelf(layout.shelf, getPreviewShelf(previewMode));
+  renderCauldron(layout.stage, getPreviewCauldron(previewMode));
 }

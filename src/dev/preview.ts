@@ -4,6 +4,7 @@
  * This whole folder is removed once the UI phase is finished.
  */
 
+import type { ICauldronView } from '../ui/cauldron';
 import type { IHudView } from '../ui/hud';
 import type { IShelfView } from '../ui/shelf';
 
@@ -107,6 +108,20 @@ const PLAYING_SHELF: IShelfView = {
 
 export function getPreviewShelf(mode: PreviewMode): IShelfView {
   return isStartLike(mode) ? { items: [], isBlocked: false, showValues: true } : PLAYING_SHELF;
+}
+
+export function getPreviewCauldron(mode: PreviewMode): ICauldronView {
+  if (isStartLike(mode)) {
+    return { ingredients: [], capacity: 4 };
+  }
+
+  return {
+    capacity: 4,
+    ingredients: [
+      { id: 'dragon-tears', name: 'Dragon Tears' },
+      { id: 'fairy-dust', name: 'Fairy Dust' }
+    ]
+  };
 }
 
 export function getPreviewHud(mode: PreviewMode): IHudView {
