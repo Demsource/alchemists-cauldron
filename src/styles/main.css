@@ -1,0 +1,423 @@
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+
+:root {
+  /* Surfaces */
+  --color-bg: #0f1310;
+  --color-bg-deep: #090b09;
+  --color-surface: #171d18;
+  --color-surface-raised: #1f2720;
+  --color-surface-sunken: #111511;
+
+  /* Ornate frame (bronze / brass) */
+  --color-frame: #6b5634;
+  --color-frame-light: #a8884f;
+  --color-frame-dark: #3a2e1c;
+
+  /* Text */
+  --color-text: #e8dfc8;
+  --color-text-muted: #a49d88;
+  --color-text-dim: #6c675a;
+  --color-heading: #d9c28a;
+
+  /* Magic accent (toxic green) */
+  --color-accent: #8fdc4a;
+  --color-accent-strong: #b6f26b;
+  --color-accent-dark: #3f6b1f;
+  --color-accent-glow: rgb(143 220 74 / 45%);
+
+  /* Parameters */
+  --color-temperature: #e0683c;
+  --color-temperature-cold: #4a7fd6;
+  --color-density: #3fa8c9;
+  --color-magic: #a46be0;
+
+  /* States */
+  --color-danger: #d9483b;
+  --color-danger-glow: rgb(217 72 59 / 50%);
+  --color-success: var(--color-accent);
+  --color-heart: #c8312b;
+
+  /* Parchment */
+  --color-parchment: #e6d3a3;
+  --color-parchment-dark: #c4a96c;
+  --color-parchment-edge: #8a6a36;
+  --color-ink: #3b2a17;
+  --color-ink-muted: #6b5236;
+
+  /* Typography */
+  --font-display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Garamond, Georgia, serif;
+  --font-numeric: 'Cinzel', Georgia, serif;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  --fs-2xl: clamp(1.8rem, 1.3rem + 2vw, 2.8rem);
+  --fs-3xl: clamp(2.2rem, 1.5rem + 3vw, 3.8rem);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Shape */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-round: 999px;
+  --border-width: 1px;
+  --frame-width: 2px;
+
+  /* Depth & glow */
+  --shadow-panel: 0 10px 30px rgb(0 0 0 / 55%), inset 0 1px 0 rgb(255 255 255 / 4%);
+  --shadow-inset: inset 0 2px 8px rgb(0 0 0 / 60%);
+  --glow-accent: 0 0 12px var(--color-accent-glow), 0 0 28px rgb(143 220 74 / 20%);
+  --glow-text: 0 0 10px var(--color-accent-glow);
+
+  /* Textures (CSS only, no image files) */
+  --texture-parchment:
+    radial-gradient(ellipse at 20% 15%, rgb(255 255 255 / 25%), transparent 55%),
+    radial-gradient(ellipse at 80% 85%, rgb(120 80 30 / 25%), transparent 60%),
+    radial-gradient(circle at 50% 50%, transparent 60%, rgb(110 70 25 / 35%) 100%),
+    repeating-linear-gradient(12deg, rgb(120 85 40 / 4%) 0 2px, transparent 2px 7px),
+    linear-gradient(var(--color-parchment), var(--color-parchment-dark));
+  --texture-wood:
+    repeating-linear-gradient(
+      90deg,
+      rgb(0 0 0 / 12%) 0 1px,
+      transparent 1px 9px,
+      rgb(255 220 160 / 3%) 9px 11px,
+      transparent 11px 23px
+    ),
+    linear-gradient(#2a2015, #1c150d);
+  --texture-stone:
+    radial-gradient(circle at 30% 20%, rgb(255 255 255 / 3%), transparent 40%),
+    radial-gradient(circle at 70% 80%, rgb(0 0 0 / 25%), transparent 50%),
+    linear-gradient(var(--color-surface-raised), var(--color-surface));
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+
+  /* Layout */
+  --app-max-width: 1440px;
+  --gutter: clamp(var(--space-3), 2vw, var(--space-6));
+
+  /* Layers */
+  --z-base: 1;
+  --z-overlay: 100;
+  --z-dialog: 200;
+  --z-tooltip: 300;
+
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  color: var(--color-text);
+  background:
+    radial-gradient(ellipse at 50% 45%, rgb(143 220 74 / 7%), transparent 55%),
+    radial-gradient(ellipse at 50% 0%, rgb(60 80 50 / 30%), transparent 60%),
+    linear-gradient(var(--color-bg), var(--color-bg-deep));
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-heading);
+  letter-spacing: 0.04em;
+}
+
+h1 {
+  font-size: var(--fs-3xl);
+}
+
+h2 {
+  font-size: var(--fs-2xl);
+}
+
+h3 {
+  font-size: var(--fs-xl);
+}
+
+h4 {
+  font-size: var(--fs-lg);
+}
+
+a {
+  color: var(--color-accent);
+}
+
+::selection {
+  color: var(--color-bg-deep);
+  background: var(--color-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.btn {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-heading);
+  text-transform: uppercase;
+  background: var(--texture-stone);
+  border: var(--frame-width) solid var(--color-frame);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.btn:hover:not(:disabled) {
+  color: var(--color-accent-strong);
+  border-color: var(--color-frame-light);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+}
+
+.btn--primary {
+  color: var(--color-accent-strong);
+  text-shadow: var(--glow-text);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgb(182 242 107 / 18%), transparent 70%),
+    linear-gradient(#2c4a1a, #18290f);
+  border-color: var(--color-accent-dark);
+  box-shadow: var(--shadow-panel), var(--glow-accent);
+}
+
+.btn--primary:hover:not(:disabled) {
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+.btn--large {
+  min-height: 60px;
+  padding: var(--space-3) var(--space-7);
+  font-size: var(--fs-xl);
+}
+
+.btn--danger {
+  color: #f3c2b8;
+  background: linear-gradient(#5a1d16, #33100c);
+  border-color: #7a2a20;
+}
+
+.btn--icon {
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 44px;
+  padding: var(--space-2);
+  font-size: var(--fs-xs);
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.btn--icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* ==========================================================================
+   Form controls
+   ========================================================================== */
+
+.input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--fs-lg);
+  color: var(--color-text);
+  background: var(--color-surface-sunken);
+  border: var(--border-width) solid var(--color-frame);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-inset);
+}
+
+.input::placeholder {
+  color: var(--color-text-dim);
+}
+
+.input:focus-visible {
+  border-color: var(--color-accent);
+  outline-offset: 1px;
+}
+
+/* ==========================================================================
+   Reusable surfaces
+   ========================================================================== */
+
+.panel {
+  position: relative;
+  padding: var(--space-4);
+  background: var(--texture-stone);
+  border: var(--frame-width) solid var(--color-frame-dark);
+  border-radius: var(--radius-lg);
+  outline: var(--border-width) solid rgb(168 136 79 / 25%);
+  outline-offset: -6px;
+  box-shadow: var(--shadow-panel);
+}
+
+.panel--wood {
+  background: var(--texture-wood);
+}
+
+.parchment {
+  color: var(--color-ink);
+  background: var(--texture-parchment);
+  border: var(--frame-width) solid var(--color-parchment-edge);
+  border-radius: var(--radius-sm);
+  box-shadow:
+    var(--shadow-panel),
+    inset 0 0 30px rgb(110 70 25 / 40%);
+}
+
+.parchment h1,
+.parchment h2,
+.parchment h3,
+.parchment h4 {
+  color: var(--color-ink);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-heading);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.divider {
+  height: 1px;
+  margin: var(--space-3) 0;
+  background: linear-gradient(90deg, transparent, var(--color-frame-light), transparent);
+  border: none;
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
