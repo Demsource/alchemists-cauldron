@@ -5,6 +5,7 @@
  */
 
 import type { IHudView } from '../ui/hud';
+import type { IShelfView } from '../ui/shelf';
 
 const PREVIEW_MODES = [
   'start',
@@ -45,6 +46,68 @@ const PLAYING_HUD: IHudView = {
   lives: 2,
   maxLives: 3
 };
+
+const isStartLike = (mode: PreviewMode): boolean =>
+  mode === 'start' || mode === 'menu' || mode === 'help' || mode === 'leaderboard';
+
+const PLAYING_SHELF: IShelfView = {
+  isBlocked: false,
+  showValues: true,
+  items: [
+    {
+      id: 'dragon-tears',
+      name: 'Dragon Tears',
+      temperature: 25,
+      density: 8,
+      magicPower: 10,
+      stock: 9
+    },
+    {
+      id: 'fairy-dust',
+      name: 'Fairy Dust',
+      temperature: 12,
+      density: 9,
+      magicPower: 12,
+      stock: 12
+    },
+    {
+      id: 'frost-lotus',
+      name: 'Frost Lotus',
+      temperature: -18,
+      density: 4,
+      magicPower: 14,
+      stock: 0
+    },
+    {
+      id: 'mandrake-root',
+      name: 'Mandrake Root',
+      temperature: -5,
+      density: 20,
+      magicPower: 8,
+      stock: 7
+    },
+    {
+      id: 'caustic-acid',
+      name: 'Caustic Acid',
+      temperature: 10,
+      density: 14,
+      magicPower: 22,
+      stock: 3
+    },
+    {
+      id: 'void-essence',
+      name: 'Essence of the Void',
+      temperature: -20,
+      density: -10,
+      magicPower: 40,
+      stock: 15
+    }
+  ]
+};
+
+export function getPreviewShelf(mode: PreviewMode): IShelfView {
+  return isStartLike(mode) ? { items: [], isBlocked: false, showValues: true } : PLAYING_SHELF;
+}
 
 export function getPreviewHud(mode: PreviewMode): IHudView {
   switch (mode) {

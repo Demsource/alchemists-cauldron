@@ -667,6 +667,163 @@ button:disabled {
   color: var(--color-text-dim);
 }
 
+/* ==========================================================================
+   Ingredient shelf
+   ========================================================================== */
+
+.shelf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+}
+
+.shelf__empty {
+  padding: var(--space-5) var(--space-2);
+  font-style: italic;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.shelf__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: var(--space-2);
+}
+
+.shelf__slot {
+  display: flex;
+  padding-bottom: var(--space-2);
+  border-bottom: 4px solid rgb(0 0 0 / 35%);
+  box-shadow: 0 1px 0 rgb(168 136 79 / 25%);
+}
+
+.shelf-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: var(--space-2);
+  align-items: center;
+  width: 100%;
+  min-height: 72px;
+  padding: var(--space-2);
+  text-align: left;
+  background: rgb(10 12 10 / 45%);
+  border: var(--border-width) solid rgb(168 136 79 / 30%);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.shelf-card:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  box-shadow: var(--glow-accent);
+  transform: translateY(-1px);
+}
+
+.shelf-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: radial-gradient(circle, rgb(143 220 74 / 12%), transparent 70%);
+  border-radius: var(--radius-round);
+}
+
+.shelf-card__icon .icon {
+  width: 46px;
+  height: 46px;
+}
+
+.shelf-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.shelf-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.shelf-card__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.value-chip {
+  display: inline-flex;
+  gap: 2px;
+  align-items: baseline;
+  padding: 0 var(--space-1);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-sm);
+}
+
+.value-chip__key {
+  opacity: 0.75;
+}
+
+.value-chip--temperature {
+  color: var(--color-temperature);
+}
+
+.value-chip--density {
+  color: var(--color-density);
+}
+
+.value-chip--magic {
+  color: var(--color-magic);
+}
+
+.shelf-card__stock {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-family: var(--font-numeric);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-accent-strong);
+  background: var(--color-surface-sunken);
+  border: var(--frame-width) solid var(--color-accent-dark);
+  border-radius: var(--radius-round);
+  box-shadow: 0 0 6px var(--color-accent-glow);
+}
+
+.shelf--blocked .shelf-card:not(.shelf-card--empty) {
+  opacity: 0.6;
+}
+
+.shelf-card--empty {
+  background: rgb(0 0 0 / 35%);
+  border-style: dashed;
+  opacity: 0.4;
+}
+
+.shelf-card--empty .shelf-card__icon {
+  background: none;
+  border: var(--border-width) dashed var(--color-text-dim);
+}
+
+.shelf-card--empty .shelf-card__stock {
+  color: var(--color-text-dim);
+  border-color: var(--color-text-dim);
+  box-shadow: none;
+}
+
 .dialog-root:empty {
   display: none;
 }
@@ -745,6 +902,10 @@ button:disabled {
   .hud__heart {
     width: 24px;
     height: 24px;
+  }
+
+  .shelf__list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
