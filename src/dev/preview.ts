@@ -9,6 +9,8 @@ import type { IBarView } from '../ui/bars';
 import type { ICauldronView } from '../ui/cauldron';
 import type { IGameOverView } from '../ui/game-dialogs';
 import type { IHudView } from '../ui/hud';
+import type { ILeaderboardRowView } from '../ui/leaderboard';
+import type { IMenuView } from '../ui/menu';
 import type { IRecipePanelView } from '../ui/recipe-panel';
 import type { IShelfView } from '../ui/shelf';
 
@@ -189,6 +191,31 @@ export const PREVIEW_GAME_OVER: IGameOverView = {
   reason: 'time',
   isTopResult: true
 };
+
+export const PREVIEW_MENU: IMenuView = {
+  difficulty: 'medium',
+  isDifficultyEnabled: false,
+  canContinue: true
+};
+
+const PREVIEW_NAMES = [
+  'MagusPrime',
+  'AlchemystX',
+  'Veneficus',
+  'Elixirion',
+  'PotionMaster',
+  'Chemicus',
+  'UmbraAlchemy',
+  'CorvusFial',
+  'NightRetort',
+  'MysticMixture'
+];
+
+export const PREVIEW_LEADERBOARD: ILeaderboardRowView[] = PREVIEW_NAMES.map((name, index) => ({
+  name,
+  score: 1450 - index * 110,
+  timestamp: new Date(2026, 9, 2, 12, 0).getTime() - index * 3_600_000 * 5
+}));
 
 export function getPreviewHud(mode: PreviewMode): IHudView {
   switch (mode) {

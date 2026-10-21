@@ -6,8 +6,12 @@ import {
   getPreviewMode,
   getPreviewRecipe,
   getPreviewShelf,
-  PREVIEW_GAME_OVER
+  PREVIEW_GAME_OVER,
+  PREVIEW_LEADERBOARD,
+  PREVIEW_MENU
 } from './dev/preview';
+import { openLeaderboardDialog } from './ui/leaderboard';
+import { openMenuDialog } from './ui/menu';
 import { renderActions } from './ui/actions';
 import { renderBars } from './ui/bars';
 import { renderCauldron } from './ui/cauldron';
@@ -37,5 +41,9 @@ if (mount) {
     openGameOverDialog(layout.dialogRoot, PREVIEW_GAME_OVER);
   } else if (previewMode === 'help') {
     openHelpDialog(layout.dialogRoot);
+  } else if (previewMode === 'menu') {
+    openMenuDialog(layout.dialogRoot, PREVIEW_MENU);
+  } else if (previewMode === 'leaderboard') {
+    openLeaderboardDialog(layout.dialogRoot, PREVIEW_LEADERBOARD);
   }
 }
