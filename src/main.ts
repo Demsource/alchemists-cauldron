@@ -1,6 +1,7 @@
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
+import { addEntry, isTopResult, validatePlayerName } from './logic/leaderboard';
 import { pauseGame, resumeGame } from './logic/pause';
 import { brew } from './logic/score';
 import {
@@ -12,12 +13,14 @@ import {
   subscribe
 } from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
+import { loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
 import { closeAllDialogs } from './ui/dialogs';
 import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
+import { openLeaderboardDialog } from './ui/leaderboard';
 import { renderGame } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
@@ -31,6 +34,7 @@ if (mount) {
 
   const startGame = (): void => {
     closeAllDialogs(layout.dialogRoot);
+    isScoreSaved = false;
     const newGame = startNewGame(getState().difficulty);
     setState(newGame);
     startTimer(newGame.timeLeft);
@@ -69,13 +73,49 @@ if (mount) {
     startTimer(resumed.timeLeft);
   };
 
+  // Set once the finished run is written to the leaderboard, so the name is asked only once.
+  let isScoreSaved = false;
+
   const showGameOver = (state: IGameState): void => {
     if (state.gameOverReason) {
       openGameOverDialog(layout.dialogRoot, {
         score: state.score,
-        reason: state.gameOverReason
+        reason: state.gameOverReason,
+        isTopResult: isScoreSaved ? undefined : isTopResult(loadLeaderboard(), state.score)
       });
     }
+  };
+
+  const submitScore = (form: HTMLFormElement): void => {
+    const input = form.querySelector<HTMLInputElement>('input[name="playerName"]');
+    const error = form.querySelector<HTMLElement>('.name-form__error');
+    const state = getState();
+
+    if (!input || state.status !== 'game-over' || isScoreSaved) {
+      return;
+    }
+
+    const validation = validatePlayerName(input.value);
+
+    if (!validation.isValid) {
+      input.setAttribute('aria-invalid', 'true');
+      if (error) {
+        error.textContent = validation.error;
+      }
+      input.focus();
+      return;
+    }
+
+    const entries = addEntry(loadLeaderboard(), {
+      name: validation.name,
+      score: state.score,
+      timestamp: Date.now()
+    });
+    saveLeaderboard(entries);
+    isScoreSaved = true;
+
+    closeAllDialogs(layout.dialogRoot);
+    openLeaderboardDialog(layout.dialogRoot, entries);
   };
 
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
@@ -146,6 +186,28 @@ if (mount) {
         break;
       default:
         break;
+    }
+  });
+
+  layout.dialogRoot.addEventListener('submit', (event) => {
+    const form = event.target;
+
+    if (form instanceof HTMLFormElement && form.id === 'player-name-form') {
+      event.preventDefault();
+      submitScore(form);
+    }
+  });
+
+  // Typing clears the previous name error.
+  layout.dialogRoot.addEventListener('input', (event) => {
+    const input = event.target;
+
+    if (input instanceof HTMLInputElement && input.name === 'playerName') {
+      input.removeAttribute('aria-invalid');
+      const error = input.form?.querySelector('.name-form__error');
+      if (error) {
+        error.textContent = '';
+      }
     }
   });
 
