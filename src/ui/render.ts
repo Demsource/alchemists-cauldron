@@ -54,6 +54,22 @@ function getBars(state: IGameState): IBarView[] {
   });
 }
 
+// Last rendered view per container, as JSON (views are plain data).
+const lastViews = new WeakMap<HTMLElement, string>();
+
+function renderIfChanged<T>(
+  container: HTMLElement,
+  render: (target: HTMLElement, view: T) => void,
+  view: T
+): void {
+  const key = JSON.stringify(view);
+
+  if (lastViews.get(container) !== key) {
+    lastViews.set(container, key);
+    render(container, view);
+  }
+}
+
 export function renderGame(
   layout: ILayoutRefs,
   state: IGameState,
@@ -64,6 +80,7 @@ export function renderGame(
 
   layout.root.dataset.status = state.status;
 
+  // HUD and bars patch their own DOM in place, so they can run on every change (incl. timer ticks).
   renderHud(layout.hud, {
     isActive: isPlaying,
     score: state.score,
@@ -73,26 +90,28 @@ export function renderGame(
     maxLives: settings.lives
   });
 
-  renderShelf(layout.shelf, {
+  renderBars(layout.bars, getBars(state));
+
+  // These sections rebuild their DOM, so render them only when their view data changed.
+  // Otherwise every timer tick would recreate them, restarting CSS animations and hover effects.
+  renderIfChanged(layout.shelf, renderShelf, {
     items: getShelfItems(state, settings),
     isBlocked: isFull || state.status !== 'playing',
     showValues: true
   });
 
-  renderCauldron(layout.stage, {
+  renderIfChanged(layout.stage, renderCauldron, {
     ingredients: state.cauldronIngredients.map(({ id, name }) => ({ id, name })),
     capacity: settings.maxCauldronIngredients
   });
 
-  renderRecipePanel(layout.recipe, {
+  renderIfChanged(layout.recipe, renderRecipePanel, {
     recipe: state.activeRecipe,
     added: state.cauldronIngredients.length,
     capacity: settings.maxCauldronIngredients
   });
 
-  renderBars(layout.bars, getBars(state));
-
-  renderActions(layout.actions, {
+  renderIfChanged(layout.actions, renderActions, {
     isPlaying,
     canPause: state.status === 'playing',
     // The menu holds actions used outside a run.
