@@ -94,6 +94,7 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
       'play-again',
       view.isTopResult === true ? 'default' : 'primary'
     ),
+    createDialogButton('Leaderboard', 'open-leaderboard'),
     createDialogButton('Exit to Menu', 'exit-to-menu')
   );
 

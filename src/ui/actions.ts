@@ -6,6 +6,7 @@ export type ActionName = 'help' | 'menu' | 'start' | 'brew' | 'pause' | 'pour-ou
 export interface IActionsView {
   isPlaying: boolean;
   canPause: boolean;
+  canOpenMenu: boolean;
   canBrew: boolean;
   showPourOut: boolean;
   canPourOut: boolean;
@@ -63,7 +64,9 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
   if (view.canPause) {
     right.append(renderIconButton('pause', UI_ICONS.pause, 'Pause'));
   }
-  right.append(renderIconButton('menu', UI_ICONS.settings, 'Menu'));
+  const menu = renderIconButton('menu', UI_ICONS.settings, 'Menu');
+  menu.disabled = !view.canOpenMenu;
+  right.append(menu);
 
   container.replaceChildren(left, center, right);
 }

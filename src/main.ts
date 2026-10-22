@@ -1,3 +1,4 @@
+import { DEFAULT_DIFFICULTY } from './data/difficulty';
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
@@ -17,10 +18,11 @@ import { loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
-import { closeAllDialogs } from './ui/dialogs';
+import { closeAllDialogs, closeDialog } from './ui/dialogs';
 import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { openLeaderboardDialog } from './ui/leaderboard';
+import { openMenuDialog } from './ui/menu';
 import { renderGame } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
@@ -114,8 +116,38 @@ if (mount) {
     saveLeaderboard(entries);
     isScoreSaved = true;
 
+    showLeaderboard();
+  };
+
+  const showMenu = (): void => {
     closeAllDialogs(layout.dialogRoot);
-    openLeaderboardDialog(layout.dialogRoot, entries);
+    openMenuDialog(layout.dialogRoot, {
+      difficulty: getState().difficulty ?? DEFAULT_DIFFICULTY,
+      isDifficultyEnabled: false, // Level 2
+      canContinue: false // Level 2
+    });
+  };
+
+  // Closing the leaderboard (Back or Escape) returns to where it was opened from:
+  // the Game Over screen after a run, otherwise the menu.
+  const returnFromLeaderboard = (): void => {
+    if (layout.dialogRoot.querySelector('dialog')) {
+      return;
+    }
+
+    const state = getState();
+
+    if (state.status === 'game-over') {
+      showGameOver(state);
+    } else if (state.status === 'menu') {
+      showMenu();
+    }
+  };
+
+  const showLeaderboard = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    const leaderboard = openLeaderboardDialog(layout.dialogRoot, loadLeaderboard());
+    leaderboard.element.addEventListener('close', returnFromLeaderboard);
   };
 
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
@@ -166,6 +198,9 @@ if (mount) {
       case 'pause':
         pause();
         break;
+      case 'menu':
+        showMenu();
+        break;
       default:
         break;
     }
@@ -181,6 +216,19 @@ if (mount) {
       case 'resume':
         resume();
         break;
+      case 'new-game':
+        startGame();
+        break;
+      case 'open-leaderboard':
+        showLeaderboard();
+        break;
+      case 'close-dialog': {
+        const dialog = button?.closest('dialog');
+        if (dialog) {
+          closeDialog(dialog);
+        }
+        break;
+      }
       case 'exit-to-menu':
         exitToMenu();
         break;

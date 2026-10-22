@@ -77,15 +77,7 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
 
   const app = root.closest('.app');
 
-  const close = (): void => {
-    if (dialog.open) {
-      dialog.close();
-    }
-    dialog.remove();
-    if (root.childElementCount === 0) {
-      app?.classList.remove(BLUR_CLASS);
-    }
-  };
+  const close = (): void => closeDialog(dialog);
 
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
@@ -100,6 +92,19 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
   dialog.showModal();
 
   return { element: dialog, close };
+}
+
+export function closeDialog(dialog: HTMLDialogElement): void {
+  const root = dialog.parentElement;
+
+  if (dialog.open) {
+    dialog.close();
+  }
+  dialog.remove();
+
+  if (root && root.querySelector('dialog') === null) {
+    root.closest('.app')?.classList.remove(BLUR_CLASS);
+  }
 }
 
 export function closeAllDialogs(root: HTMLElement): void {

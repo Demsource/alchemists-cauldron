@@ -95,6 +95,8 @@ export function renderGame(
   renderActions(layout.actions, {
     isPlaying,
     canPause: state.status === 'playing',
+    // The menu holds actions used outside a run.
+    canOpenMenu: state.status === 'menu' || state.status === 'game-over',
     canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false
