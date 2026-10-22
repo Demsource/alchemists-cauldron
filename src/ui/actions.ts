@@ -5,6 +5,7 @@ export type ActionName = 'help' | 'menu' | 'start' | 'brew' | 'pause' | 'pour-ou
 
 export interface IActionsView {
   isPlaying: boolean;
+  canPause: boolean;
   canBrew: boolean;
   showPourOut: boolean;
   canPourOut: boolean;
@@ -59,7 +60,7 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
   center.append(renderPrimary(view));
 
   const right = createElement('div', 'actions__side actions__side--right');
-  if (view.isPlaying) {
+  if (view.canPause) {
     right.append(renderIconButton('pause', UI_ICONS.pause, 'Pause'));
   }
   right.append(renderIconButton('menu', UI_ICONS.settings, 'Menu'));
