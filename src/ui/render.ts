@@ -1,21 +1,17 @@
+import { BAR_SCALES } from '../data/bar-scales';
 import { getShelfIngredients } from '../data/difficulty';
+import { calculateCauldron, isInRange } from '../logic/calculate-cauldron';
 import { isCauldronFull } from '../logic/cauldron';
 import { getStock } from '../logic/stock';
 import type { IDifficultySettings, IGameState } from '../types/game';
+import type { IParameters } from '../types/ingredient';
 import { renderActions } from './actions';
-import { renderBars, type IBarView } from './bars';
+import { renderBars, type BarKey, type IBarView } from './bars';
 import { renderCauldron } from './cauldron';
 import { renderHud } from './hud';
 import type { ILayoutRefs } from './layout';
 import { renderRecipePanel } from './recipe-panel';
 import { renderShelf, type IShelfItemView } from './shelf';
-
-// Visible range of every parameter bar.
-const BAR_SCALES = {
-  temperature: { min: -100, max: 100 },
-  density: { min: -50, max: 100 },
-  magic: { min: -50, max: 150 }
-} as const;
 
 function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelfItemView[] {
   if (state.status === 'menu') {
@@ -32,35 +28,29 @@ function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelf
   }));
 }
 
+const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters; label: string }[] = [
+  { key: 'temperature', parameter: 'temperature', label: 'Temperature' },
+  { key: 'density', parameter: 'density', label: 'Density' },
+  { key: 'magic', parameter: 'magicPower', label: 'Magic Power' }
+];
+
 function getBars(state: IGameState): IBarView[] {
+  const values = calculateCauldron(state.cauldronIngredients);
   const recipe = state.activeRecipe;
 
-  return [
-    {
-      key: 'temperature',
-      label: 'Temperature',
-      value: 0,
-      ...BAR_SCALES.temperature,
-      target: recipe?.temperature ?? null,
-      isInTarget: false
-    },
-    {
-      key: 'density',
-      label: 'Density',
-      value: 0,
-      ...BAR_SCALES.density,
-      target: recipe?.density ?? null,
-      isInTarget: false
-    },
-    {
-      key: 'magic',
-      label: 'Magic Power',
-      value: 0,
-      ...BAR_SCALES.magic,
-      target: recipe?.magicPower ?? null,
-      isInTarget: false
-    }
-  ];
+  return BAR_DEFINITIONS.map(({ key, parameter, label }) => {
+    const value = values[parameter];
+    const target = recipe ? recipe[parameter] : null;
+
+    return {
+      key,
+      label,
+      value,
+      ...BAR_SCALES[parameter],
+      target,
+      isInTarget: target !== null && isInRange(value, target)
+    };
+  });
 }
 
 export function renderGame(
