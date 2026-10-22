@@ -1,0 +1,53 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies &amp; Build Outputs
+node_modules
+dist
+dist-ssr
+build
+coverage
+.nyc_output
+
+# Caches &amp; Tooling Output
+.cache
+.vite
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# Environment Files
+*.local
+.env
+.env.*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swo
+*.swp
+*~
+
+# Linux &amp; OS System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.directory
+.fuse_hidden*
+.Trash-*
+core
+core.*
