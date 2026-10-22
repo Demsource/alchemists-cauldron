@@ -511,25 +511,18 @@ button:disabled {
   opacity: 0.35;
 }
 
-.stage__arch {
+.stage__alcove {
   position: absolute;
   bottom: 0;
-  width: 34%;
-  max-width: 220px;
-  height: 92%;
+  left: 50%;
+  width: 96%;
+  height: 94%;
+  transform: translateX(-50%);
 }
 
-.stage__arch svg {
+.stage__alcove svg {
   width: 100%;
   height: 100%;
-}
-
-.stage__arch--left {
-  left: 2%;
-}
-
-.stage__arch--right {
-  right: 2%;
 }
 
 .stage__shelf-decor {

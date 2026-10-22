@@ -189,12 +189,21 @@ export const SCENE_ICONS = {
       '<circle class="cauldron__bubble" cx="140" cy="70" r="4" fill="#c8ff8a"/>' +
       '<circle class="cauldron__bubble" cx="160" cy="77" r="3" fill="#c8ff8a"/>'
   ),
-  arch: svg(
-    '0 0 200 400',
-    '<path d="M10 400V110a90 90 0 01180 0v290" fill="none" stroke="currentColor" stroke-width="3"/>' +
-      '<path d="M30 400V115a70 70 0 01140 0v285" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/>' +
-      '<path d="M100 20v40M44 54l22 28M156 54l-22 28M18 110h30M152 110h30" stroke="currentColor" stroke-width="1.5" opacity=".5"/>' +
-      '<path d="M30 250h140M100 115v285" stroke="currentColor" stroke-width="1" opacity=".3"/>'
+  alcove: svg(
+    '0 0 600 420',
+    // pointed (ogival) arch spanning the whole stage
+    '<path d="M24 420V204A380 380 0 01300 18a380 380 0 01276 186v216" fill="none" stroke="currentColor" stroke-width="3"/>' +
+      '<path d="M46 420V210A356 356 0 01300 44a356 356 0 01254 166v210" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/>' +
+      // pillar capitals, bases and stone joints
+      '<path d="M12 204h46M542 204h46M12 404h46M542 404h46" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>' +
+      '<path d="M24 270h22M24 336h22M554 270h22M554 336h22" stroke="currentColor" stroke-width="1.5" opacity=".5"/>' +
+      // keystone and rose window at the apex
+      '<path d="M300 4l12 16-12 16-12-16z" fill="currentColor" opacity=".7"/>' +
+      '<circle cx="300" cy="104" r="34" fill="none" stroke="currentColor" stroke-width="2" opacity=".7"/>' +
+      '<circle cx="300" cy="104" r="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".6"/>' +
+      '<path d="M300 70v24M300 114v24M266 104h24M310 104h24M276 80l17 17M307 111l17 17M324 80l-17 17M293 111l-17 17" stroke="currentColor" stroke-width="1.2" opacity=".5"/>' +
+      // floor line
+      '<path d="M46 404h508" stroke="currentColor" stroke-width="1" opacity=".3"/>'
   ),
   shelfDecor: svg(
     '0 0 220 120',

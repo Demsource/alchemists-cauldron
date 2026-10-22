@@ -30,8 +30,7 @@ function renderStageDecor(): HTMLDivElement {
   const decor = createElement('div', 'stage__decor');
 
   decor.append(
-    createIcon(SCENE_ICONS.arch, 'stage__arch stage__arch--left'),
-    createIcon(SCENE_ICONS.arch, 'stage__arch stage__arch--right'),
+    createIcon(SCENE_ICONS.alcove, 'stage__alcove'),
     createIcon(SCENE_ICONS.shelfDecor, 'stage__shelf-decor stage__shelf-decor--left'),
     createIcon(SCENE_ICONS.shelfDecor, 'stage__shelf-decor stage__shelf-decor--right')
   );
