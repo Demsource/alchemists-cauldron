@@ -1,7 +1,6 @@
+import type { GameOverReason } from '../types/game';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
-
-export type GameOverReason = 'time' | 'lives' | 'ingredients';
 
 export interface IGameOverView {
   score: number;
