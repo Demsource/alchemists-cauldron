@@ -3,6 +3,7 @@ import { addIngredient } from './logic/cauldron';
 import { brew } from './logic/score';
 import { getSettings, getState, setState, startNewGame, subscribe } from './state/game-state';
 import type { IngredientId } from './types/ingredient';
+import { showBrewMessage } from './ui/brew-message';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
 
@@ -49,9 +50,16 @@ if (mount) {
       case 'start':
         setState(startNewGame(state.difficulty));
         break;
-      case 'brew':
-        setState(brew(state, getSettings(state)).state);
+      case 'brew': {
+        const settings = getSettings(state);
+        const outcome = brew(state, settings);
+        setState(outcome.state);
+
+        if (outcome.check) {
+          showBrewMessage(layout.stage, outcome.check, settings);
+        }
         break;
+      }
       default:
         break;
     }

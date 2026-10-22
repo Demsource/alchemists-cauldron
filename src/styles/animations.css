@@ -164,6 +164,49 @@
   }
 }
 
+/* --- Brew result message -------------------------------------------------- */
+
+.brew-message {
+  animation: brew-message 2.6s var(--ease-out) forwards;
+}
+
+@keyframes brew-message {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+
+  10%,
+  75% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+}
+
+/* Keep the message readable with reduced motion: no movement, but still visible for a while. */
+@media (prefers-reduced-motion: reduce) {
+  .brew-message {
+    animation-name: brew-message-fade !important;
+    animation-duration: 2.6s !important;
+  }
+}
+
+@keyframes brew-message-fade {
+  0%,
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
 /* --- Dialogs ------------------------------------------------------------- */
 
 .dialog[open] {
