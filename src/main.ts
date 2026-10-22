@@ -1,8 +1,9 @@
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
+import { endGame, getGameOverReason } from './logic/game-over';
 import { brew } from './logic/score';
 import { getSettings, getState, setState, startNewGame, subscribe } from './state/game-state';
-import { startTimer, syncTimer, withCurrentTime } from './state/game-timer';
+import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
 import { renderLayout } from './ui/layout';
@@ -67,6 +68,17 @@ if (mount) {
       }
       default:
         break;
+    }
+  });
+
+  // Every state change (timer, add, brew) passes this check first, so the game ends
+  // at 00:00, at 0 lives, or when the ingredients run out.
+  subscribe((state) => {
+    const reason = getGameOverReason(state);
+
+    if (reason) {
+      stopTimer();
+      setState(endGame(state, reason));
     }
   });
 
