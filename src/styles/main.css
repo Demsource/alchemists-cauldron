@@ -1187,6 +1187,8 @@ button:disabled {
   border-inline: 2px solid var(--color-accent);
   border-radius: var(--radius-sm);
   transition:
+    left var(--duration-slow) var(--ease-out),
+    width var(--duration-slow) var(--ease-out),
     box-shadow var(--duration-base) var(--ease-out),
     background-color var(--duration-base) var(--ease-out);
 }
@@ -1245,8 +1247,16 @@ button:disabled {
   color: var(--color-accent);
 }
 
-.bar__ticks:has(.bar__tick--target) {
+.bar--has-target .bar__ticks {
   height: 2.4em;
+}
+
+/* Parts that only exist for some bars stay in the DOM so values can animate. */
+.bar:not(.bar--has-target) .bar__zone,
+.bar:not(.bar--has-target) .bar__tick--target,
+.bar:not(.bar--has-zero) .bar__zero,
+.bar:not(.bar--has-zero) .bar__tick--zero {
+  display: none;
 }
 
 .bar__target {
