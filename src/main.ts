@@ -1,6 +1,7 @@
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
+import { pauseGame, resumeGame } from './logic/pause';
 import { brew } from './logic/score';
 import {
   createInitialState,
@@ -15,7 +16,7 @@ import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
 import { closeAllDialogs } from './ui/dialogs';
-import { openGameOverDialog } from './ui/game-dialogs';
+import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
 
@@ -39,6 +40,33 @@ if (mount) {
     closeAllDialogs(layout.dialogRoot);
     stopTimer();
     setState({ ...createInitialState(), difficulty: getState().difficulty });
+  };
+
+  const pause = (): void => {
+    // Keep the exact remaining time, then freeze it.
+    const state = withCurrentTime(getState());
+    const paused = pauseGame(state);
+
+    if (paused === state) {
+      return;
+    }
+
+    stopTimer();
+    setState(paused);
+    openPauseDialog(layout.dialogRoot);
+  };
+
+  const resume = (): void => {
+    const state = getState();
+    const resumed = resumeGame(state);
+
+    if (resumed === state) {
+      return;
+    }
+
+    closeAllDialogs(layout.dialogRoot);
+    setState(resumed);
+    startTimer(resumed.timeLeft);
   };
 
   const showGameOver = (state: IGameState): void => {
@@ -95,6 +123,9 @@ if (mount) {
         }
         break;
       }
+      case 'pause':
+        pause();
+        break;
       default:
         break;
     }
@@ -106,6 +137,9 @@ if (mount) {
     switch (button?.dataset.action) {
       case 'play-again':
         startGame();
+        break;
+      case 'resume':
+        resume();
         break;
       case 'exit-to-menu':
         exitToMenu();
