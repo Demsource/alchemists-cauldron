@@ -14,11 +14,11 @@ import {
   subscribe
 } from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
-import { loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
+import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
-import { closeAllDialogs, closeDialog } from './ui/dialogs';
+import { closeAllDialogs, closeDialog, openConfirmDialog } from './ui/dialogs';
 import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { openLeaderboardDialog } from './ui/leaderboard';
@@ -220,6 +220,19 @@ if (mount) {
         startGame();
         break;
       case 'open-leaderboard':
+        showLeaderboard();
+        break;
+      case 'clear-leaderboard':
+        openConfirmDialog(layout.dialogRoot, {
+          id: 'clear-leaderboard-dialog',
+          title: 'Clear all results?',
+          message: 'Every name and score on the leaderboard will be erased. This cannot be undone.',
+          confirmLabel: 'Clear',
+          confirmAction: 'confirm-clear-leaderboard'
+        });
+        break;
+      case 'confirm-clear-leaderboard':
+        clearLeaderboard();
         showLeaderboard();
         break;
       case 'close-dialog': {
