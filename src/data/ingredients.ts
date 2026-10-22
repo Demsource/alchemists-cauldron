@@ -1,4 +1,4 @@
-import type { IIngredient } from '../types/ingredient';
+import type { IIngredient, IngredientId } from '../types/ingredient';
 
 // Fixed ordered catalogue from the README. Shelves always use the first N entries.
 export const INGREDIENTS: readonly IIngredient[] = [
@@ -67,3 +67,7 @@ export const INGREDIENTS: readonly IIngredient[] = [
     magicPower: 0
   }
 ];
+
+export function isIngredientId(value: string | undefined): value is IngredientId {
+  return INGREDIENTS.some((ingredient) => ingredient.id === value);
+}
