@@ -2,10 +2,20 @@ import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
 import { brew } from './logic/score';
-import { getSettings, getState, setState, startNewGame, subscribe } from './state/game-state';
+import {
+  createInitialState,
+  getSettings,
+  getState,
+  setState,
+  startNewGame,
+  subscribe
+} from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
+import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
+import { closeAllDialogs } from './ui/dialogs';
+import { openGameOverDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
 
@@ -16,6 +26,28 @@ if (mount) {
   const render = (): void => {
     const state = getState();
     renderGame(layout, state, getSettings(state));
+  };
+
+  const startGame = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    const newGame = startNewGame(getState().difficulty);
+    setState(newGame);
+    startTimer(newGame.timeLeft);
+  };
+
+  const exitToMenu = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    stopTimer();
+    setState({ ...createInitialState(), difficulty: getState().difficulty });
+  };
+
+  const showGameOver = (state: IGameState): void => {
+    if (state.gameOverReason) {
+      openGameOverDialog(layout.dialogRoot, {
+        score: state.score,
+        reason: state.gameOverReason
+      });
+    }
   };
 
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
@@ -49,12 +81,9 @@ if (mount) {
     const state = withCurrentTime(getState());
 
     switch (button.dataset.action) {
-      case 'start': {
-        const newGame = startNewGame(state.difficulty);
-        setState(newGame);
-        startTimer(newGame.timeLeft);
+      case 'start':
+        startGame();
         break;
-      }
       case 'brew': {
         const settings = getSettings(state);
         const outcome = brew(state, settings);
@@ -71,6 +100,21 @@ if (mount) {
     }
   });
 
+  layout.dialogRoot.addEventListener('click', (event) => {
+    const button = (event.target as Element).closest<HTMLButtonElement>('button[data-action]');
+
+    switch (button?.dataset.action) {
+      case 'play-again':
+        startGame();
+        break;
+      case 'exit-to-menu':
+        exitToMenu();
+        break;
+      default:
+        break;
+    }
+  });
+
   // Every state change (timer, add, brew) passes this check first, so the game ends
   // at 00:00, at 0 lives, or when the ingredients run out.
   subscribe((state) => {
@@ -78,7 +122,9 @@ if (mount) {
 
     if (reason) {
       stopTimer();
-      setState(endGame(state, reason));
+      const finished = endGame(state, reason);
+      setState(finished);
+      showGameOver(finished);
     }
   });
 
