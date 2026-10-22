@@ -177,10 +177,10 @@ export const SCENE_ICONS = {
       '<path d="M30 72h180c6 52-16 104-90 104S24 124 30 72z" fill="#232a25" stroke="#3d4a40" stroke-width="3"/>' +
       '<path d="M48 90c0 34 18 64 58 72" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="10" stroke-linecap="round"/>' +
       // rune emblem
-      '<circle cx="120" cy="122" r="26" fill="#161b17" stroke="#a8884f" stroke-width="2.5"/>' +
-      '<path class="cauldron__rune" d="M120 104l17 29h-34z" fill="none" stroke="#8fdc4a" stroke-width="3" stroke-linejoin="round"/>' +
-      '<circle class="cauldron__rune" cx="120" cy="123" r="4" fill="#8fdc4a"/>' +
-      '<path d="M120 92v6M120 146v6M90 122h6M144 122h6" stroke="#a8884f" stroke-width="2" stroke-linecap="round"/>' +
+      '<circle cx="120" cy="134" r="26" fill="#161b17" stroke="#a8884f" stroke-width="2.5"/>' +
+      '<path class="cauldron__rune" d="M120 115l17 29h-34z" fill="none" stroke="#8fdc4a" stroke-width="3" stroke-linejoin="round"/>' +
+      '<circle class="cauldron__rune" cx="120" cy="134" r="4" fill="#8fdc4a"/>' +
+      '<path d="M120 102v6M120 156v6M90 132h6M144 132h6" stroke="#a8884f" stroke-width="2" stroke-linecap="round"/>' +
       // rim & liquid
       '<ellipse cx="120" cy="72" rx="96" ry="22" fill="#2f3833" stroke="#7d8a80" stroke-width="4"/>' +
       '<ellipse class="cauldron__liquid" cx="120" cy="74" rx="84" ry="15" fill="#8fdc4a"/>' +
