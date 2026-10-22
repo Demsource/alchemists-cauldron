@@ -2,6 +2,7 @@ import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { brew } from './logic/score';
 import { getSettings, getState, setState, startNewGame, subscribe } from './state/game-state';
+import { startTimer, syncTimer, withCurrentTime } from './state/game-timer';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
 import { renderLayout } from './ui/layout';
@@ -44,16 +45,20 @@ if (mount) {
       return;
     }
 
-    const state = getState();
+    const state = withCurrentTime(getState());
 
     switch (button.dataset.action) {
-      case 'start':
-        setState(startNewGame(state.difficulty));
+      case 'start': {
+        const newGame = startNewGame(state.difficulty);
+        setState(newGame);
+        startTimer(newGame.timeLeft);
         break;
+      }
       case 'brew': {
         const settings = getSettings(state);
         const outcome = brew(state, settings);
         setState(outcome.state);
+        syncTimer(outcome.state.timeLeft);
 
         if (outcome.check) {
           showBrewMessage(layout.stage, outcome.check, settings);
