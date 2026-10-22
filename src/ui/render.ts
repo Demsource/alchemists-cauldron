@@ -94,6 +94,7 @@ export function renderGame(
 
   renderActions(layout.actions, {
     isPlaying,
+    canPause: state.status === 'playing',
     canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false
