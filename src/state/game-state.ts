@@ -1,4 +1,5 @@
 import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS, getShelfIngredients } from '../data/difficulty';
+import { pickRecipe } from '../logic/recipe-generator';
 import { createStock } from '../logic/stock';
 import type { IDifficultySettings, IGameState } from '../types/game';
 
@@ -29,7 +30,7 @@ export function startNewGame(difficulty = DEFAULT_DIFFICULTY): IGameState {
     score: 0,
     timeLeft: settings.startTime,
     lives: settings.lives,
-    activeRecipe: null, // picked in US 1.3
+    activeRecipe: pickRecipe(difficulty),
     cauldronIngredients: [],
     shelfStock: createStock(getShelfIngredients(settings)),
     difficulty

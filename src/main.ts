@@ -1,7 +1,9 @@
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
+import { brew } from './logic/score';
 import { getSettings, getState, setState, startNewGame, subscribe } from './state/game-state';
 import type { IngredientId } from './types/ingredient';
+import { showBrewMessage } from './ui/brew-message';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
 
@@ -38,8 +40,28 @@ if (mount) {
   layout.actions.addEventListener('click', (event) => {
     const button = (event.target as Element).closest<HTMLButtonElement>('button[data-action]');
 
-    if (button?.dataset.action === 'start') {
-      setState(startNewGame(getState().difficulty));
+    if (!button || button.disabled) {
+      return;
+    }
+
+    const state = getState();
+
+    switch (button.dataset.action) {
+      case 'start':
+        setState(startNewGame(state.difficulty));
+        break;
+      case 'brew': {
+        const settings = getSettings(state);
+        const outcome = brew(state, settings);
+        setState(outcome.state);
+
+        if (outcome.check) {
+          showBrewMessage(layout.stage, outcome.check, settings);
+        }
+        break;
+      }
+      default:
+        break;
     }
   });
 
