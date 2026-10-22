@@ -1,5 +1,7 @@
 # 🧪 Alchemist's Cauldron
 
+🔗 **Live demo:** [demsource.github.io/alchemists-cauldron](https://demsource.github.io/alchemists-cauldron/)
+
 ## 📌 Project Overview
 
 **Alchemist's Cauldron** is a browser alchemy puzzle game written in pure TypeScript, without frameworks, CSS libraries or game engines. The player picks ingredients from a shelf, drops them into a cauldron and tries to bring **Temperature**, **Density** and **Magic Power** into the target ranges of a random recipe before time, lives or ingredients run out.
