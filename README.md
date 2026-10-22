@@ -2,97 +2,109 @@
 
 ## 📌 Project Overview
 
-**Alchemist's Cauldron** is a web-based alchemy puzzle mini-game built with pure TypeScript [1, 5]. The player acts as an alchemist selecting ingredients from a shelf into a brewing cauldron [1, 3]. The goal is to reach target ranges for **Temperature**, **Density**, and **Magic Power** defined by randomly generated recipes before running out of time, lives, or ingredient stock [1, 3, 9, 10].
+**Alchemist's Cauldron** is a browser alchemy puzzle game written in pure TypeScript, without frameworks, CSS libraries or game engines. The player picks ingredients from a shelf, drops them into a cauldron and tries to bring **Temperature**, **Density** and **Magic Power** into the target ranges of a random recipe before time, lives or ingredients run out.
 
 ---
 
-## 🎯 Game Goal &amp; Core Gameplay
+## 🎯 Game Goal & Core Gameplay
 
-- **Primary Objective**: Successfully brew potions by matching the combined parameters of ingredients in the cauldron to the target ranges specified by the active recipe [1, 3, 9].
-- **Core Parameters**:
-  - 🌡️ **Temperature** [3]
-  - ⚖️ **Density** [3]
-  - ✨ **Magic Power** [3]
-- **Win/Loss Conditions**:
-  - **Score &amp; Bonus Time**: Successfully brewing a potion grants score points and bonus time based on difficulty [8].
-  - **Game Over**: Occurs when time expires (\\(0\text{s}\\)), lives reach \\(0\\), or ingredient stock is completely exhausted (empty shelf and empty cauldron) [3, 10].
+- **Goal**: brew as many potions as possible. A brew succeeds when all three cauldron values are inside the recipe ranges, widened by the difficulty tolerance (±8 in Level 1).
+- **Parameters**:
+  - 🌡️ **Temperature**
+  - 💧 **Density**
+  - ✨ **Magic Power**
+- **Successful brew**: +200 score, +10 s (never above the 150 s start time), the cauldron is emptied and a new recipe is picked.
+- **Failed brew**: −1 life and the cauldron is emptied.
+- **Used ingredients are spent** in both cases — the stock is never refilled.
+- **Game Over** happens when:
+  - the timer reaches `00:00`;
+  - all lives are lost;
+  - the ingredients run out (every shelf slot is empty and the cauldron is empty).
 
 ---
 
 ## 🛠️ Task Set Structure
 
-The project specification is structured into four progressive stages totaling **393 points** [2]:
+The task is split into four stages with a maximum of **393 points**:
 
-1. **Precondition 1 — Project Setup &amp; Technical Base (58 pts)** [2, 4]:
-   - Repository setup, tooling, folder structure, code formatting, and quality checks.
-2. **Level 1 — Basic Game (170 pts / 228 total score)** [2, 4]:
-   - Fixed Medium difficulty rule set [2, 8].
-   - Core mechanics: Ingredient selection, parameter summing, recipe tolerance check (\\(\pm 8\\)), timer, lives, pause menu, and Top-10 leaderboard [4, 8].
-3. **Level 2 — Extended Functionality (50 pts / 278 total score)** [2, 4]:
-   - Difficulty selection (Easy, Medium, Hard) [2, 4, 8].
-   - Variable shelf ingredients, cauldron capacity, initial time, lives, time bonuses, and tolerances (\\(\pm 12\\), \\(\pm 8\\), \\(\pm 5\\)) [8].
-   - Auto-save and continue game state via `localStorage` [4, 11].
-4. **Level 3 — Full Game &amp; Enhanced UX (115 pts / 393 total score)** [2, 5]:
-   - Drag &amp; drop ingredient interaction [2, 5, 11].
-   - Tooltip popups displaying ingredient statistics on hover [2, 5, 8, 11].
-   - Chemical reactions dynamically modifying combined parameter values [2, 5, 8, 11].
-   - "Pour Out" action to clear cauldron contents [2, 3, 5].
-   - Keyboard shortcuts and visual feedback/animations [2, 5].
+1. **Precondition 1 — Project Setup & Technical Base (58 pts)**: repository, tooling, folder structure and quality checks.
+2. **Level 1 — Basic Game (170 pts, 228 total)**: one full game with the Medium rule set — shelf and cauldron, parameter bars, recipes and brew check, timer and lives, pause, Top-10 leaderboard.
+3. **Level 2 — Extended (50 pts, 278 total)**: difficulty selection (Easy / Medium / Hard) and auto-save with Continue Game.
+4. **Level 3 — Full Game (115 pts, 393 total)**: drag & drop, ingredient tooltips, chemical reactions, Pour Out, visual feedback and keyboard shortcuts.
 
 ---
 
 ## ✅ Implementation Status
 
-_Developers can mark implemented parts of the task set:_
-
-- [x] **Precondition 1**: Repository setup, TypeScript tooling, folder structure, quality checks.
-- [x] **Level 1 (Basic Game)**: Core game loop, shelf and cauldron, parameter bars, recipe brew check, timer, lives, pause, leaderboard.
-- [x] **Level 2 (Extended)**: Difficulty selection (Easy/Medium/Hard), auto-save &amp; continue (`localStorage`).
-- [x] **Level 3 (Full Game)**: Drag &amp; Drop, ingredient tooltips, chemical reactions, Pour Out feature, visual feedback, keyboard shortcuts.
+- [x] **Precondition 1** — Vite + TypeScript (strict mode), ESLint, Prettier, Husky, lint-staged, commitlint, folder structure.
+- [x] **Level 1 — Basic Game**
+  - [x] **US 1.1** Ingredient shelf & cauldron — 6 ingredient cards with icon, name, values and stock badge; random stock from 2 to 15 per new game; empty slots stay in place and can't be used; the cauldron keeps the order of ingredients and holds up to 4.
+  - [x] **US 1.2** Parameter bars — three bars with live sums, a centre zero line for negative values, smooth movement, the recipe target zone, a value marker and a green glow inside the target.
+  - [x] **US 1.3** Recipe & brewing check — 20 fixed recipes, a random Medium recipe per game and after each success, an ingredient counter (`Ingredients: 2 / 4`), the Brew check with ±8 tolerance and a short result message.
+  - [x] **US 1.4** Timer & Game Over — `MM:SS` timer with a shrinking bar, calculated from timestamps; red pulsing timer under 15 s; the Game Over screen shows the reason and the final score.
+  - [x] **US 1.5** Pause — Pause button, blurred play field, Resume / Exit to Menu dialog, automatic pause when the tab is hidden.
+  - [x] **US 1.6** Leaderboard — Top-10 in `localStorage`, name entry with validation, sorting with ties kept in order, `DD.MM.YYYY HH:MM` dates, Clear Leaderboard with an in-app confirmation; broken saved data never crashes the game.
+- [ ] **Level 2 — Extended**: difficulty selection, auto-save & Continue Game.
+- [ ] **Level 3 — Full Game**: drag & drop, tooltips, chemical reactions, Pour Out, visual feedback, keyboard shortcuts.
 
 ---
 
-## 🎮 How the Player Interacts with the Game
+## 🎮 How to Play
 
-- **Start Screen &amp; Navigation**:
-  - Launch from the start screen with **Start Game** or open **Help** to review rules [6, 7].
-  - Open **Settings / Menu** to choose difficulty, start a new run, continue a saved game, or inspect the **Leaderboard** [7].
-- **Managing Ingredients &amp; Stock**:
-  - Add ingredients from the shelf to the cauldron (via click or drag &amp; drop in Level 3) [3, 5].
-  - Each ingredient has limited stock (randomly assigned whole number from \\(2\\) to \\(15\\) at game start) [12].
-  - Cards display names and icons; parameter stats are visible directly (Levels 1–2) or in hover tooltips (Level 3) [7, 8].
-- **Brewing &amp; Clearing**:
-  - Track combined values on the **Temperature**, **Density**, and **Magic Power** parameter bars [3].
-  - Click **Brew** to verify if parameter totals fit target recipe ranges within the active difficulty tolerance [3, 8, 13].
-  - Click **Pour Out** (Level 3) to discard cauldron contents without submitting a brew check [3, 5].
-- **Controls**:
-  - Pointer click or drag &amp; drop [5, 11].
-  - Keyboard shortcuts for streamlined gameplay [2, 5].
+1. **Start screen** — the shelf and cauldron are empty, score and time are `0`. Press **Start Game** in the centre.
+2. **Menu** (cog button) — start a **New Game** or open the **Leaderboard**. The menu is available on the start screen and after a game ends.
+3. **Read the recipe** — the parchment on the right shows the recipe name, the three target ranges and the ingredient counter.
+4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. The cauldron takes up to 4 ingredients; when it is full, the shelf is blocked.
+5. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
+6. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
+7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run.
+8. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard**, **Play Again** or exit to the menu.
 
 ---
 
 ## 🚀 How to Run the Game
 
-### Technical Requirements
+### Requirements
 
-- **Stack**: Pure **TypeScript** only (no external frameworks or game engines permitted), HTML5, CSS/SVG/Canvas [5].
-- **Browser**: Latest Google Chrome [5].
-- **Viewport**: Fully responsive for screens from 375 px to 1920 px wide [5].
+- Node.js (version from `.nvmrc`) and npm.
+- Latest Google Chrome.
+- Works on screens from 375 px to 1920 px wide.
 
-### Setup and Running Instructions
+### Setup
 
-1. **Clone &amp; Navigate**:
-   Clone your project repository and open the project root directory.
+```bash
+git clone <repository-url>
+cd alchemists-cauldron
+npm install
+```
 
-2. **Install Dependencies**:
-   Execute package installation:
-   `npm install`
+### Scripts
 
-3. **Start Local Server**:
-   Launch the development server:
-   `npm run dev` or `npm start`
-   Open the provided localhost address in Google Chrome.
+| Command                | Description                                                       |
+| ---------------------- | ----------------------------------------------------------------- |
+| `npm run dev`          | Start the development server (open the URL shown in the terminal) |
+| `npm run build`        | Type-check and build the production bundle into `dist/`           |
+| `npm run preview`      | Serve the production build locally                                |
+| `npm run lint`         | Run ESLint                                                        |
+| `npm run lint:fix`     | Run ESLint and fix what it can                                    |
+| `npm run format`       | Format the code with Prettier                                     |
+| `npm run format:check` | Check formatting without changing files                           |
 
-4. **Build Production Assets**:
-   Compile the production bundle:
-   `npm run build`
+---
+
+## 🗂️ Project Structure
+
+```text
+src/
+  assets/     SVG icons (one separate asset per game element)
+  data/       ingredients, recipes, difficulty settings, bar scales
+  logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard
+  state/      game state store and the countdown timer
+  storage/    localStorage access (leaderboard)
+  types/      TypeScript interfaces and types
+  ui/         DOM rendering: layout, HUD, shelf, cauldron, bars, recipe panel, dialogs
+  utils/      formatting and scale helpers
+  styles/     main styles and CSS animations
+```
+
+Game rules live in `logic/` and never touch the DOM; `ui/` only renders the state.
