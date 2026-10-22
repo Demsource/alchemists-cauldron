@@ -1,3 +1,4 @@
+import { BAR_SCALES } from '../data/bar-scales';
 import { getShelfIngredients } from '../data/difficulty';
 import { isCauldronFull } from '../logic/cauldron';
 import { getStock } from '../logic/stock';
@@ -9,13 +10,6 @@ import { renderHud } from './hud';
 import type { ILayoutRefs } from './layout';
 import { renderRecipePanel } from './recipe-panel';
 import { renderShelf, type IShelfItemView } from './shelf';
-
-// Visible range of every parameter bar.
-const BAR_SCALES = {
-  temperature: { min: -100, max: 100 },
-  density: { min: -50, max: 100 },
-  magic: { min: -50, max: 150 }
-} as const;
 
 function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelfItemView[] {
   if (state.status === 'menu') {
@@ -56,7 +50,7 @@ function getBars(state: IGameState): IBarView[] {
       key: 'magic',
       label: 'Magic Power',
       value: 0,
-      ...BAR_SCALES.magic,
+      ...BAR_SCALES.magicPower,
       target: recipe?.magicPower ?? null,
       isInTarget: false
     }
