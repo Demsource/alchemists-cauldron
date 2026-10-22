@@ -1,12 +1,11 @@
+import type { GameOverReason } from '../types/game';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
-
-export type GameOverReason = 'time' | 'lives' | 'ingredients';
 
 export interface IGameOverView {
   score: number;
   reason: GameOverReason;
-  isTopResult: boolean;
+  isTopResult?: boolean; // undefined: leaderboard not checked, no name prompt or hint
 }
 
 const REASON_TEXT: Record<GameOverReason, string> = {
@@ -85,14 +84,18 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
     submit.type = 'submit';
     submit.setAttribute('form', 'player-name-form');
     actions.push(submit);
-  } else {
+  } else if (view.isTopResult === false) {
     content.push(
       createElement('p', 'dialog__text', 'Not enough for the Top-10 this time. Brew again!')
     );
   }
 
   actions.push(
-    createDialogButton('Play Again', 'play-again', view.isTopResult ? 'default' : 'primary'),
+    createDialogButton(
+      'Play Again',
+      'play-again',
+      view.isTopResult === true ? 'default' : 'primary'
+    ),
     createDialogButton('Exit to Menu', 'exit-to-menu')
   );
 

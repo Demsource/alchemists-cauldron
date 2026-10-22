@@ -2,6 +2,7 @@ import { BAR_SCALES } from '../data/bar-scales';
 import { getShelfIngredients } from '../data/difficulty';
 import { calculateCauldron, isInRange } from '../logic/calculate-cauldron';
 import { isCauldronFull } from '../logic/cauldron';
+import { canBrew } from '../logic/score';
 import { getStock } from '../logic/stock';
 import type { IDifficultySettings, IGameState } from '../types/game';
 import type { IParameters } from '../types/ingredient';
@@ -74,7 +75,7 @@ export function renderGame(
 
   renderShelf(layout.shelf, {
     items: getShelfItems(state, settings),
-    isBlocked: isFull,
+    isBlocked: isFull || state.status !== 'playing',
     showValues: true
   });
 
@@ -93,7 +94,7 @@ export function renderGame(
 
   renderActions(layout.actions, {
     isPlaying,
-    canBrew: state.cauldronIngredients.length > 0,
+    canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false
   });
