@@ -1,6 +1,8 @@
+import { DEFAULT_DIFFICULTY } from './data/difficulty';
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
+import { addEntry, isTopResult, validatePlayerName } from './logic/leaderboard';
 import { pauseGame, resumeGame } from './logic/pause';
 import { brew } from './logic/score';
 import {
@@ -12,12 +14,15 @@ import {
   subscribe
 } from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
+import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
-import { closeAllDialogs } from './ui/dialogs';
+import { closeAllDialogs, closeDialog, openConfirmDialog } from './ui/dialogs';
 import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
+import { openLeaderboardDialog } from './ui/leaderboard';
+import { openMenuDialog } from './ui/menu';
 import { renderGame } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
@@ -31,6 +36,7 @@ if (mount) {
 
   const startGame = (): void => {
     closeAllDialogs(layout.dialogRoot);
+    isScoreSaved = false;
     const newGame = startNewGame(getState().difficulty);
     setState(newGame);
     startTimer(newGame.timeLeft);
@@ -69,13 +75,79 @@ if (mount) {
     startTimer(resumed.timeLeft);
   };
 
+  // Set once the finished run is written to the leaderboard, so the name is asked only once.
+  let isScoreSaved = false;
+
   const showGameOver = (state: IGameState): void => {
     if (state.gameOverReason) {
       openGameOverDialog(layout.dialogRoot, {
         score: state.score,
-        reason: state.gameOverReason
+        reason: state.gameOverReason,
+        isTopResult: isScoreSaved ? undefined : isTopResult(loadLeaderboard(), state.score)
       });
     }
+  };
+
+  const submitScore = (form: HTMLFormElement): void => {
+    const input = form.querySelector<HTMLInputElement>('input[name="playerName"]');
+    const error = form.querySelector<HTMLElement>('.name-form__error');
+    const state = getState();
+
+    if (!input || state.status !== 'game-over' || isScoreSaved) {
+      return;
+    }
+
+    const validation = validatePlayerName(input.value);
+
+    if (!validation.isValid) {
+      input.setAttribute('aria-invalid', 'true');
+      if (error) {
+        error.textContent = validation.error;
+      }
+      input.focus();
+      return;
+    }
+
+    const entries = addEntry(loadLeaderboard(), {
+      name: validation.name,
+      score: state.score,
+      timestamp: Date.now()
+    });
+    saveLeaderboard(entries);
+    isScoreSaved = true;
+
+    showLeaderboard();
+  };
+
+  const showMenu = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    openMenuDialog(layout.dialogRoot, {
+      difficulty: getState().difficulty ?? DEFAULT_DIFFICULTY,
+      isDifficultyEnabled: false, // Level 2
+      canContinue: false // Level 2
+    });
+  };
+
+  // Closing the leaderboard (Back or Escape) returns to where it was opened from:
+  // the Game Over screen after a run, otherwise the menu.
+  const returnFromLeaderboard = (): void => {
+    if (layout.dialogRoot.querySelector('dialog')) {
+      return;
+    }
+
+    const state = getState();
+
+    if (state.status === 'game-over') {
+      showGameOver(state);
+    } else if (state.status === 'menu') {
+      showMenu();
+    }
+  };
+
+  const showLeaderboard = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    const leaderboard = openLeaderboardDialog(layout.dialogRoot, loadLeaderboard());
+    leaderboard.element.addEventListener('close', returnFromLeaderboard);
   };
 
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
@@ -126,6 +198,9 @@ if (mount) {
       case 'pause':
         pause();
         break;
+      case 'menu':
+        showMenu();
+        break;
       default:
         break;
     }
@@ -141,11 +216,59 @@ if (mount) {
       case 'resume':
         resume();
         break;
+      case 'new-game':
+        startGame();
+        break;
+      case 'open-leaderboard':
+        showLeaderboard();
+        break;
+      case 'clear-leaderboard':
+        openConfirmDialog(layout.dialogRoot, {
+          id: 'clear-leaderboard-dialog',
+          title: 'Clear all results?',
+          message: 'Every name and score on the leaderboard will be erased. This cannot be undone.',
+          confirmLabel: 'Clear',
+          confirmAction: 'confirm-clear-leaderboard'
+        });
+        break;
+      case 'confirm-clear-leaderboard':
+        clearLeaderboard();
+        showLeaderboard();
+        break;
+      case 'close-dialog': {
+        const dialog = button?.closest('dialog');
+        if (dialog) {
+          closeDialog(dialog);
+        }
+        break;
+      }
       case 'exit-to-menu':
         exitToMenu();
         break;
       default:
         break;
+    }
+  });
+
+  layout.dialogRoot.addEventListener('submit', (event) => {
+    const form = event.target;
+
+    if (form instanceof HTMLFormElement && form.id === 'player-name-form') {
+      event.preventDefault();
+      submitScore(form);
+    }
+  });
+
+  // Typing clears the previous name error.
+  layout.dialogRoot.addEventListener('input', (event) => {
+    const input = event.target;
+
+    if (input instanceof HTMLInputElement && input.name === 'playerName') {
+      input.removeAttribute('aria-invalid');
+      const error = input.form?.querySelector('.name-form__error');
+      if (error) {
+        error.textContent = '';
+      }
     }
   });
 
