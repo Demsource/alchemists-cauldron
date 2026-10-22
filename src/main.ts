@@ -162,6 +162,13 @@ if (mount) {
     }
   });
 
+  // Leaving the tab pauses a running game; the player resumes it from the dialog.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && getState().status === 'playing') {
+      pause();
+    }
+  });
+
   subscribe(render);
   render();
 }
