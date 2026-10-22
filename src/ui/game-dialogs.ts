@@ -1,3 +1,4 @@
+import { PLAYER_NAME_MAX, PLAYER_NAME_MIN } from '../logic/leaderboard';
 import type { GameOverReason } from '../types/game';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -13,9 +14,6 @@ const REASON_TEXT: Record<GameOverReason, string> = {
   lives: 'No lives left',
   ingredients: 'Out of ingredients'
 };
-
-export const PLAYER_NAME_MIN = 2;
-export const PLAYER_NAME_MAX = 15;
 
 export function openPauseDialog(root: HTMLElement): IDialogHandle {
   return openDialog(root, {
