@@ -2047,6 +2047,52 @@ button:disabled {
 }
 
 /* ==========================================================================
+   Keyboard shortcut hints
+   ========================================================================== */
+
+.shelf-card__key,
+.actions__key {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5em;
+  height: 1.5em;
+  padding: 0 0.3em;
+  font-family: var(--font-numeric);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: var(--color-surface-sunken);
+  border: var(--border-width) solid var(--color-frame);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.shelf-card__key {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: var(--z-base);
+}
+
+.actions__key {
+  margin-left: var(--space-1);
+  vertical-align: middle;
+}
+
+.shelf-card--empty .shelf-card__key {
+  opacity: 0.5;
+}
+
+/* Key hints only where a keyboard is likely (devices with hover); touch screens skip them. */
+@media (hover: none) {
+  .shelf-card__key,
+  .actions__key {
+    display: none;
+  }
+}
+
+/* ==========================================================================
    Drag & drop
    ========================================================================== */
 

@@ -1,4 +1,5 @@
 import { PLAYER_NAME_MAX, PLAYER_NAME_MIN } from '../logic/leaderboard';
+import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import type { GameOverReason } from '../types/game';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -133,6 +134,15 @@ const HELP_SECTIONS: IHelpSection[] = [
       'Choose Easy, Medium or Hard in the Menu before a game starts.',
       'Harder levels put more ingredients on the shelf, allow a smaller tolerance and give less bonus time, but every brew is worth more points.',
       'Each difficulty has its own Top-10 leaderboard.'
+    ]
+  },
+  {
+    title: 'Keyboard',
+    items: [
+      `1–8: add the ingredient at that shelf position.`,
+      `${SHORTCUT_KEYS.brew}: brew · ${SHORTCUT_KEYS.pourOut}: pour out · ${SHORTCUT_KEYS.pause} or Esc: pause.`,
+      'Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.',
+      'Tab moves between buttons; Enter or Space presses the focused one.'
     ]
   },
   {

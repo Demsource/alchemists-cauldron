@@ -1,4 +1,5 @@
 import { SCENE_ICONS, UI_ICONS } from '../assets/icons';
+import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import { createElement, createIcon } from './dom';
 
 export type ActionName =
@@ -27,9 +28,27 @@ function createActionButton(
   return button;
 }
 
-function renderIconButton(action: ActionName, icon: string, label: string): HTMLButtonElement {
+// Shows the key on the button and names it for assistive tech, e.g. "Brew (B)".
+function addShortcutHint(button: HTMLButtonElement, label: string, key: string): HTMLElement {
+  button.setAttribute('aria-label', `${label} (${key})`);
+  button.setAttribute('aria-keyshortcuts', key);
+  const hint = createElement('kbd', 'actions__key', key);
+  hint.setAttribute('aria-hidden', 'true');
+  return hint;
+}
+
+function renderIconButton(
+  action: ActionName,
+  icon: string,
+  label: string,
+  key?: string
+): HTMLButtonElement {
   const button = createActionButton(action, 'btn btn--icon actions__icon-btn', label);
-  button.append(createIcon(icon), createElement('span', 'actions__icon-label', label));
+  const caption = createElement('span', 'actions__icon-label', label);
+  if (key) {
+    caption.append(' ', addShortcutHint(button, label, key));
+  }
+  button.append(createIcon(icon), caption);
   return button;
 }
 
@@ -40,16 +59,23 @@ function renderPrimary(view: IActionsView): HTMLButtonElement {
   button.disabled = view.isPlaying && !view.canBrew;
   button.append(
     createIcon(SCENE_ICONS.hexagram, 'icon actions__ornament'),
-    createElement('span', 'actions__primary-label', label),
-    createIcon(SCENE_ICONS.hexagram, 'icon actions__ornament')
+    createElement('span', 'actions__primary-label', label)
   );
+  if (view.isPlaying) {
+    button.append(addShortcutHint(button, label, SHORTCUT_KEYS.brew));
+  }
+  button.append(createIcon(SCENE_ICONS.hexagram, 'icon actions__ornament'));
   return button;
 }
 
 function renderPourOut(view: IActionsView): HTMLButtonElement {
   const button = createActionButton('pour-out', 'btn actions__pour-out', 'Pour Out');
   button.disabled = !view.canPourOut;
-  button.append(createIcon(UI_ICONS.pourOut, 'icon actions__btn-icon'), 'Pour Out');
+  button.append(
+    createIcon(UI_ICONS.pourOut, 'icon actions__btn-icon'),
+    'Pour Out',
+    addShortcutHint(button, 'Pour Out', SHORTCUT_KEYS.pourOut)
+  );
   return button;
 }
 
@@ -73,7 +99,7 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
 
   const right = createElement('div', 'actions__side actions__side--right');
   if (view.canPause) {
-    right.append(renderIconButton('pause', UI_ICONS.pause, 'Pause'));
+    right.append(renderIconButton('pause', UI_ICONS.pause, 'Pause', SHORTCUT_KEYS.pause));
   }
   const menu = renderIconButton('menu', UI_ICONS.settings, 'Menu');
   menu.disabled = !view.canOpenMenu;

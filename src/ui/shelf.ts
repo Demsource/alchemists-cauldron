@@ -29,7 +29,7 @@ function renderValue(modifier: string, short: string, label: string, value: numb
   return chip;
 }
 
-function renderCard(item: IShelfItemView, isBlocked: boolean): HTMLLIElement {
+function renderCard(item: IShelfItemView, isBlocked: boolean, index: number): HTMLLIElement {
   const slot = createElement('li', 'shelf__slot');
   const card = createElement('button', 'shelf-card');
   card.type = 'button';
@@ -41,6 +41,9 @@ function renderCard(item: IShelfItemView, isBlocked: boolean): HTMLLIElement {
   // Only a usable card can be dragged: never at stock 0, while blocked or paused.
   card.draggable = !card.disabled;
   card.setAttribute('aria-label', `Add ${item.name}, ${item.stock} left`);
+  // Keyboard shortcut: the shelf position (1–8).
+  const shortcut = String(index + 1);
+  card.setAttribute('aria-keyshortcuts', shortcut);
 
   const iconWrap = createElement('span', 'shelf-card__icon');
   if (!isEmpty) {
@@ -61,7 +64,10 @@ function renderCard(item: IShelfItemView, isBlocked: boolean): HTMLLIElement {
   const badge = createElement('span', 'shelf-card__stock', String(Math.max(0, item.stock)));
   badge.setAttribute('aria-hidden', 'true');
 
-  card.append(iconWrap, body, badge);
+  const key = createElement('kbd', 'shelf-card__key', shortcut);
+  key.setAttribute('aria-hidden', 'true');
+
+  card.append(key, iconWrap, body, badge);
   slot.append(card);
   return slot;
 }
@@ -76,7 +82,7 @@ export function renderShelf(container: HTMLElement, view: IShelfView): void {
     panel.append(createElement('p', 'shelf__empty', 'The shelf fills up when a game starts.'));
   } else {
     const list = createElement('ul', 'shelf__list');
-    list.append(...view.items.map((item) => renderCard(item, view.isBlocked)));
+    list.append(...view.items.map((item, index) => renderCard(item, view.isBlocked, index)));
     panel.append(list);
   }
 
