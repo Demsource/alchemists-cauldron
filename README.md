@@ -46,21 +46,30 @@ The task is split into four stages with a maximum of **393 points**:
   - [x] **US 1.4** Timer & Game Over — `MM:SS` timer with a shrinking bar, calculated from timestamps; red pulsing timer under 15 s; the Game Over screen shows the reason and the final score.
   - [x] **US 1.5** Pause — Pause button, blurred play field, Resume / Exit to Menu dialog, automatic pause when the tab is hidden.
   - [x] **US 1.6** Leaderboard — Top-10 in `localStorage`, name entry with validation, sorting with ties kept in order, `DD.MM.YYYY HH:MM` dates, Clear Leaderboard with an in-app confirmation; broken saved data never crashes the game.
-- [ ] **Level 2 — Extended**: difficulty selection, auto-save & Continue Game.
+- [ ] **Level 2 — Extended**
+  - [x] **US 2.1** Difficulty selection — Help button with the game rules; Easy / Medium / Hard in the Menu, each with a short summary; all values from the difficulty table (shelf size, cauldron limit, start time, tolerance, lives, score per brew, time bonus); recipes picked from the chosen difficulty; difficulty locked during a run and remembered after reload; one Top-10 leaderboard per difficulty with tabs and a Difficulty column.
+  - [ ] **US 2.2** Auto-save & Continue Game.
 - [ ] **Level 3 — Full Game**: drag & drop, tooltips, chemical reactions, Pour Out, visual feedback, keyboard shortcuts.
 
 ---
 
 ## 🎮 How to Play
 
-1. **Start screen** — the shelf and cauldron are empty, score and time are `0`. Press **Start Game** in the centre.
-2. **Menu** (cog button) — start a **New Game** or open the **Leaderboard**. The menu is available on the start screen and after a game ends.
-3. **Read the recipe** — the parchment on the right shows the recipe name, the three target ranges and the ingredient counter.
-4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. The cauldron takes up to 4 ingredients; when it is full, the shelf is blocked.
+1. **Start screen** — the shelf and cauldron are empty, score and time are `0`. Press **Start Game** in the centre, or **Help** (book button) to read the rules.
+2. **Menu** (cog button) — choose the difficulty, start a **New Game** or open the **Leaderboard**. The menu is available on the start screen and after a game ends.
+
+   | Difficulty | Ingredients | Cauldron | Time  | Tolerance | Lives | Score / brew | Time bonus |
+   | ---------- | :---------: | :------: | :---: | :-------: | :---: | :----------: | :--------: |
+   | Easy       |      4      |    4     | 180 s |    ±12    |   5   |     100      |   +15 s    |
+   | Medium     |      6      |    4     | 150 s |    ±8     |   3   |     200      |   +10 s    |
+   | Hard       |      8      |    5     | 150 s |    ±5     |   3   |     300      |    +5 s    |
+
+3. **Read the recipe** — the parchment on the right shows the difficulty, the recipe name, the three target ranges and the ingredient counter.
+4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 5. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
 6. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
 7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run.
-8. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard**, **Play Again** or exit to the menu.
+8. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard** (one Top-10 per difficulty, switched with the tabs), **Play Again** or exit to the menu.
 
 ---
 
