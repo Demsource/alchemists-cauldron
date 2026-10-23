@@ -3,6 +3,7 @@ import { createGameFlow } from './app/game-flow';
 import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
 import { createSaveFlow } from './app/save-flow';
+import { bindTooltip } from './app/tooltip-flow';
 import { getSettings, getState, subscribe } from './state/game-state';
 import { hasSave } from './storage/save';
 import { renderLayout } from './ui/layout';
@@ -21,6 +22,7 @@ if (mount) {
   });
 
   bindEvents(layout, { game, menu, leaderboard });
+  bindTooltip(layout);
 
   // The game-over check must run before saving and rendering, so it subscribes first.
   game.watchGameOver();
