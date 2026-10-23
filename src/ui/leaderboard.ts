@@ -1,3 +1,4 @@
+import type { Difficulty } from '../types/recipe';
 import { formatDate } from '../utils/format';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -6,10 +7,41 @@ export interface ILeaderboardRowView {
   name: string;
   score: number;
   timestamp: number;
+  difficultyLabel: string;
 }
 
-const COLUMNS = ['Rank', 'Name', 'Score', 'Date'];
+export interface ILeaderboardTabView {
+  difficulty: Difficulty;
+  label: string;
+}
+
+export interface ILeaderboardView {
+  difficulty: Difficulty; // list on screen
+  tabs: ILeaderboardTabView[];
+  rows: ILeaderboardRowView[];
+}
+
+const COLUMNS = ['Rank', 'Name', 'Score', 'Difficulty', 'Date'];
 const MEDALS = ['gold', 'silver', 'bronze'];
+
+function renderTabs(view: ILeaderboardView): HTMLElement {
+  const tabs = createElement('div', 'leaderboard__tabs');
+  tabs.setAttribute('role', 'group');
+  tabs.setAttribute('aria-label', 'Difficulty');
+
+  tabs.append(
+    ...view.tabs.map((tab) => {
+      const button = createElement('button', 'btn leaderboard__tab', tab.label);
+      button.type = 'button';
+      button.dataset.action = 'leaderboard-tab';
+      button.dataset.difficulty = tab.difficulty;
+      button.setAttribute('aria-pressed', String(tab.difficulty === view.difficulty));
+      return button;
+    })
+  );
+
+  return tabs;
+}
 
 function renderRank(index: number): HTMLTableCellElement {
   const cell = createElement('td', 'leaderboard__rank');
@@ -38,6 +70,7 @@ function renderRow(row: ILeaderboardRowView, index: number): HTMLTableRowElement
     renderRank(index),
     createElement('td', 'leaderboard__name', row.name),
     createElement('td', 'leaderboard__score', String(row.score)),
+    createElement('td', 'leaderboard__difficulty', row.difficultyLabel),
     dateCell
   );
   return tr;
@@ -71,12 +104,9 @@ function renderTable(rows: ILeaderboardRowView[]): HTMLElement {
   return wrapper;
 }
 
-export function openLeaderboardDialog(
-  root: HTMLElement,
-  rows: ILeaderboardRowView[]
-): IDialogHandle {
+export function openLeaderboardDialog(root: HTMLElement, view: ILeaderboardView): IDialogHandle {
   const clear = createDialogButton('Clear Leaderboard', 'clear-leaderboard', 'danger');
-  clear.disabled = rows.length === 0;
+  clear.disabled = view.rows.length === 0;
 
   return openDialog(root, {
     id: 'leaderboard-dialog',
@@ -84,7 +114,7 @@ export function openLeaderboardDialog(
     variant: 'parchment',
     dismissible: true,
     wide: true,
-    content: [renderTable(rows)],
+    content: [renderTabs(view), renderTable(view.rows)],
     actions: [clear, createDialogButton('Back', 'close-dialog', 'primary')]
   });
 }

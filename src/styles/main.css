@@ -1680,6 +1680,37 @@ button:disabled {
    Leaderboard
    ========================================================================== */
 
+.leaderboard__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.leaderboard__tab {
+  min-height: 40px;
+  padding-inline: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 25%);
+  border-color: var(--color-parchment-edge);
+  box-shadow: none;
+}
+
+.leaderboard__tab:hover:not(:disabled) {
+  color: var(--color-ink);
+  border-color: var(--color-ink-muted);
+}
+
+.leaderboard__tab[aria-pressed='true'] {
+  color: var(--color-parchment);
+  background: #3b2a17;
+  border-color: #3b2a17;
+}
+
+.leaderboard__difficulty {
+  white-space: nowrap;
+}
+
 .leaderboard__scroll {
   max-width: 100%;
   overflow-x: auto;
