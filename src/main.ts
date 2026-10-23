@@ -2,6 +2,7 @@ import { bindEvents } from './app/events';
 import { createGameFlow } from './app/game-flow';
 import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
+import { createSaveFlow } from './app/save-flow';
 import { getSettings, getState, subscribe } from './state/game-state';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
@@ -20,8 +21,9 @@ if (mount) {
 
   bindEvents(layout, { game, menu, leaderboard });
 
-  // The game-over check must run before rendering, so it subscribes first.
+  // The game-over check must run before saving and rendering, so it subscribes first.
   game.watchGameOver();
+  createSaveFlow().watchChanges();
   menu.restoreDifficulty();
 
   const render = (): void => {

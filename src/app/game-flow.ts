@@ -11,6 +11,7 @@ import {
   subscribe
 } from '../state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from '../state/game-timer';
+import { clearSave } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
 import { showBrewMessage } from '../ui/brew-message';
@@ -45,9 +46,11 @@ export function createGameFlow(
     startTimer(newGame.timeLeft);
   };
 
+  // Leaving the run on purpose drops its save.
   const exitToMenu = (): void => {
     closeAllDialogs(layout.dialogRoot);
     stopTimer();
+    clearSave();
     setState({ ...createInitialState(), difficulty: getState().difficulty });
   };
 
