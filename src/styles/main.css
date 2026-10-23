@@ -1340,6 +1340,26 @@ button:disabled {
   opacity: 0.8;
 }
 
+/* Wider screens keep the centre buttons (Brew + Pour Out, Continue + Start) on one row,
+   so the footer never grows a second line. Phones keep the stacked footer below. */
+@media (width > 640px) {
+  .actions__center {
+    flex-wrap: nowrap;
+  }
+
+  .actions__center > .btn {
+    flex-shrink: 0;
+  }
+}
+
+/* Tablets: a narrower main button leaves room for Pour Out on the same row. */
+@media (640px < width <= 1100px) {
+  .actions__primary {
+    min-width: 220px;
+    padding-inline: var(--space-5);
+  }
+}
+
 .actions__continue {
   color: var(--color-accent-strong);
   border-color: var(--color-accent-dark);
