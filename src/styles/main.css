@@ -1801,6 +1801,51 @@ button:disabled {
 }
 
 /* ==========================================================================
+   Drag & drop
+   ========================================================================== */
+
+.shelf-card[draggable='true'] {
+  cursor: grab;
+}
+
+.shelf-card[draggable='true']:active {
+  cursor: grabbing;
+}
+
+.shelf-card--dragging {
+  opacity: 0.45;
+  transform: scale(0.97);
+}
+
+/* Drop zone outline, faded in while a valid drag is over the cauldron area. */
+.board__stage::after {
+  position: absolute;
+  inset: var(--space-2);
+  z-index: var(--z-base);
+  pointer-events: none;
+  content: '';
+  border: var(--frame-width) dashed var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    inset 0 0 40px rgb(143 220 74 / 25%),
+    var(--glow-accent);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.board__stage--drop-target::after {
+  opacity: 1;
+}
+
+.board__stage .cauldron__art {
+  transition: filter var(--duration-base) var(--ease-out);
+}
+
+.board__stage--drop-target .cauldron__art {
+  filter: drop-shadow(0 0 32px rgb(143 220 74 / 65%));
+}
+
+/* ==========================================================================
    Brew result message
    ========================================================================== */
 
