@@ -25,13 +25,11 @@ function renderScore(score: number): HTMLDivElement {
   return block;
 }
 
-function renderTimer({ isActive, timeLeft, timeTotal }: IHudView): HTMLDivElement {
+function renderTimer(): HTMLDivElement {
   const block = createElement('div', 'hud__block hud__block--timer');
-  const isLow = isActive && timeLeft < LOW_TIME_THRESHOLD;
-  block.classList.toggle('hud__block--low', isLow);
 
   const row = createElement('div', 'hud__timer-row');
-  const time = createElement('time', 'hud__value hud__time', formatTime(timeLeft));
+  const time = createElement('time', 'hud__value hud__time');
   time.setAttribute('role', 'timer');
   row.append(
     createIcon(UI_ICONS.clock, 'icon hud__icon'),
@@ -40,13 +38,25 @@ function renderTimer({ isActive, timeLeft, timeTotal }: IHudView): HTMLDivElemen
   );
 
   const track = createElement('div', 'hud__time-track');
-  const fill = createElement('div', 'hud__time-fill');
-  const ratio = timeTotal > 0 ? Math.min(1, Math.max(0, timeLeft / timeTotal)) : 0;
-  fill.style.setProperty('--time-ratio', String(ratio));
-  track.append(fill);
+  track.append(createElement('div', 'hud__time-fill'));
 
   block.append(row, track);
   return block;
+}
+
+// The time changes every second, so it is patched in place: the time bar transition
+// and the low-time pulse keep running instead of restarting.
+function updateTimer(frame: HTMLElement, { isActive, timeLeft, timeTotal }: IHudView): void {
+  const block = frame.querySelector<HTMLElement>('.hud__block--timer');
+  const time = frame.querySelector<HTMLElement>('.hud__time');
+  const fill = frame.querySelector<HTMLElement>('.hud__time-fill');
+  const ratio = timeTotal > 0 ? Math.min(1, Math.max(0, timeLeft / timeTotal)) : 0;
+
+  block?.classList.toggle('hud__block--low', isActive && timeLeft < LOW_TIME_THRESHOLD);
+  if (time) {
+    time.textContent = formatTime(timeLeft);
+  }
+  fill?.style.setProperty('--time-ratio', String(ratio));
 }
 
 function renderLives({ isActive, lives, maxLives }: IHudView): HTMLDivElement {
@@ -74,7 +84,16 @@ function renderLives({ isActive, lives, maxLives }: IHudView): HTMLDivElement {
 }
 
 export function renderHud(container: HTMLElement, view: IHudView): void {
-  const frame = createElement('div', 'hud__frame panel');
-  frame.append(renderScore(view.score), renderTimer(view), renderLives(view));
-  container.replaceChildren(frame);
+  const staticKey = `${view.isActive}|${view.score}|${view.lives}|${view.maxLives}`;
+  let frame = container.querySelector<HTMLElement>(':scope > .hud__frame');
+
+  // Score and lives change rarely: rebuild only then.
+  if (!frame || frame.dataset.key !== staticKey) {
+    frame = createElement('div', 'hud__frame panel');
+    frame.dataset.key = staticKey;
+    frame.append(renderScore(view.score), renderTimer(), renderLives(view));
+    container.replaceChildren(frame);
+  }
+
+  updateTimer(frame, view);
 }
