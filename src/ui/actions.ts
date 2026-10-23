@@ -60,15 +60,16 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
   left.append(help);
 
   const center = createElement('div', 'actions__center');
-  if (view.isPlaying && view.showPourOut) {
-    center.append(renderPourOut(view));
-  }
   if (!view.isPlaying && view.canContinue) {
     const resume = createActionButton('continue-game', 'btn actions__continue', 'Continue Game');
     resume.append(createIcon(UI_ICONS.play, 'icon actions__btn-icon'), 'Continue Game');
     center.append(resume);
   }
   center.append(renderPrimary(view));
+  // Pour Out sits to the right of Brew.
+  if (view.isPlaying && view.showPourOut) {
+    center.append(renderPourOut(view));
+  }
 
   const right = createElement('div', 'actions__side actions__side--right');
   if (view.canPause) {

@@ -11,6 +11,8 @@ export interface IDialogOptions {
   variant?: DialogVariant;
   dismissible?: boolean;
   wide?: boolean;
+  // What Escape does for a dialog that is not simply closable (e.g. leave the paused game).
+  onDismiss?: () => void;
 }
 
 export interface IDialogHandle {
@@ -81,8 +83,18 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
 
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
-    if (options.dismissible) {
+    if (options.onDismiss) {
+      options.onDismiss();
+    } else if (options.dismissible) {
       close();
+    }
+  });
+
+  // The browser may still close a modal itself (Chrome ignores a repeated preventDefault
+  // on Escape). Whatever closed it, remove it and the page blur, so no overlay is left behind.
+  dialog.addEventListener('close', () => {
+    if (dialog.isConnected) {
+      closeDialog(dialog);
     }
   });
 

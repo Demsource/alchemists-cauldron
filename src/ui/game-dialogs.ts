@@ -15,10 +15,12 @@ const REASON_TEXT: Record<GameOverReason, string> = {
   ingredients: 'Out of ingredients'
 };
 
-export function openPauseDialog(root: HTMLElement): IDialogHandle {
+// onDismiss: what Escape does (the dialog itself never just closes over a paused game).
+export function openPauseDialog(root: HTMLElement, onDismiss?: () => void): IDialogHandle {
   return openDialog(root, {
     id: 'pause-dialog',
     title: 'Game Paused',
+    onDismiss,
     content: [createElement('p', 'dialog__text', 'The cauldron simmers quietly. Take a breath.')],
     actions: [
       createDialogButton('Resume', 'resume', 'primary'),
