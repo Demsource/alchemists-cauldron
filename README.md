@@ -49,7 +49,13 @@ The task is split into four stages with a maximum of **393 points**:
 - [x] **Level 2 — Extended**
   - [x] **US 2.1** Difficulty selection — Help button with the game rules; Easy / Medium / Hard in the Menu, each with a short summary; all values from the difficulty table (shelf size, cauldron limit, start time, tolerance, lives, score per brew, time bonus); recipes picked from the chosen difficulty; difficulty locked during a run and remembered after reload; one Top-10 leaderboard per difficulty with tabs and a Difficulty column.
   - [x] **US 2.2** Auto-save & Continue Game — the running game (difficulty, score, time left, lives, recipe, cauldron, shelf stock, status) is saved to `localStorage` after every change, on pause and when the page closes; **Continue Game** appears on the start screen and in the Menu only for a valid unfinished save and opens it paused with the saved stock; a new game overwrites the save, while Game Over and Exit to Menu remove it; broken or edited saves are validated, deleted and never crash the game.
-- [ ] **Level 3 — Full Game**: drag & drop, tooltips, chemical reactions, Pour Out, visual feedback, keyboard shortcuts.
+- [ ] **Level 3 — Full Game**
+  - [x] **US 3.1** Drag & drop — drag a shelf card into the cauldron area (HTML5 `dragstart`, `dragover`, `dragleave`, `drop`); the cauldron glows as a drop zone only for a valid drag; drops are ignored while paused, with a full cauldron or at stock 0; a drop adds the ingredient and spends one portion exactly like a click, which still works.
+  - [ ] **US 3.2** Ingredient tooltip.
+  - [ ] **US 3.3** Chemical reactions.
+  - [ ] **US 3.4** Pour Out.
+  - [ ] **US 3.5** Visual feedback.
+  - [ ] **US 3.6** Keyboard shortcuts.
 
 ---
 
@@ -65,7 +71,7 @@ The task is split into four stages with a maximum of **393 points**:
    | Hard       |      8      |    5     | 150 s |    ±5     |   3   |     300      |    +5 s    |
 
 3. **Read the recipe** — the parchment on the right shows the difficulty, the recipe name, the three target ranges and the ingredient counter.
-4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
+4. **Add ingredients** — click a card on the shelf, or drag it with the mouse and drop it on the cauldron (it glows when the drop is allowed). Each one puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 5. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
 6. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
 7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
