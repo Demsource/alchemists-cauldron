@@ -164,6 +164,87 @@
   }
 }
 
+/* --- Success brew -------------------------------------------------------- */
+
+.effect-success-flash {
+  animation: success-flash 0.9s var(--ease-out);
+}
+
+.effect-sparkles {
+  animation: effect-life 0.9s linear forwards;
+}
+
+.effect-sparkles__item {
+  animation: sparkle-burst 0.9s var(--ease-out) forwards;
+}
+
+.effect-float {
+  animation: float-up 1.4s var(--ease-out) forwards;
+}
+
+@keyframes success-flash {
+  0%,
+  100% {
+    filter: none;
+  }
+
+  30% {
+    filter: drop-shadow(0 0 28px rgb(182 242 107 / 90%))
+      drop-shadow(0 0 60px rgb(246 226 122 / 55%)) brightness(1.25);
+  }
+}
+
+/* Keeps the wrapper alive exactly as long as its children animate. */
+@keyframes effect-life {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sparkle-burst {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(0) scale(0.4);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(-110px) scale(1.1);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -2.2em);
+  }
+}
+
+/* Reduced motion: a short colour flash only. Sparkles and rising text keep the global
+   near-zero duration, so they end at once (still firing animationend for cleanup). */
+@media (prefers-reduced-motion: reduce) {
+  .effect-success-flash {
+    animation-duration: 0.6s !important;
+  }
+}
+
 /* --- Ingredient tooltip -------------------------------------------------- */
 
 .tooltip--visible {

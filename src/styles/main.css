@@ -1953,6 +1953,59 @@ button:disabled {
 }
 
 /* ==========================================================================
+   Brew effects (animations live in animations.css)
+   ========================================================================== */
+
+.effect {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hud__block--score,
+.hud__block--timer {
+  position: relative;
+}
+
+.effect-sparkles {
+  inset: 0;
+  z-index: var(--z-base);
+}
+
+.effect-sparkles__ring {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+}
+
+.effect-sparkles__item {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  color: #f6e27a;
+  filter: drop-shadow(0 0 6px rgb(246 226 122 / 80%));
+}
+
+.effect-float {
+  top: -0.2em;
+  left: 50%;
+  z-index: var(--z-overlay);
+  font-family: var(--font-numeric);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.effect-float--score {
+  color: #f6e27a;
+}
+
+.effect-float--time {
+  color: var(--color-accent-strong);
+}
+
+/* ==========================================================================
    Drag & drop
    ========================================================================== */
 
