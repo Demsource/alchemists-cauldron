@@ -11,6 +11,8 @@ export interface IDialogOptions {
   variant?: DialogVariant;
   dismissible?: boolean;
   wide?: boolean;
+  // What Escape does for a dialog that is not simply closable (e.g. leave the paused game).
+  onDismiss?: () => void;
 }
 
 export interface IDialogHandle {
@@ -62,18 +64,18 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
   const body = createElement('div', 'dialog__body');
   body.append(...options.content);
 
-  dialog.append(
-    ...renderFrame(variant),
-    title,
-    createIcon(SCENE_ICONS.divider, 'icon dialog__divider'),
-    body
-  );
+  // Only this inner part scrolls. The frame (corners, emblem) stays on the dialog itself,
+  // so tall dialogs keep their corners at the real edges instead of scrolling with the content.
+  const scroll = createElement('div', 'dialog__scroll');
+  scroll.append(title, createIcon(SCENE_ICONS.divider, 'icon dialog__divider'), body);
 
   if (options.actions && options.actions.length > 0) {
     const footer = createElement('div', 'dialog__actions');
     footer.append(...options.actions);
-    dialog.append(footer);
+    scroll.append(footer);
   }
+
+  dialog.append(...renderFrame(variant), scroll);
 
   const app = root.closest('.app');
 
@@ -81,8 +83,18 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
 
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
-    if (options.dismissible) {
+    if (options.onDismiss) {
+      options.onDismiss();
+    } else if (options.dismissible) {
       close();
+    }
+  });
+
+  // The browser may still close a modal itself (Chrome ignores a repeated preventDefault
+  // on Escape). Whatever closed it, remove it and the page blur, so no overlay is left behind.
+  dialog.addEventListener('close', () => {
+    if (dialog.isConnected) {
+      closeDialog(dialog);
     }
   });
 

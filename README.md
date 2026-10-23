@@ -49,7 +49,13 @@ The task is split into four stages with a maximum of **393 points**:
 - [x] **Level 2 — Extended**
   - [x] **US 2.1** Difficulty selection — Help button with the game rules; Easy / Medium / Hard in the Menu, each with a short summary; all values from the difficulty table (shelf size, cauldron limit, start time, tolerance, lives, score per brew, time bonus); recipes picked from the chosen difficulty; difficulty locked during a run and remembered after reload; one Top-10 leaderboard per difficulty with tabs and a Difficulty column.
   - [x] **US 2.2** Auto-save & Continue Game — the running game (difficulty, score, time left, lives, recipe, cauldron, shelf stock, status) is saved to `localStorage` after every change, on pause and when the page closes; **Continue Game** appears on the start screen and in the Menu only for a valid unfinished save and opens it paused with the saved stock; a new game overwrites the save, while Game Over and Exit to Menu remove it; broken or edited saves are validated, deleted and never crash the game.
-- [ ] **Level 3 — Full Game**: drag & drop, tooltips, chemical reactions, Pour Out, visual feedback, keyboard shortcuts.
+- [x] **Level 3 — Full Game**
+  - [x] **US 3.1** Drag & drop — drag a shelf card into the cauldron area (HTML5 `dragstart`, `dragover`, `dragleave`, `drop`); the cauldron glows as a drop zone only for a valid drag; drops are ignored while paused, with a full cauldron or at stock 0; a drop adds the ingredient and spends one portion exactly like a click, which still works.
+  - [x] **US 3.2** Ingredient tooltip — with a mouse, shelf cards show only the icon, name and stock; hovering or focusing a card opens a tooltip with Temperature, Density and Magic Power (`+` / `−`) and a short description; it opens to the left near the right edge and upward near the bottom edge, stays above the rest of the game and is hidden while paused or dragging. On touch screens without hover the numbers stay on the cards.
+  - [x] **US 3.3** Chemical reactions — all 15 reactions kept as a typed `IReaction[]`; Easy has none, Medium enables Bubbling and Solar Frost, Hard enables Volatile Mix, Rooted Steam and Pressure Spike; cauldron values are always recalculated from the ingredient list and the active reactions are applied to them (bars and brew check use the same values); a reaction fires only when it turns from inactive to active, applying its one-time effects (lost seconds, lost life, cleared cauldron) and showing a message; active reactions are listed on the recipe panel and in Help.
+  - [x] **US 3.4** Pour Out — a **Pour Out** button next to **Brew** clears the whole cauldron for 10 seconds without losing a life; it is disabled when the cauldron is empty; the poured ingredients stay spent and every other value is unchanged; a short message confirms it.
+  - [x] **US 3.5** Visual feedback — a correct brew flashes the cauldron and bursts sparkles, with `+score` and `+10s` floating up from the HUD; a failed brew shows an explosion with smoke and a short shake of the HUD and play field; ingredient icons float inside the cauldron and the newest one drops in; the parameter bars move smoothly. All effects are CSS animations cleaned up on `animationend` (no `setTimeout` / `setInterval`), and with reduced motion only short colour flashes remain.
+  - [x] **US 3.6** Keyboard shortcuts — one `keydown` handler gated by the game state: shortcuts run only while playing (never on the start, pause or Game Over screens, never while typing, with modifier keys or on key repeat); `1`–`8` add the ingredient at that shelf position, `B` brews, `O` pours out, `P` / `Esc` pause; on the pause dialog Resume is focused, so Enter resumes; all controls stay real buttons with native Enter / Space; key hints are shown on cards, buttons and in Help.
 
 ---
 
@@ -65,12 +71,30 @@ The task is split into four stages with a maximum of **393 points**:
    | Hard       |      8      |    5     | 150 s |    ±5     |   3   |     300      |    +5 s    |
 
 3. **Read the recipe** — the parchment on the right shows the difficulty, the recipe name, the three target ranges and the ingredient counter.
-4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
-5. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
-6. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
-7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
-8. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
-9. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard** (one Top-10 per difficulty, switched with the tabs), **Play Again** or exit to the menu.
+4. **Check the ingredients** — hover a shelf card (or focus it with the keyboard) to see its Temperature, Density and Magic Power in a tooltip. On touch screens the numbers are shown on the cards.
+5. **Add ingredients** — click a card on the shelf, or drag it with the mouse and drop it on the cauldron (it glows when the drop is allowed). Each one puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
+6. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
+   On Medium and Hard some combinations cause a **reaction** (listed in **Help**): a purple message shows what happened, the recipe panel lists the active reactions, and the bars already include their effect. Some reactions also cost time or a life, or empty the cauldron.
+7. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked. If the mixture is clearly wrong, press **Pour Out** instead: it empties the cauldron for 10 seconds and you keep your lives (the poured ingredients are not returned).
+8. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
+9. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
+10. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard** (one Top-10 per difficulty, switched with the tabs), **Play Again** or exit to the menu.
+
+---
+
+### ⌨️ Keyboard
+
+Shortcuts work only during a running game (not on the start, pause or Game Over screens, and not while typing a name).
+
+| Key                      | Action                                        |
+| ------------------------ | --------------------------------------------- |
+| `1`–`8`                  | Add the ingredient at that shelf position     |
+| `B`                      | Brew                                          |
+| `O`                      | Pour Out                                      |
+| `P` / `Esc`              | Pause                                         |
+| `Enter`                  | On the pause dialog: Resume (it has focus)    |
+| `Esc`                    | On the pause dialog: back to the start screen |
+| `Tab`, `Enter` / `Space` | Move between buttons and press them           |
 
 ---
 

@@ -1,7 +1,14 @@
 import { isIngredientId } from '../data/ingredients';
-import { getState } from '../state/game-state';
+import { getShelfIngredients } from '../data/difficulty';
+import { canAddIngredient } from '../logic/cauldron';
+import { getShortcut } from '../logic/shortcuts';
+import { bindKeyboard } from '../ui/keyboard';
+import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
+import { getReactionsFor } from '../logic/reactions-logic';
+import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
-import { openHelpDialog } from '../ui/game-dialogs';
+import { bindDragAndDrop } from '../ui/drag-drop';
+import { openHelpDialog, type IHelpSection } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import type { IGameFlow } from './game-flow';
 import type { ILeaderboardFlow } from './leaderboard-flow';
@@ -11,6 +18,30 @@ interface IFlows {
   game: IGameFlow;
   menu: IMenuFlow;
   leaderboard: ILeaderboardFlow;
+}
+
+// Help lists the enabled reactions per difficulty, straight from the reaction data.
+function getReactionHelp(): IHelpSection {
+  const items = DIFFICULTIES.map((difficulty) => {
+    const reactions = getReactionsFor(difficulty);
+    const list = reactions.length
+      ? reactions
+          .map(
+            (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
+          )
+          .join('; ')
+      : 'no reactions';
+    return `${DIFFICULTY_LABELS[difficulty]} — ${list}.`;
+  });
+
+  return {
+    title: 'Reactions',
+    items: [
+      'Some combinations react in the cauldron and change the values, so watch more than the plain sums.',
+      'A reaction fires once when its combination appears; its value change lasts while the combination stays.',
+      ...items
+    ]
+  };
 }
 
 const findActionButton = (event: Event): HTMLButtonElement | null =>
@@ -23,6 +54,21 @@ function bindShelf(layout: ILayoutRefs, { game }: IFlows): void {
 
     if (card && !card.disabled && isIngredientId(id)) {
       game.addToCauldron(id);
+    }
+  });
+}
+
+// Drop uses the same rule and the same action as a click on the card.
+function bindDrag(layout: ILayoutRefs, { game }: IFlows): void {
+  bindDragAndDrop(layout.shelf, layout.stage, {
+    canDrop: (id) => {
+      const state = getState();
+      return isIngredientId(id) && canAddIngredient(state, id, getSettings(state));
+    },
+    onDrop: (id) => {
+      if (isIngredientId(id)) {
+        game.addToCauldron(id);
+      }
     }
   });
 }
@@ -45,6 +91,9 @@ function bindFooter(layout: ILayoutRefs, { game, menu }: IFlows): void {
       case 'brew':
         game.brewMixture();
         break;
+      case 'pour-out':
+        game.pourOutMixture();
+        break;
       case 'pause':
         game.pause();
         break;
@@ -52,7 +101,7 @@ function bindFooter(layout: ILayoutRefs, { game, menu }: IFlows): void {
         menu.showMenu();
         break;
       case 'help':
-        openHelpDialog(layout.dialogRoot);
+        openHelpDialog(layout.dialogRoot, [getReactionHelp()]);
         break;
       default:
         break;
@@ -137,8 +186,40 @@ function bindVisibility({ game }: IFlows): void {
   });
 }
 
+// One keyboard handler, gated by the game state inside getShortcut (playing only).
+function bindShortcuts({ game }: IFlows): void {
+  bindKeyboard((input) => {
+    const state = getState();
+    const shortcut = getShortcut(input, state.status);
+
+    switch (shortcut?.type) {
+      case 'add': {
+        const ingredient = getShelfIngredients(getSettings(state))[shortcut.index];
+        if (!ingredient) {
+          return false; // no card at that position on this difficulty
+        }
+        game.addToCauldron(ingredient.id);
+        return true;
+      }
+      case 'brew':
+        game.brewMixture();
+        return true;
+      case 'pour-out':
+        game.pourOutMixture();
+        return true;
+      case 'pause':
+        game.pause();
+        return true;
+      default:
+        return false;
+    }
+  });
+}
+
 export function bindEvents(layout: ILayoutRefs, flows: IFlows): void {
   bindShelf(layout, flows);
+  bindDrag(layout, flows);
+  bindShortcuts(flows);
   bindFooter(layout, flows);
   bindDialogs(layout, flows);
   bindVisibility(flows);

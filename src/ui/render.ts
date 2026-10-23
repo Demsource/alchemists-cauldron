@@ -1,8 +1,9 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
 import { DIFFICULTY_LABELS } from '../logic/difficulty';
-import { calculateCauldron, isInRange } from '../logic/calculate-cauldron';
-import { isCauldronFull } from '../logic/cauldron';
+import { isInRange } from '../logic/calculate-cauldron';
+import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
+import { canPourOut, isCauldronFull } from '../logic/cauldron';
 import { canBrew } from '../logic/score';
 import { getStock } from '../logic/stock';
 import type { IDifficultySettings, IGameState } from '../types/game';
@@ -37,7 +38,10 @@ const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters; label: strin
 ];
 
 function getBars(state: IGameState): IBarView[] {
-  const values = calculateCauldron(state.cauldronIngredients);
+  const values = getCauldronValues(
+    state.cauldronIngredients,
+    state.difficulty ?? DEFAULT_DIFFICULTY
+  );
   const recipe = state.activeRecipe;
 
   return BAR_DEFINITIONS.map(({ key, parameter, label }) => {
@@ -104,7 +108,7 @@ export function renderGame(
   renderIfChanged(layout.shelf, renderShelf, {
     items: getShelfItems(state, settings),
     isBlocked: isFull || state.status !== 'playing',
-    showValues: true
+    showValues: 'touch-only'
   });
 
   renderIfChanged(layout.stage, renderCauldron, {
@@ -116,7 +120,11 @@ export function renderGame(
     recipe: state.activeRecipe,
     added: state.cauldronIngredients.length,
     capacity: settings.maxCauldronIngredients,
-    difficultyLabel: DIFFICULTY_LABELS[state.difficulty ?? DEFAULT_DIFFICULTY]
+    difficultyLabel: DIFFICULTY_LABELS[state.difficulty ?? DEFAULT_DIFFICULTY],
+    activeReactions: getActiveReactions(
+      state.cauldronIngredients,
+      getReactionsFor(state.difficulty ?? DEFAULT_DIFFICULTY)
+    ).map((reaction) => reaction.name)
   });
 
   renderIfChanged(layout.actions, renderActions, {
@@ -128,7 +136,7 @@ export function renderGame(
     canOpenHelp: state.status === 'menu' || state.status === 'game-over',
     canContinue: state.status === 'menu' && options.hasSave,
     canBrew: canBrew(state),
-    showPourOut: false,
-    canPourOut: false
+    showPourOut: true,
+    canPourOut: canPourOut(state)
   });
 }

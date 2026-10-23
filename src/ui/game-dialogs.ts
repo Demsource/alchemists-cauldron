@@ -1,4 +1,5 @@
 import { PLAYER_NAME_MAX, PLAYER_NAME_MIN } from '../logic/leaderboard';
+import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import type { GameOverReason } from '../types/game';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -15,15 +16,19 @@ const REASON_TEXT: Record<GameOverReason, string> = {
   ingredients: 'Out of ingredients'
 };
 
-export function openPauseDialog(root: HTMLElement): IDialogHandle {
+// onDismiss: what Escape does (the dialog itself never just closes over a paused game).
+export function openPauseDialog(root: HTMLElement, onDismiss?: () => void): IDialogHandle {
+  // Focus starts on Resume, so Enter / Space resume with the native button behaviour
+  // (no game shortcut runs while paused).
+  const resume = createDialogButton('Resume', 'resume', 'primary');
+  resume.autofocus = true;
+
   return openDialog(root, {
     id: 'pause-dialog',
     title: 'Game Paused',
+    onDismiss,
     content: [createElement('p', 'dialog__text', 'The cauldron simmers quietly. Take a breath.')],
-    actions: [
-      createDialogButton('Resume', 'resume', 'primary'),
-      createDialogButton('Exit to Menu', 'exit-to-menu')
-    ]
+    actions: [resume, createDialogButton('Exit to Menu', 'exit-to-menu')]
   });
 }
 
@@ -101,7 +106,12 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
   return openDialog(root, { id: 'game-over-dialog', title: 'Game Over', content, actions });
 }
 
-const HELP_SECTIONS: { title: string; items: string[] }[] = [
+export interface IHelpSection {
+  title: string;
+  items: string[];
+}
+
+const HELP_SECTIONS: IHelpSection[] = [
   {
     title: 'Goal',
     items: [
@@ -127,6 +137,15 @@ const HELP_SECTIONS: { title: string; items: string[] }[] = [
     ]
   },
   {
+    title: 'Keyboard',
+    items: [
+      `1–8: add the ingredient at that shelf position.`,
+      `${SHORTCUT_KEYS.brew}: brew · ${SHORTCUT_KEYS.pourOut}: pour out · ${SHORTCUT_KEYS.pause} or Esc: pause.`,
+      'Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.',
+      'Tab moves between buttons; Enter or Space presses the focused one.'
+    ]
+  },
+  {
     title: 'Stock',
     items: [
       'Every ingredient has a limited stock shown in the round badge.',
@@ -144,8 +163,12 @@ const HELP_SECTIONS: { title: string; items: string[] }[] = [
   }
 ];
 
-export function openHelpDialog(root: HTMLElement): IDialogHandle {
-  const content = HELP_SECTIONS.map((section) => {
+// Extra sections (built from game data, e.g. reactions) are added after the fixed rules.
+export function openHelpDialog(
+  root: HTMLElement,
+  extraSections: IHelpSection[] = []
+): IDialogHandle {
+  const content = [...HELP_SECTIONS, ...extraSections].map((section) => {
     const block = createElement('section', 'help__section');
     const list = createElement('ul', 'help__list');
     list.append(...section.items.map((item) => createElement('li', 'help__item', item)));

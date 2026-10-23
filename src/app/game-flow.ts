@@ -1,6 +1,7 @@
-import { addIngredient } from '../logic/cauldron';
+import { addIngredient, POUR_OUT_PENALTY, pourOut } from '../logic/cauldron';
 import { endGame, getGameOverReason } from '../logic/game-over';
 import { pauseGame, resumeGame } from '../logic/pause';
+import { resolveReactions } from '../logic/reactions-logic';
 import { brew } from '../logic/score';
 import {
   createInitialState,
@@ -14,7 +15,10 @@ import { startTimer, stopTimer, syncTimer, withCurrentTime } from '../state/game
 import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
+import { playFailureEffect, playSuccessEffect } from '../ui/brew-effects';
 import { showBrewMessage } from '../ui/brew-message';
+import { showPourOutMessage } from '../ui/pour-out-message';
+import { showReactionMessage } from '../ui/reaction-message';
 import { closeAllDialogs } from '../ui/dialogs';
 import { openPauseDialog } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
@@ -26,6 +30,7 @@ export interface IGameFlow {
   pause: () => void;
   resume: () => void;
   brewMixture: () => void;
+  pourOutMixture: () => void;
   addToCauldron: (id: IngredientId) => void;
   watchGameOver: () => void;
 }
@@ -55,6 +60,14 @@ export function createGameFlow(
     setState({ ...createInitialState(), difficulty: getState().difficulty });
   };
 
+  // Escape on the pause dialog: back to the start screen, but the paused run stays saved,
+  // so Continue Game is offered again (unlike Exit to Menu, which drops the save).
+  const leaveToStartScreen = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    stopTimer();
+    setState({ ...createInitialState(), difficulty: getState().difficulty });
+  };
+
   // Restores the saved run (stock included, never re-rolled) and opens it paused;
   // Resume starts the timer from the saved time.
   const continueGame = (): void => {
@@ -68,7 +81,7 @@ export function createGameFlow(
     stopTimer();
     onNewGame();
     setState(saved);
-    openPauseDialog(layout.dialogRoot);
+    openPauseDialog(layout.dialogRoot, leaveToStartScreen);
   };
 
   const pause = (): void => {
@@ -82,7 +95,7 @@ export function createGameFlow(
 
     stopTimer();
     setState(paused);
-    openPauseDialog(layout.dialogRoot);
+    openPauseDialog(layout.dialogRoot, leaveToStartScreen);
   };
 
   const resume = (): void => {
@@ -107,7 +120,30 @@ export function createGameFlow(
 
     if (outcome.check) {
       showBrewMessage(layout.stage, outcome.check, settings);
+
+      if (outcome.check.isSuccess) {
+        playSuccessEffect(layout, {
+          scoreGain: outcome.state.score - state.score,
+          timeGain: Math.round(outcome.state.timeLeft - state.timeLeft)
+        });
+      } else {
+        playFailureEffect(layout);
+      }
     }
+  };
+
+  // Clears a wrong mixture for 10 seconds instead of a life.
+  const pourOutMixture = (): void => {
+    const state = withCurrentTime(getState());
+    const poured = pourOut(state, POUR_OUT_PENALTY);
+
+    if (poured === state) {
+      return;
+    }
+
+    setState(poured);
+    syncTimer(poured.timeLeft);
+    showPourOutMessage(layout.stage, POUR_OUT_PENALTY);
   };
 
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
@@ -119,8 +155,24 @@ export function createGameFlow(
   };
 
   const addToCauldron = (id: IngredientId): void => {
-    const state = getState();
-    setState(addIngredient(state, id, getSettings(state)));
+    // Exact time, so a reaction's time penalty starts from the real remaining time.
+    const state = withCurrentTime(getState());
+    const added = addIngredient(state, id, getSettings(state));
+
+    if (added === state) {
+      return;
+    }
+
+    // Reactions that just fired apply their one-time effects; value effects come from the list.
+    const outcome = resolveReactions(state, added);
+    setState(outcome.state);
+
+    if (outcome.state.timeLeft !== added.timeLeft) {
+      syncTimer(outcome.state.timeLeft);
+    }
+
+    showReactionMessage(layout.stage, outcome.fired);
+
     refocusCard(id);
   };
 
@@ -146,6 +198,7 @@ export function createGameFlow(
     pause,
     resume,
     brewMixture,
+    pourOutMixture,
     addToCauldron,
     watchGameOver
   };

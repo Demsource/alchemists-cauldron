@@ -164,6 +164,274 @@
   }
 }
 
+/* --- Floating ingredient icons ------------------------------------------- */
+
+/* Each icon bobs and drifts on its own rhythm, so they never move in sync. */
+.cauldron__float-icon {
+  animation: float-bob 3s ease-in-out infinite;
+}
+
+.cauldron__float-icon:nth-child(2) {
+  animation-duration: 3.6s;
+  animation-delay: -1.1s;
+}
+
+.cauldron__float-icon:nth-child(3) {
+  animation-duration: 3.2s;
+  animation-delay: -2.2s;
+}
+
+.cauldron__float-icon:nth-child(4) {
+  animation-duration: 3.9s;
+  animation-delay: -0.6s;
+}
+
+.cauldron__float-icon:nth-child(5) {
+  animation-duration: 3.4s;
+  animation-delay: -1.7s;
+}
+
+/* The ingredient just added drops in with a splash, then starts bobbing.
+   Same specificity as the nth-child rules and written after them, so it wins. */
+.cauldron__float-icon.cauldron__float-icon--new {
+  animation:
+    float-drop 0.6s var(--ease-out),
+    float-bob 3s ease-in-out 0.6s infinite;
+}
+
+@keyframes float-bob {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(-4deg);
+  }
+
+  25% {
+    transform: translate(3px, -6px) rotate(2deg);
+  }
+
+  50% {
+    transform: translate(0, -9px) rotate(5deg);
+  }
+
+  75% {
+    transform: translate(-3px, -4px) rotate(-1deg);
+  }
+}
+
+@keyframes float-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-70px) scale(0.7);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translateY(6px) scale(1.08);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --- Success brew -------------------------------------------------------- */
+
+.effect-success-flash {
+  animation: success-flash 0.9s var(--ease-out);
+}
+
+.effect-sparkles {
+  animation: effect-life 0.9s linear forwards;
+}
+
+.effect-sparkles__item {
+  animation: sparkle-burst 0.9s var(--ease-out) forwards;
+}
+
+.effect-float {
+  animation: float-up 1.4s var(--ease-out) forwards;
+}
+
+@keyframes success-flash {
+  0%,
+  100% {
+    filter: none;
+  }
+
+  30% {
+    filter: drop-shadow(0 0 28px rgb(182 242 107 / 90%))
+      drop-shadow(0 0 60px rgb(246 226 122 / 55%)) brightness(1.25);
+  }
+}
+
+/* Keeps the wrapper alive exactly as long as its children animate. */
+@keyframes effect-life {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sparkle-burst {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(0) scale(0.4);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(-110px) scale(1.1);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -2.2em);
+  }
+}
+
+/* Reduced motion: a short colour flash only. Sparkles and rising text keep the global
+   near-zero duration, so they end at once (still firing animationend for cleanup). */
+@media (prefers-reduced-motion: reduce) {
+  .effect-success-flash {
+    animation-duration: 0.6s !important;
+  }
+}
+
+/* --- Failed brew --------------------------------------------------------- */
+
+.effect-explosion {
+  animation: effect-life 1s linear forwards;
+}
+
+.effect-explosion__blast {
+  animation: explosion-blast 0.7s var(--ease-out) forwards;
+}
+
+.effect-explosion__smoke {
+  animation: explosion-smoke 1s ease-out forwards;
+}
+
+.effect-shake {
+  animation: screen-shake 0.4s ease-in-out;
+}
+
+@keyframes explosion-blast {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes explosion-smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  30% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40%) scale(1.6);
+  }
+}
+
+@keyframes screen-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  15% {
+    transform: translate(-8px, 2px);
+  }
+
+  30% {
+    transform: translate(7px, -3px);
+  }
+
+  45% {
+    transform: translate(-6px, 3px);
+  }
+
+  60% {
+    transform: translate(5px, -2px);
+  }
+
+  80% {
+    transform: translate(-3px, 1px);
+  }
+}
+
+@keyframes explosion-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 0.85;
+  }
+}
+
+/* Reduced motion: no shake (it keeps the global near-zero duration); the blast becomes a
+   short red flash without growing, and the smoke is skipped. */
+@media (prefers-reduced-motion: reduce) {
+  .effect-explosion {
+    animation-duration: 0.6s !important;
+  }
+
+  .effect-explosion__blast {
+    animation-name: explosion-flash !important;
+    animation-duration: 0.6s !important;
+  }
+}
+
+/* --- Ingredient tooltip -------------------------------------------------- */
+
+.tooltip--visible {
+  animation: tooltip-in var(--duration-fast) var(--ease-out);
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* --- Brew result message -------------------------------------------------- */
 
 .brew-message {
