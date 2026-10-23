@@ -1953,6 +1953,100 @@ button:disabled {
 }
 
 /* ==========================================================================
+   Brew effects (animations live in animations.css)
+   ========================================================================== */
+
+.effect {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hud__block--score,
+.hud__block--timer {
+  position: relative;
+}
+
+.effect-sparkles {
+  inset: 0;
+  z-index: var(--z-base);
+}
+
+.effect-sparkles__ring {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+}
+
+.effect-sparkles__item {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  color: #f6e27a;
+  filter: drop-shadow(0 0 6px rgb(246 226 122 / 80%));
+}
+
+.effect-explosion {
+  inset: -10%;
+  z-index: var(--z-base);
+}
+
+.effect-explosion__parts {
+  position: absolute;
+  inset: 0;
+}
+
+.effect-explosion__blast,
+.effect-explosion__smoke {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.effect-explosion__blast {
+  background: radial-gradient(
+    circle,
+    #fff6c8 0%,
+    #ffb35a 22%,
+    #e0683c 45%,
+    rgb(217 72 59 / 60%) 62%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+}
+
+.effect-explosion__smoke {
+  background: radial-gradient(
+    circle,
+    rgb(40 36 32 / 85%) 0%,
+    rgb(30 28 26 / 50%) 45%,
+    transparent 70%
+  );
+}
+
+.effect-float {
+  top: -0.2em;
+  left: 50%;
+  z-index: var(--z-overlay);
+  font-family: var(--font-numeric);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.effect-float--score {
+  color: #f6e27a;
+}
+
+.effect-float--time {
+  color: var(--color-accent-strong);
+}
+
+/* ==========================================================================
    Drag & drop
    ========================================================================== */
 

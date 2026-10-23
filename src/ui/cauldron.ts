@@ -35,10 +35,16 @@ export function renderCauldron(container: HTMLElement, view: ICauldronView): voi
   const vessel = createElement('div', 'cauldron__vessel');
   const floating = createElement('div', 'cauldron__floating');
   floating.setAttribute('aria-hidden', 'true');
+  // Icons come from the same ingredient data as the shelf. The cauldron only re-renders
+  // when its content changes, so the last icon is the one just added: it drops in first.
   floating.append(
-    ...view.ingredients.map((item) =>
-      createIcon(INGREDIENT_ICONS[item.id], 'icon cauldron__float-icon')
-    )
+    ...view.ingredients.map((item, index) => {
+      const isNewest = index === view.ingredients.length - 1;
+      return createIcon(
+        INGREDIENT_ICONS[item.id],
+        `icon cauldron__float-icon${isNewest ? ' cauldron__float-icon--new' : ''}`
+      );
+    })
   );
   vessel.append(createIcon(SCENE_ICONS.cauldron, 'icon cauldron__art'), floating);
 
