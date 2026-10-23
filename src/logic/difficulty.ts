@@ -1,4 +1,4 @@
-import { DIFFICULTY_SETTINGS } from '../data/difficulty';
+import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS } from '../data/difficulty';
 import type { IDifficultySettings, IGameState } from '../types/game';
 import type { Difficulty } from '../types/recipe';
 
@@ -9,6 +9,10 @@ export const DIFFICULTY_LABELS: Readonly<Record<Difficulty, string>> = {
   medium: 'Medium',
   hard: 'Hard'
 };
+
+export function getDifficulty(state: IGameState): Difficulty {
+  return state.difficulty ?? DEFAULT_DIFFICULTY;
+}
 
 export function isDifficulty(value: unknown): value is Difficulty {
   return DIFFICULTIES.some((difficulty) => difficulty === value);
