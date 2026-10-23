@@ -164,6 +164,22 @@
   }
 }
 
+/* --- Ingredient tooltip -------------------------------------------------- */
+
+.tooltip--visible {
+  animation: tooltip-in var(--duration-fast) var(--ease-out);
+}
+
+@keyframes tooltip-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* --- Brew result message -------------------------------------------------- */
 
 .brew-message {
