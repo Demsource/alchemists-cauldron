@@ -17,15 +17,17 @@ const REASON_TEXT: Record<GameOverReason, string> = {
 
 // onDismiss: what Escape does (the dialog itself never just closes over a paused game).
 export function openPauseDialog(root: HTMLElement, onDismiss?: () => void): IDialogHandle {
+  // Focus starts on Resume, so Enter / Space resume with the native button behaviour
+  // (no game shortcut runs while paused).
+  const resume = createDialogButton('Resume', 'resume', 'primary');
+  resume.autofocus = true;
+
   return openDialog(root, {
     id: 'pause-dialog',
     title: 'Game Paused',
     onDismiss,
     content: [createElement('p', 'dialog__text', 'The cauldron simmers quietly. Take a breath.')],
-    actions: [
-      createDialogButton('Resume', 'resume', 'primary'),
-      createDialogButton('Exit to Menu', 'exit-to-menu')
-    ]
+    actions: [resume, createDialogButton('Exit to Menu', 'exit-to-menu')]
   });
 }
 
