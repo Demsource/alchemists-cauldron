@@ -59,6 +59,14 @@ export function createGameFlow(
     setState({ ...createInitialState(), difficulty: getState().difficulty });
   };
 
+  // Escape on the pause dialog: back to the start screen, but the paused run stays saved,
+  // so Continue Game is offered again (unlike Exit to Menu, which drops the save).
+  const leaveToStartScreen = (): void => {
+    closeAllDialogs(layout.dialogRoot);
+    stopTimer();
+    setState({ ...createInitialState(), difficulty: getState().difficulty });
+  };
+
   // Restores the saved run (stock included, never re-rolled) and opens it paused;
   // Resume starts the timer from the saved time.
   const continueGame = (): void => {
@@ -72,7 +80,7 @@ export function createGameFlow(
     stopTimer();
     onNewGame();
     setState(saved);
-    openPauseDialog(layout.dialogRoot);
+    openPauseDialog(layout.dialogRoot, leaveToStartScreen);
   };
 
   const pause = (): void => {
@@ -86,7 +94,7 @@ export function createGameFlow(
 
     stopTimer();
     setState(paused);
-    openPauseDialog(layout.dialogRoot);
+    openPauseDialog(layout.dialogRoot, leaveToStartScreen);
   };
 
   const resume = (): void => {
