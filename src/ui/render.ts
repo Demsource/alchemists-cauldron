@@ -1,7 +1,8 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
 import { DIFFICULTY_LABELS } from '../logic/difficulty';
-import { calculateCauldron, isInRange } from '../logic/calculate-cauldron';
+import { isInRange } from '../logic/calculate-cauldron';
+import { getCauldronValues } from '../logic/reactions-logic';
 import { isCauldronFull } from '../logic/cauldron';
 import { canBrew } from '../logic/score';
 import { getStock } from '../logic/stock';
@@ -37,7 +38,10 @@ const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters; label: strin
 ];
 
 function getBars(state: IGameState): IBarView[] {
-  const values = calculateCauldron(state.cauldronIngredients);
+  const values = getCauldronValues(
+    state.cauldronIngredients,
+    state.difficulty ?? DEFAULT_DIFFICULTY
+  );
   const recipe = state.activeRecipe;
 
   return BAR_DEFINITIONS.map(({ key, parameter, label }) => {

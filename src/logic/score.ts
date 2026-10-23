@@ -1,6 +1,6 @@
 import type { IDifficultySettings, IGameState } from '../types/game';
 import { checkBrew, type IBrewCheck } from './brew-check';
-import { calculateCauldron } from './calculate-cauldron';
+import { getCauldronValues } from './reactions-logic';
 import { pickRecipe } from './recipe-generator';
 
 export interface IBrewOutcome {
@@ -30,9 +30,10 @@ export function brew(
     return { state, check: null };
   }
 
-  const values = calculateCauldron(state.cauldronIngredients);
-  const check = checkBrew(values, state.activeRecipe, settings.tolerance);
   const difficulty = state.difficulty ?? state.activeRecipe.difficulty;
+  // The same values the bars show: sums with the active reactions applied.
+  const values = getCauldronValues(state.cauldronIngredients, difficulty);
+  const check = checkBrew(values, state.activeRecipe, settings.tolerance);
 
   const nextState: IGameState = check.isSuccess
     ? {
