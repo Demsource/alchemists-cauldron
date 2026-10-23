@@ -4,6 +4,7 @@ import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
 import { createSaveFlow } from './app/save-flow';
 import { getSettings, getState, subscribe } from './state/game-state';
+import { hasSave } from './storage/save';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
 
@@ -28,7 +29,10 @@ if (mount) {
 
   const render = (): void => {
     const state = getState();
-    renderGame(layout, state, getSettings(state));
+    // The save is only read on the start screen, where Continue Game can appear.
+    renderGame(layout, state, getSettings(state), {
+      hasSave: state.status === 'menu' && hasSave()
+    });
   };
 
   subscribe(render);

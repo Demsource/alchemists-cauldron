@@ -39,6 +39,9 @@ function bindFooter(layout: ILayoutRefs, { game, menu }: IFlows): void {
       case 'start':
         game.startGame();
         break;
+      case 'continue-game':
+        game.continueGame();
+        break;
       case 'brew':
         game.brewMixture();
         break;
@@ -68,6 +71,9 @@ function bindDialogs(layout: ILayoutRefs, { game, menu, leaderboard }: IFlows): 
         break;
       case 'resume':
         game.resume();
+        break;
+      case 'continue-game':
+        game.continueGame();
         break;
       case 'exit-to-menu':
         game.exitToMenu();

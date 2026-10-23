@@ -11,7 +11,7 @@ import {
   subscribe
 } from '../state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from '../state/game-timer';
-import { clearSave } from '../storage/save';
+import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
 import { showBrewMessage } from '../ui/brew-message';
@@ -21,6 +21,7 @@ import type { ILayoutRefs } from '../ui/layout';
 
 export interface IGameFlow {
   startGame: () => void;
+  continueGame: () => void;
   exitToMenu: () => void;
   pause: () => void;
   resume: () => void;
@@ -52,6 +53,22 @@ export function createGameFlow(
     stopTimer();
     clearSave();
     setState({ ...createInitialState(), difficulty: getState().difficulty });
+  };
+
+  // Restores the saved run (stock included, never re-rolled) and opens it paused;
+  // Resume starts the timer from the saved time.
+  const continueGame = (): void => {
+    const saved = loadGame();
+
+    if (!saved) {
+      return;
+    }
+
+    closeAllDialogs(layout.dialogRoot);
+    stopTimer();
+    onNewGame();
+    setState(saved);
+    openPauseDialog(layout.dialogRoot);
   };
 
   const pause = (): void => {
@@ -122,5 +139,14 @@ export function createGameFlow(
     });
   };
 
-  return { startGame, exitToMenu, pause, resume, brewMixture, addToCauldron, watchGameOver };
+  return {
+    startGame,
+    continueGame,
+    exitToMenu,
+    pause,
+    resume,
+    brewMixture,
+    addToCauldron,
+    watchGameOver
+  };
 }

@@ -1327,6 +1327,11 @@ button:disabled {
   opacity: 0.8;
 }
 
+.actions__continue {
+  color: var(--color-accent-strong);
+  border-color: var(--color-accent-dark);
+}
+
 .actions__pour-out {
   color: var(--color-density);
 }

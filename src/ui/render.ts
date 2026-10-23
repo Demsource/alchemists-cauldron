@@ -55,10 +55,16 @@ function getBars(state: IGameState): IBarView[] {
   });
 }
 
+// Facts from outside the state (e.g. storage) that the screen needs.
+export interface IRenderOptions {
+  hasSave: boolean;
+}
+
 export function renderGame(
   layout: ILayoutRefs,
   state: IGameState,
-  settings: IDifficultySettings
+  settings: IDifficultySettings,
+  options: IRenderOptions
 ): void {
   const isPlaying = state.status !== 'menu';
   const isFull = isCauldronFull(state.cauldronIngredients, settings);
@@ -101,6 +107,7 @@ export function renderGame(
     canOpenMenu: state.status === 'menu' || state.status === 'game-over',
     // A running game must be paused first, so Help never opens over a live timer.
     canOpenHelp: state.status === 'menu' || state.status === 'game-over',
+    canContinue: state.status === 'menu' && options.hasSave,
     canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false
