@@ -119,6 +119,14 @@ const HELP_SECTIONS: { title: string; items: string[] }[] = [
     ]
   },
   {
+    title: 'Difficulty',
+    items: [
+      'Choose Easy, Medium or Hard in the Menu before a game starts.',
+      'Harder levels put more ingredients on the shelf, allow a smaller tolerance and give less bonus time, but every brew is worth more points.',
+      'Each difficulty has its own Top-10 leaderboard.'
+    ]
+  },
+  {
     title: 'Stock',
     items: [
       'Every ingredient has a limited stock shown in the round badge.',

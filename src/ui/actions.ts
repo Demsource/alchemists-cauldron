@@ -7,6 +7,7 @@ export interface IActionsView {
   isPlaying: boolean;
   canPause: boolean;
   canOpenMenu: boolean;
+  canOpenHelp: boolean;
   canBrew: boolean;
   showPourOut: boolean;
   canPourOut: boolean;
@@ -52,7 +53,9 @@ function renderPourOut(view: IActionsView): HTMLButtonElement {
 
 export function renderActions(container: HTMLElement, view: IActionsView): void {
   const left = createElement('div', 'actions__side actions__side--left');
-  left.append(renderIconButton('help', UI_ICONS.help, 'Help'));
+  const help = renderIconButton('help', UI_ICONS.help, 'Help');
+  help.disabled = !view.canOpenHelp;
+  left.append(help);
 
   const center = createElement('div', 'actions__center');
   if (view.isPlaying && view.showPourOut) {

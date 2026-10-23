@@ -97,6 +97,8 @@ export function renderGame(
     canPause: state.status === 'playing',
     // The menu holds actions used outside a run.
     canOpenMenu: state.status === 'menu' || state.status === 'game-over',
+    // A running game must be paused first, so Help never opens over a live timer.
+    canOpenHelp: state.status === 'menu' || state.status === 'game-over',
     canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false

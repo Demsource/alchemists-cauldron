@@ -19,7 +19,7 @@ import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
 import { closeAllDialogs, closeDialog, openConfirmDialog } from './ui/dialogs';
-import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
+import { openGameOverDialog, openHelpDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { openLeaderboardDialog } from './ui/leaderboard';
 import { openMenuDialog } from './ui/menu';
@@ -200,6 +200,9 @@ if (mount) {
         break;
       case 'menu':
         showMenu();
+        break;
+      case 'help':
+        openHelpDialog(layout.dialogRoot);
         break;
       default:
         break;
