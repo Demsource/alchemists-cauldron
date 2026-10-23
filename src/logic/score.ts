@@ -1,5 +1,6 @@
 import type { IDifficultySettings, IGameState } from '../types/game';
 import { checkBrew, type IBrewCheck } from './brew-check';
+import { clearCauldron } from './cauldron';
 import { getCauldronValues } from './reactions-logic';
 import { pickRecipe } from './recipe-generator';
 
@@ -35,18 +36,17 @@ export function brew(
   const values = getCauldronValues(state.cauldronIngredients, difficulty);
   const check = checkBrew(values, state.activeRecipe, settings.tolerance);
 
+  const emptied = clearCauldron(state);
   const nextState: IGameState = check.isSuccess
     ? {
-        ...state,
+        ...emptied,
         score: state.score + settings.scorePerBrew,
         timeLeft: addTimeBonus(state.timeLeft, settings),
-        cauldronIngredients: [],
         activeRecipe: pickRecipe(difficulty, random)
       }
     : {
-        ...state,
-        lives: Math.max(0, state.lives - 1),
-        cauldronIngredients: []
+        ...emptied,
+        lives: Math.max(0, state.lives - 1)
       };
 
   return { state: nextState, check };
