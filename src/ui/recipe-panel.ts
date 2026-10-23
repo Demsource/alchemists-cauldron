@@ -15,6 +15,7 @@ export interface IRecipePanelView {
   } | null;
   added: number;
   capacity: number;
+  difficultyLabel: string;
 }
 
 const formatNumber = (value: number): string => (value < 0 ? `−${Math.abs(value)}` : String(value));
@@ -48,6 +49,7 @@ export function renderRecipePanel(container: HTMLElement, view: IRecipePanelView
 
   const heading = createElement('header', 'recipe__header');
   heading.append(
+    createElement('p', 'recipe__difficulty', `${view.difficultyLabel} mode`),
     createElement('p', 'recipe__kicker', 'Current recipe'),
     createIcon(UI_ICONS.flask, 'icon recipe__flask'),
     createElement('h2', 'recipe__name', recipe ? recipe.name : 'No recipe yet')

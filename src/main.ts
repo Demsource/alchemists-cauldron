@@ -2,6 +2,15 @@ import { DEFAULT_DIFFICULTY } from './data/difficulty';
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
+import {
+  canChangeDifficulty,
+  DIFFICULTIES,
+  DIFFICULTY_LABELS,
+  getDifficultySettings,
+  getDifficultySummary,
+  isDifficulty,
+  setDifficulty
+} from './logic/difficulty';
 import { addEntry, isTopResult, validatePlayerName } from './logic/leaderboard';
 import { pauseGame, resumeGame } from './logic/pause';
 import { brew } from './logic/score';
@@ -15,6 +24,7 @@ import {
 } from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
+import { loadDifficulty, saveDifficulty } from './storage/preferences';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
 import { showBrewMessage } from './ui/brew-message';
@@ -22,7 +32,7 @@ import { closeAllDialogs, closeDialog, openConfirmDialog } from './ui/dialogs';
 import { openGameOverDialog, openHelpDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { openLeaderboardDialog } from './ui/leaderboard';
-import { openMenuDialog } from './ui/menu';
+import { openMenuDialog, updateMenuDifficulty } from './ui/menu';
 import { renderGame } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
@@ -121,11 +131,36 @@ if (mount) {
 
   const showMenu = (): void => {
     closeAllDialogs(layout.dialogRoot);
+    const state = getState();
     openMenuDialog(layout.dialogRoot, {
-      difficulty: getState().difficulty ?? DEFAULT_DIFFICULTY,
-      isDifficultyEnabled: false, // Level 2
-      canContinue: false // Level 2
+      difficulty: state.difficulty ?? DEFAULT_DIFFICULTY,
+      options: DIFFICULTIES.map((difficulty) => ({
+        difficulty,
+        label: DIFFICULTY_LABELS[difficulty],
+        summary: getDifficultySummary(getDifficultySettings(difficulty))
+      })),
+      canChangeDifficulty: canChangeDifficulty(state),
+      canContinue: false // US 2.2
     });
+  };
+
+  const chooseDifficulty = (value: string | undefined): void => {
+    if (!isDifficulty(value)) {
+      return;
+    }
+
+    const state = getState();
+    const next = setDifficulty(state, value);
+
+    if (next !== state) {
+      // After Game Over the finished run belongs to its own difficulty (and leaderboard),
+      // so choosing another one leaves that run and returns to a fresh start screen.
+      setState(
+        state.status === 'game-over' ? { ...createInitialState(), difficulty: value } : next
+      );
+      saveDifficulty(value);
+      updateMenuDifficulty(layout.dialogRoot, value);
+    }
   };
 
   // Closing the leaderboard (Back or Escape) returns to where it was opened from:
@@ -222,6 +257,9 @@ if (mount) {
       case 'new-game':
         startGame();
         break;
+      case 'set-difficulty':
+        chooseDifficulty(button?.dataset.difficulty);
+        break;
       case 'open-leaderboard':
         showLeaderboard();
         break;
@@ -294,6 +332,9 @@ if (mount) {
       pause();
     }
   });
+
+  // Start on the difficulty the player chose last time (Medium when nothing is saved).
+  setState(setDifficulty(getState(), loadDifficulty(DEFAULT_DIFFICULTY)));
 
   subscribe(render);
   render();
