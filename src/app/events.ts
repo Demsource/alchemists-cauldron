@@ -1,6 +1,8 @@
 import { isIngredientId } from '../data/ingredients';
-import { getState } from '../state/game-state';
+import { canAddIngredient } from '../logic/cauldron';
+import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
+import { bindDragAndDrop } from '../ui/drag-drop';
 import { openHelpDialog } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import type { IGameFlow } from './game-flow';
@@ -23,6 +25,21 @@ function bindShelf(layout: ILayoutRefs, { game }: IFlows): void {
 
     if (card && !card.disabled && isIngredientId(id)) {
       game.addToCauldron(id);
+    }
+  });
+}
+
+// Drop uses the same rule and the same action as a click on the card.
+function bindDrag(layout: ILayoutRefs, { game }: IFlows): void {
+  bindDragAndDrop(layout.shelf, layout.stage, {
+    canDrop: (id) => {
+      const state = getState();
+      return isIngredientId(id) && canAddIngredient(state, id, getSettings(state));
+    },
+    onDrop: (id) => {
+      if (isIngredientId(id)) {
+        game.addToCauldron(id);
+      }
     }
   });
 }
@@ -139,6 +156,7 @@ function bindVisibility({ game }: IFlows): void {
 
 export function bindEvents(layout: ILayoutRefs, flows: IFlows): void {
   bindShelf(layout, flows);
+  bindDrag(layout, flows);
   bindFooter(layout, flows);
   bindDialogs(layout, flows);
   bindVisibility(flows);
