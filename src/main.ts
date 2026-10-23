@@ -2,6 +2,15 @@ import { DEFAULT_DIFFICULTY } from './data/difficulty';
 import { isIngredientId } from './data/ingredients';
 import { addIngredient } from './logic/cauldron';
 import { endGame, getGameOverReason } from './logic/game-over';
+import {
+  canChangeDifficulty,
+  DIFFICULTIES,
+  DIFFICULTY_LABELS,
+  getDifficultySettings,
+  getDifficultySummary,
+  isDifficulty,
+  setDifficulty
+} from './logic/difficulty';
 import { addEntry, isTopResult, validatePlayerName } from './logic/leaderboard';
 import { pauseGame, resumeGame } from './logic/pause';
 import { brew } from './logic/score';
@@ -15,14 +24,16 @@ import {
 } from './state/game-state';
 import { startTimer, stopTimer, syncTimer, withCurrentTime } from './state/game-timer';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from './storage/leaderboard';
+import { loadDifficulty, saveDifficulty } from './storage/preferences';
 import type { IGameState } from './types/game';
 import type { IngredientId } from './types/ingredient';
+import type { Difficulty } from './types/recipe';
 import { showBrewMessage } from './ui/brew-message';
 import { closeAllDialogs, closeDialog, openConfirmDialog } from './ui/dialogs';
-import { openGameOverDialog, openPauseDialog } from './ui/game-dialogs';
+import { openGameOverDialog, openHelpDialog, openPauseDialog } from './ui/game-dialogs';
 import { renderLayout } from './ui/layout';
 import { openLeaderboardDialog } from './ui/leaderboard';
-import { openMenuDialog } from './ui/menu';
+import { openMenuDialog, updateMenuDifficulty } from './ui/menu';
 import { renderGame } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
@@ -75,6 +86,8 @@ if (mount) {
     startTimer(resumed.timeLeft);
   };
 
+  const getDifficulty = (state: IGameState): Difficulty => state.difficulty ?? DEFAULT_DIFFICULTY;
+
   // Set once the finished run is written to the leaderboard, so the name is asked only once.
   let isScoreSaved = false;
 
@@ -83,7 +96,9 @@ if (mount) {
       openGameOverDialog(layout.dialogRoot, {
         score: state.score,
         reason: state.gameOverReason,
-        isTopResult: isScoreSaved ? undefined : isTopResult(loadLeaderboard(), state.score)
+        isTopResult: isScoreSaved
+          ? undefined
+          : isTopResult(loadLeaderboard(getDifficulty(state)), state.score)
       });
     }
   };
@@ -108,24 +123,51 @@ if (mount) {
       return;
     }
 
-    const entries = addEntry(loadLeaderboard(), {
+    const difficulty = getDifficulty(state);
+    const entries = addEntry(loadLeaderboard(difficulty), {
       name: validation.name,
       score: state.score,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      difficulty
     });
-    saveLeaderboard(entries);
+    saveLeaderboard(difficulty, entries);
     isScoreSaved = true;
 
-    showLeaderboard();
+    showLeaderboard(difficulty);
   };
 
   const showMenu = (): void => {
     closeAllDialogs(layout.dialogRoot);
+    const state = getState();
     openMenuDialog(layout.dialogRoot, {
-      difficulty: getState().difficulty ?? DEFAULT_DIFFICULTY,
-      isDifficultyEnabled: false, // Level 2
-      canContinue: false // Level 2
+      difficulty: state.difficulty ?? DEFAULT_DIFFICULTY,
+      options: DIFFICULTIES.map((difficulty) => ({
+        difficulty,
+        label: DIFFICULTY_LABELS[difficulty],
+        summary: getDifficultySummary(getDifficultySettings(difficulty))
+      })),
+      canChangeDifficulty: canChangeDifficulty(state),
+      canContinue: false // US 2.2
     });
+  };
+
+  const chooseDifficulty = (value: string | undefined): void => {
+    if (!isDifficulty(value)) {
+      return;
+    }
+
+    const state = getState();
+    const next = setDifficulty(state, value);
+
+    if (next !== state) {
+      // After Game Over the finished run belongs to its own difficulty (and leaderboard),
+      // so choosing another one leaves that run and returns to a fresh start screen.
+      setState(
+        state.status === 'game-over' ? { ...createInitialState(), difficulty: value } : next
+      );
+      saveDifficulty(value);
+      updateMenuDifficulty(layout.dialogRoot, value);
+    }
   };
 
   // Closing the leaderboard (Back or Escape) returns to where it was opened from:
@@ -144,9 +186,21 @@ if (mount) {
     }
   };
 
-  const showLeaderboard = (): void => {
+  // The difficulty whose list is on screen; Clear Leaderboard applies to this one.
+  let leaderboardDifficulty: Difficulty = DEFAULT_DIFFICULTY;
+
+  const showLeaderboard = (difficulty: Difficulty = getDifficulty(getState())): void => {
+    leaderboardDifficulty = difficulty;
     closeAllDialogs(layout.dialogRoot);
-    const leaderboard = openLeaderboardDialog(layout.dialogRoot, loadLeaderboard());
+
+    const leaderboard = openLeaderboardDialog(layout.dialogRoot, {
+      difficulty,
+      tabs: DIFFICULTIES.map((item) => ({ difficulty: item, label: DIFFICULTY_LABELS[item] })),
+      rows: loadLeaderboard(difficulty).map((entry) => ({
+        ...entry,
+        difficultyLabel: DIFFICULTY_LABELS[entry.difficulty]
+      }))
+    });
     leaderboard.element.addEventListener('close', returnFromLeaderboard);
   };
 
@@ -201,6 +255,9 @@ if (mount) {
       case 'menu':
         showMenu();
         break;
+      case 'help':
+        openHelpDialog(layout.dialogRoot);
+        break;
       default:
         break;
     }
@@ -219,21 +276,31 @@ if (mount) {
       case 'new-game':
         startGame();
         break;
+      case 'set-difficulty':
+        chooseDifficulty(button?.dataset.difficulty);
+        break;
       case 'open-leaderboard':
         showLeaderboard();
         break;
+      case 'leaderboard-tab': {
+        const difficulty = button?.dataset.difficulty;
+        if (isDifficulty(difficulty) && difficulty !== leaderboardDifficulty) {
+          showLeaderboard(difficulty);
+        }
+        break;
+      }
       case 'clear-leaderboard':
         openConfirmDialog(layout.dialogRoot, {
           id: 'clear-leaderboard-dialog',
-          title: 'Clear all results?',
-          message: 'Every name and score on the leaderboard will be erased. This cannot be undone.',
+          title: `Clear ${DIFFICULTY_LABELS[leaderboardDifficulty]} results?`,
+          message: `Every name and score on the ${DIFFICULTY_LABELS[leaderboardDifficulty]} leaderboard will be erased. This cannot be undone.`,
           confirmLabel: 'Clear',
           confirmAction: 'confirm-clear-leaderboard'
         });
         break;
       case 'confirm-clear-leaderboard':
-        clearLeaderboard();
-        showLeaderboard();
+        clearLeaderboard(leaderboardDifficulty);
+        showLeaderboard(leaderboardDifficulty);
         break;
       case 'close-dialog': {
         const dialog = button?.closest('dialog');
@@ -291,6 +358,9 @@ if (mount) {
       pause();
     }
   });
+
+  // Start on the difficulty the player chose last time (Medium when nothing is saved).
+  setState(setDifficulty(getState(), loadDifficulty(DEFAULT_DIFFICULTY)));
 
   subscribe(render);
   render();

@@ -1,5 +1,6 @@
 import { BAR_SCALES } from '../data/bar-scales';
-import { getShelfIngredients } from '../data/difficulty';
+import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
+import { DIFFICULTY_LABELS } from '../logic/difficulty';
 import { calculateCauldron, isInRange } from '../logic/calculate-cauldron';
 import { isCauldronFull } from '../logic/cauldron';
 import { canBrew } from '../logic/score';
@@ -87,7 +88,8 @@ export function renderGame(
   renderRecipePanel(layout.recipe, {
     recipe: state.activeRecipe,
     added: state.cauldronIngredients.length,
-    capacity: settings.maxCauldronIngredients
+    capacity: settings.maxCauldronIngredients,
+    difficultyLabel: DIFFICULTY_LABELS[state.difficulty ?? DEFAULT_DIFFICULTY]
   });
 
   renderBars(layout.bars, getBars(state));
@@ -97,6 +99,8 @@ export function renderGame(
     canPause: state.status === 'playing',
     // The menu holds actions used outside a run.
     canOpenMenu: state.status === 'menu' || state.status === 'game-over',
+    // A running game must be paused first, so Help never opens over a live timer.
+    canOpenHelp: state.status === 'menu' || state.status === 'game-over',
     canBrew: canBrew(state),
     showPourOut: false,
     canPourOut: false

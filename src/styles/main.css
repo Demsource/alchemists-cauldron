@@ -1610,13 +1610,37 @@ button:disabled {
 
 .menu__difficulty-options {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-2);
 }
 
 .menu__difficulty-btn {
-  padding-inline: var(--space-2);
+  flex-direction: column;
+  gap: 0;
+  padding: var(--space-2) var(--space-3);
   font-size: var(--fs-sm);
+}
+
+.menu__difficulty-summary {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 400;
+  color: var(--color-text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.recipe__difficulty {
+  align-self: center;
+  padding: 0 var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-parchment);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: var(--color-ink-muted);
+  border-radius: var(--radius-round);
 }
 
 .menu__difficulty-btn[aria-pressed='true'] {
@@ -1655,6 +1679,37 @@ button:disabled {
 /* ==========================================================================
    Leaderboard
    ========================================================================== */
+
+.leaderboard__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.leaderboard__tab {
+  min-height: 40px;
+  padding-inline: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 25%);
+  border-color: var(--color-parchment-edge);
+  box-shadow: none;
+}
+
+.leaderboard__tab:hover:not(:disabled) {
+  color: var(--color-ink);
+  border-color: var(--color-ink-muted);
+}
+
+.leaderboard__tab[aria-pressed='true'] {
+  color: var(--color-parchment);
+  background: #3b2a17;
+  border-color: #3b2a17;
+}
+
+.leaderboard__difficulty {
+  white-space: nowrap;
+}
 
 .leaderboard__scroll {
   max-width: 100%;
