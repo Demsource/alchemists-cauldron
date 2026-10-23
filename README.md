@@ -46,9 +46,9 @@ The task is split into four stages with a maximum of **393 points**:
   - [x] **US 1.4** Timer & Game Over — `MM:SS` timer with a shrinking bar, calculated from timestamps; red pulsing timer under 15 s; the Game Over screen shows the reason and the final score.
   - [x] **US 1.5** Pause — Pause button, blurred play field, Resume / Exit to Menu dialog, automatic pause when the tab is hidden.
   - [x] **US 1.6** Leaderboard — Top-10 in `localStorage`, name entry with validation, sorting with ties kept in order, `DD.MM.YYYY HH:MM` dates, Clear Leaderboard with an in-app confirmation; broken saved data never crashes the game.
-- [ ] **Level 2 — Extended**
+- [x] **Level 2 — Extended**
   - [x] **US 2.1** Difficulty selection — Help button with the game rules; Easy / Medium / Hard in the Menu, each with a short summary; all values from the difficulty table (shelf size, cauldron limit, start time, tolerance, lives, score per brew, time bonus); recipes picked from the chosen difficulty; difficulty locked during a run and remembered after reload; one Top-10 leaderboard per difficulty with tabs and a Difficulty column.
-  - [ ] **US 2.2** Auto-save & Continue Game.
+  - [x] **US 2.2** Auto-save & Continue Game — the running game (difficulty, score, time left, lives, recipe, cauldron, shelf stock, status) is saved to `localStorage` after every change, on pause and when the page closes; **Continue Game** appears on the start screen and in the Menu only for a valid unfinished save and opens it paused with the saved stock; a new game overwrites the save, while Game Over and Exit to Menu remove it; broken or edited saves are validated, deleted and never crash the game.
 - [ ] **Level 3 — Full Game**: drag & drop, tooltips, chemical reactions, Pour Out, visual feedback, keyboard shortcuts.
 
 ---
@@ -68,8 +68,9 @@ The task is split into four stages with a maximum of **393 points**:
 4. **Add ingredients** — click a card on the shelf. Each click puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 5. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
 6. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
-7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run.
-8. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard** (one Top-10 per difficulty, switched with the tabs), **Play Again** or exit to the menu.
+7. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
+8. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
+9. **Game Over** — the final score and the reason are shown. If the score reaches the Top-10, enter a name (2–15 characters: letters, digits, space, `_` and `-`) and press **Submit Score**. From here you can open the **Leaderboard** (one Top-10 per difficulty, switched with the tabs), **Play Again** or exit to the menu.
 
 ---
 
@@ -111,7 +112,8 @@ src/
   data/       ingredients, recipes, difficulty settings, bar scales
   logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard
   state/      game state store and the countdown timer
-  storage/    localStorage access (leaderboard)
+  app/        game flows (game, menu, leaderboard, save) and event wiring
+  storage/    localStorage access (leaderboard, game save, difficulty preference)
   types/      TypeScript interfaces and types
   ui/         DOM rendering: layout, HUD, shelf, cauldron, bars, recipe panel, dialogs
   utils/      formatting and scale helpers
