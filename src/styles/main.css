@@ -1986,6 +1986,47 @@ button:disabled {
   filter: drop-shadow(0 0 6px rgb(246 226 122 / 80%));
 }
 
+.effect-explosion {
+  inset: -10%;
+  z-index: var(--z-base);
+}
+
+.effect-explosion__parts {
+  position: absolute;
+  inset: 0;
+}
+
+.effect-explosion__blast,
+.effect-explosion__smoke {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.effect-explosion__blast {
+  background: radial-gradient(
+    circle,
+    #fff6c8 0%,
+    #ffb35a 22%,
+    #e0683c 45%,
+    rgb(217 72 59 / 60%) 62%,
+    transparent 72%
+  );
+  mix-blend-mode: screen;
+}
+
+.effect-explosion__smoke {
+  background: radial-gradient(
+    circle,
+    rgb(40 36 32 / 85%) 0%,
+    rgb(30 28 26 / 50%) 45%,
+    transparent 70%
+  );
+}
+
 .effect-float {
   top: -0.2em;
   left: 50%;

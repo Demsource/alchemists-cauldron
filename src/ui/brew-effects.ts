@@ -30,6 +30,27 @@ function floatText(target: Element | null, text: string, modifier: string): void
   }
 }
 
+// Failed brew: a blast with smoke over the cauldron and a short shake of the HUD and board.
+// Header and footer stay still, so buttons do not jump under the cursor.
+export function playFailureEffect(layout: ILayoutRefs): void {
+  const vessel = layout.stage.querySelector<HTMLElement>('.cauldron__vessel');
+
+  if (vessel) {
+    const explosion = createElement('div', 'effect-explosion__parts');
+    explosion.append(
+      createElement('div', 'effect-explosion__blast'),
+      createElement('div', 'effect-explosion__smoke')
+    );
+    spawnEffect(vessel, 'effect-explosion', explosion);
+  }
+
+  const board = layout.root.querySelector<HTMLElement>('.board');
+  playEffect(layout.hud, 'effect-shake');
+  if (board) {
+    playEffect(board, 'effect-shake');
+  }
+}
+
 // Called after the state update, so it decorates the freshly rendered cauldron and HUD.
 export function playSuccessEffect(layout: ILayoutRefs, view: ISuccessEffectView): void {
   const vessel = layout.stage.querySelector<HTMLElement>('.cauldron__vessel');

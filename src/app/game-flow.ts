@@ -15,7 +15,7 @@ import { startTimer, stopTimer, syncTimer, withCurrentTime } from '../state/game
 import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
-import { playSuccessEffect } from '../ui/brew-effects';
+import { playFailureEffect, playSuccessEffect } from '../ui/brew-effects';
 import { showBrewMessage } from '../ui/brew-message';
 import { showPourOutMessage } from '../ui/pour-out-message';
 import { showReactionMessage } from '../ui/reaction-message';
@@ -126,6 +126,8 @@ export function createGameFlow(
           scoreGain: outcome.state.score - state.score,
           timeGain: Math.round(outcome.state.timeLeft - state.timeLeft)
         });
+      } else {
+        playFailureEffect(layout);
       }
     }
   };

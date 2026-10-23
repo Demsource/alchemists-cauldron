@@ -245,6 +245,107 @@
   }
 }
 
+/* --- Failed brew --------------------------------------------------------- */
+
+.effect-explosion {
+  animation: effect-life 1s linear forwards;
+}
+
+.effect-explosion__blast {
+  animation: explosion-blast 0.7s var(--ease-out) forwards;
+}
+
+.effect-explosion__smoke {
+  animation: explosion-smoke 1s ease-out forwards;
+}
+
+.effect-shake {
+  animation: screen-shake 0.4s ease-in-out;
+}
+
+@keyframes explosion-blast {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes explosion-smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+
+  30% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-40%) scale(1.6);
+  }
+}
+
+@keyframes screen-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  15% {
+    transform: translate(-8px, 2px);
+  }
+
+  30% {
+    transform: translate(7px, -3px);
+  }
+
+  45% {
+    transform: translate(-6px, 3px);
+  }
+
+  60% {
+    transform: translate(5px, -2px);
+  }
+
+  80% {
+    transform: translate(-3px, 1px);
+  }
+}
+
+@keyframes explosion-flash {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 0.85;
+  }
+}
+
+/* Reduced motion: no shake (it keeps the global near-zero duration); the blast becomes a
+   short red flash without growing, and the smoke is skipped. */
+@media (prefers-reduced-motion: reduce) {
+  .effect-explosion {
+    animation-duration: 0.6s !important;
+  }
+
+  .effect-explosion__blast {
+    animation-name: explosion-flash !important;
+    animation-duration: 0.6s !important;
+  }
+}
+
 /* --- Ingredient tooltip -------------------------------------------------- */
 
 .tooltip--visible {
