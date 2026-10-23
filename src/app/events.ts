@@ -1,9 +1,11 @@
 import { isIngredientId } from '../data/ingredients';
 import { canAddIngredient } from '../logic/cauldron';
+import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
+import { getReactionsFor } from '../logic/reactions-logic';
 import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
 import { bindDragAndDrop } from '../ui/drag-drop';
-import { openHelpDialog } from '../ui/game-dialogs';
+import { openHelpDialog, type IHelpSection } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import type { IGameFlow } from './game-flow';
 import type { ILeaderboardFlow } from './leaderboard-flow';
@@ -13,6 +15,30 @@ interface IFlows {
   game: IGameFlow;
   menu: IMenuFlow;
   leaderboard: ILeaderboardFlow;
+}
+
+// Help lists the enabled reactions per difficulty, straight from the reaction data.
+function getReactionHelp(): IHelpSection {
+  const items = DIFFICULTIES.map((difficulty) => {
+    const reactions = getReactionsFor(difficulty);
+    const list = reactions.length
+      ? reactions
+          .map(
+            (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
+          )
+          .join('; ')
+      : 'no reactions';
+    return `${DIFFICULTY_LABELS[difficulty]} — ${list}.`;
+  });
+
+  return {
+    title: 'Reactions',
+    items: [
+      'Some combinations react in the cauldron and change the values, so watch more than the plain sums.',
+      'A reaction fires once when its combination appears; its value change lasts while the combination stays.',
+      ...items
+    ]
+  };
 }
 
 const findActionButton = (event: Event): HTMLButtonElement | null =>
@@ -69,7 +95,7 @@ function bindFooter(layout: ILayoutRefs, { game, menu }: IFlows): void {
         menu.showMenu();
         break;
       case 'help':
-        openHelpDialog(layout.dialogRoot);
+        openHelpDialog(layout.dialogRoot, [getReactionHelp()]);
         break;
       default:
         break;

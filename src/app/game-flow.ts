@@ -1,6 +1,7 @@
 import { addIngredient } from '../logic/cauldron';
 import { endGame, getGameOverReason } from '../logic/game-over';
 import { pauseGame, resumeGame } from '../logic/pause';
+import { resolveReactions } from '../logic/reactions-logic';
 import { brew } from '../logic/score';
 import {
   createInitialState,
@@ -15,6 +16,7 @@ import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
 import { showBrewMessage } from '../ui/brew-message';
+import { showReactionMessage } from '../ui/reaction-message';
 import { closeAllDialogs } from '../ui/dialogs';
 import { openPauseDialog } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
@@ -119,8 +121,24 @@ export function createGameFlow(
   };
 
   const addToCauldron = (id: IngredientId): void => {
-    const state = getState();
-    setState(addIngredient(state, id, getSettings(state)));
+    // Exact time, so a reaction's time penalty starts from the real remaining time.
+    const state = withCurrentTime(getState());
+    const added = addIngredient(state, id, getSettings(state));
+
+    if (added === state) {
+      return;
+    }
+
+    // Reactions that just fired apply their one-time effects; value effects come from the list.
+    const outcome = resolveReactions(state, added);
+    setState(outcome.state);
+
+    if (outcome.state.timeLeft !== added.timeLeft) {
+      syncTimer(outcome.state.timeLeft);
+    }
+
+    showReactionMessage(layout.stage, outcome.fired);
+
     refocusCard(id);
   };
 

@@ -16,6 +16,7 @@ export interface IRecipePanelView {
   added: number;
   capacity: number;
   difficultyLabel: string;
+  activeReactions: string[]; // names of reactions changing the values right now
 }
 
 const formatNumber = (value: number): string => (value < 0 ? `−${Math.abs(value)}` : String(value));
@@ -78,8 +79,19 @@ export function renderRecipePanel(container: HTMLElement, view: IRecipePanelView
     ...renderCorners(),
     heading,
     createIcon(SCENE_ICONS.divider, 'icon recipe__divider'),
-    ranges,
-    counter
+    ranges
   );
+
+  // Tells the player why a value is not a plain sum.
+  if (view.activeReactions.length > 0) {
+    const reactions = createElement('p', 'recipe__reactions');
+    reactions.append(
+      createElement('span', 'recipe__reactions-label', 'Active reactions:'),
+      ` ${view.activeReactions.join(', ')}`
+    );
+    panel.append(reactions);
+  }
+
+  panel.append(counter);
   container.replaceChildren(panel);
 }

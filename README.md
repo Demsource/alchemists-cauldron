@@ -52,7 +52,7 @@ The task is split into four stages with a maximum of **393 points**:
 - [ ] **Level 3 — Full Game**
   - [x] **US 3.1** Drag & drop — drag a shelf card into the cauldron area (HTML5 `dragstart`, `dragover`, `dragleave`, `drop`); the cauldron glows as a drop zone only for a valid drag; drops are ignored while paused, with a full cauldron or at stock 0; a drop adds the ingredient and spends one portion exactly like a click, which still works.
   - [x] **US 3.2** Ingredient tooltip — with a mouse, shelf cards show only the icon, name and stock; hovering or focusing a card opens a tooltip with Temperature, Density and Magic Power (`+` / `−`) and a short description; it opens to the left near the right edge and upward near the bottom edge, stays above the rest of the game and is hidden while paused or dragging. On touch screens without hover the numbers stay on the cards.
-  - [ ] **US 3.3** Chemical reactions.
+  - [x] **US 3.3** Chemical reactions — all 15 reactions kept as a typed `IReaction[]`; Easy has none, Medium enables Bubbling and Solar Frost, Hard enables Volatile Mix, Rooted Steam and Pressure Spike; cauldron values are always recalculated from the ingredient list and the active reactions are applied to them (bars and brew check use the same values); a reaction fires only when it turns from inactive to active, applying its one-time effects (lost seconds, lost life, cleared cauldron) and showing a message; active reactions are listed on the recipe panel and in Help.
   - [ ] **US 3.4** Pour Out.
   - [ ] **US 3.5** Visual feedback.
   - [ ] **US 3.6** Keyboard shortcuts.
@@ -74,6 +74,7 @@ The task is split into four stages with a maximum of **393 points**:
 4. **Check the ingredients** — hover a shelf card (or focus it with the keyboard) to see its Temperature, Density and Magic Power in a tooltip. On touch screens the numbers are shown on the cards.
 5. **Add ingredients** — click a card on the shelf, or drag it with the mouse and drop it on the cauldron (it glows when the drop is allowed). Each one puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 6. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
+   On Medium and Hard some combinations cause a **reaction** (listed in **Help**): a purple message shows what happened, the recipe panel lists the active reactions, and the bars already include their effect. Some reactions also cost time or a life, or empty the cauldron.
 7. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked.
 8. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
 9. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
