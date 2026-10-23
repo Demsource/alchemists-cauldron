@@ -36,6 +36,8 @@ function renderCard(item: IShelfItemView, isBlocked: boolean, showValues: boolea
   const isEmpty = item.stock <= 0;
   card.classList.toggle('shelf-card--empty', isEmpty);
   card.disabled = isEmpty || isBlocked;
+  // Only a usable card can be dragged: never at stock 0, while blocked or paused.
+  card.draggable = !card.disabled;
   card.setAttribute('aria-label', `Add ${item.name}, ${item.stock} left`);
 
   const iconWrap = createElement('span', 'shelf-card__icon');
