@@ -11,6 +11,7 @@ import {
 } from '../logic/difficulty';
 import { createInitialState, getState, setState } from '../state/game-state';
 import { loadDifficulty, saveDifficulty } from '../storage/preferences';
+import { hasSave } from '../storage/save';
 import { closeAllDialogs } from '../ui/dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import { openMenuDialog, updateMenuDifficulty } from '../ui/menu';
@@ -34,7 +35,7 @@ export function createMenuFlow(layout: ILayoutRefs): IMenuFlow {
         summary: getDifficultySummary(getDifficultySettings(difficulty))
       })),
       canChangeDifficulty: canChangeDifficulty(state),
-      canContinue: false // US 2.2
+      canContinue: state.status === 'menu' && hasSave()
     });
   };
 

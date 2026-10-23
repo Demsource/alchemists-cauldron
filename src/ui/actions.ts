@@ -1,13 +1,15 @@
 import { SCENE_ICONS, UI_ICONS } from '../assets/icons';
 import { createElement, createIcon } from './dom';
 
-export type ActionName = 'help' | 'menu' | 'start' | 'brew' | 'pause' | 'pour-out';
+export type ActionName =
+  'help' | 'menu' | 'start' | 'continue-game' | 'brew' | 'pause' | 'pour-out';
 
 export interface IActionsView {
   isPlaying: boolean;
   canPause: boolean;
   canOpenMenu: boolean;
   canOpenHelp: boolean;
+  canContinue: boolean;
   canBrew: boolean;
   showPourOut: boolean;
   canPourOut: boolean;
@@ -60,6 +62,11 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
   const center = createElement('div', 'actions__center');
   if (view.isPlaying && view.showPourOut) {
     center.append(renderPourOut(view));
+  }
+  if (!view.isPlaying && view.canContinue) {
+    const resume = createActionButton('continue-game', 'btn actions__continue', 'Continue Game');
+    resume.append(createIcon(UI_ICONS.play, 'icon actions__btn-icon'), 'Continue Game');
+    center.append(resume);
   }
   center.append(renderPrimary(view));
 
