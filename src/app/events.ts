@@ -88,6 +88,9 @@ function bindFooter(layout: ILayoutRefs, { game, menu }: IFlows): void {
       case 'brew':
         game.brewMixture();
         break;
+      case 'pour-out':
+        game.pourOutMixture();
+        break;
       case 'pause':
         game.pause();
         break;

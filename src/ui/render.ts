@@ -3,7 +3,7 @@ import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
 import { DIFFICULTY_LABELS } from '../logic/difficulty';
 import { isInRange } from '../logic/calculate-cauldron';
 import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
-import { isCauldronFull } from '../logic/cauldron';
+import { canPourOut, isCauldronFull } from '../logic/cauldron';
 import { canBrew } from '../logic/score';
 import { getStock } from '../logic/stock';
 import type { IDifficultySettings, IGameState } from '../types/game';
@@ -136,7 +136,7 @@ export function renderGame(
     canOpenHelp: state.status === 'menu' || state.status === 'game-over',
     canContinue: state.status === 'menu' && options.hasSave,
     canBrew: canBrew(state),
-    showPourOut: false,
-    canPourOut: false
+    showPourOut: true,
+    canPourOut: canPourOut(state)
   });
 }

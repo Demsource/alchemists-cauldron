@@ -1,4 +1,4 @@
-import { addIngredient } from '../logic/cauldron';
+import { addIngredient, POUR_OUT_PENALTY, pourOut } from '../logic/cauldron';
 import { endGame, getGameOverReason } from '../logic/game-over';
 import { pauseGame, resumeGame } from '../logic/pause';
 import { resolveReactions } from '../logic/reactions-logic';
@@ -16,6 +16,7 @@ import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
 import { showBrewMessage } from '../ui/brew-message';
+import { showPourOutMessage } from '../ui/pour-out-message';
 import { showReactionMessage } from '../ui/reaction-message';
 import { closeAllDialogs } from '../ui/dialogs';
 import { openPauseDialog } from '../ui/game-dialogs';
@@ -28,6 +29,7 @@ export interface IGameFlow {
   pause: () => void;
   resume: () => void;
   brewMixture: () => void;
+  pourOutMixture: () => void;
   addToCauldron: (id: IngredientId) => void;
   watchGameOver: () => void;
 }
@@ -112,6 +114,20 @@ export function createGameFlow(
     }
   };
 
+  // Clears a wrong mixture for 10 seconds instead of a life.
+  const pourOutMixture = (): void => {
+    const state = withCurrentTime(getState());
+    const poured = pourOut(state, POUR_OUT_PENALTY);
+
+    if (poured === state) {
+      return;
+    }
+
+    setState(poured);
+    syncTimer(poured.timeLeft);
+    showPourOutMessage(layout.stage, POUR_OUT_PENALTY);
+  };
+
   // The shelf is re-rendered on every change, so give keyboard focus back to the same card.
   const refocusCard = (id: IngredientId): void => {
     const card = layout.shelf.querySelector<HTMLButtonElement>(`[data-ingredient-id="${id}"]`);
@@ -164,6 +180,7 @@ export function createGameFlow(
     pause,
     resume,
     brewMixture,
+    pourOutMixture,
     addToCauldron,
     watchGameOver
   };

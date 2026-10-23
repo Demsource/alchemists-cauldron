@@ -2011,6 +2011,11 @@ button:disabled {
   box-shadow: 0 0 18px var(--color-danger-glow);
 }
 
+.brew-message--pour-out {
+  color: var(--color-density);
+  box-shadow: 0 0 18px rgb(63 168 201 / 45%);
+}
+
 .brew-message--reaction {
   color: var(--color-magic);
   box-shadow: 0 0 18px rgb(164 107 224 / 50%);
