@@ -1800,6 +1800,13 @@ button:disabled {
   }
 }
 
+/* Level 3: with a mouse the numbers live in the tooltip; touch screens (no hover) keep them on the card. */
+@media (hover: hover) {
+  .shelf--values-touch-only .shelf-card__values {
+    display: none;
+  }
+}
+
 /* ==========================================================================
    Drag & drop
    ========================================================================== */

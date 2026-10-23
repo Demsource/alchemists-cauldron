@@ -104,7 +104,7 @@ export function renderGame(
   renderIfChanged(layout.shelf, renderShelf, {
     items: getShelfItems(state, settings),
     isBlocked: isFull || state.status !== 'playing',
-    showValues: true
+    showValues: 'touch-only'
   });
 
   renderIfChanged(layout.stage, renderCauldron, {
