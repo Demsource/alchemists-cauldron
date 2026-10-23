@@ -1,5 +1,8 @@
 import { isIngredientId } from '../data/ingredients';
+import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
+import { getShortcut } from '../logic/shortcuts';
+import { bindKeyboard } from '../ui/keyboard';
 import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
 import { getReactionsFor } from '../logic/reactions-logic';
 import { getSettings, getState } from '../state/game-state';
@@ -183,9 +186,40 @@ function bindVisibility({ game }: IFlows): void {
   });
 }
 
+// One keyboard handler, gated by the game state inside getShortcut (playing only).
+function bindShortcuts({ game }: IFlows): void {
+  bindKeyboard((input) => {
+    const state = getState();
+    const shortcut = getShortcut(input, state.status);
+
+    switch (shortcut?.type) {
+      case 'add': {
+        const ingredient = getShelfIngredients(getSettings(state))[shortcut.index];
+        if (!ingredient) {
+          return false; // no card at that position on this difficulty
+        }
+        game.addToCauldron(ingredient.id);
+        return true;
+      }
+      case 'brew':
+        game.brewMixture();
+        return true;
+      case 'pour-out':
+        game.pourOutMixture();
+        return true;
+      case 'pause':
+        game.pause();
+        return true;
+      default:
+        return false;
+    }
+  });
+}
+
 export function bindEvents(layout: ILayoutRefs, flows: IFlows): void {
   bindShelf(layout, flows);
   bindDrag(layout, flows);
+  bindShortcuts(flows);
   bindFooter(layout, flows);
   bindDialogs(layout, flows);
   bindVisibility(flows);
