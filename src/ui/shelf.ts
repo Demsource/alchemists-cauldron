@@ -14,7 +14,9 @@ export interface IShelfItemView {
 export interface IShelfView {
   items: IShelfItemView[];
   isBlocked: boolean;
-  showValues: boolean;
+  // 'always': numbers on the cards (Levels 1–2).
+  // 'touch-only': Level 3 — mouse users read them in the tooltip, devices without hover keep them on the card.
+  showValues: 'always' | 'touch-only';
 }
 
 function renderValue(modifier: string, short: string, label: string, value: number): HTMLElement {
@@ -27,7 +29,7 @@ function renderValue(modifier: string, short: string, label: string, value: numb
   return chip;
 }
 
-function renderCard(item: IShelfItemView, isBlocked: boolean, showValues: boolean): HTMLLIElement {
+function renderCard(item: IShelfItemView, isBlocked: boolean): HTMLLIElement {
   const slot = createElement('li', 'shelf__slot');
   const card = createElement('button', 'shelf-card');
   card.type = 'button';
@@ -48,15 +50,13 @@ function renderCard(item: IShelfItemView, isBlocked: boolean, showValues: boolea
   const body = createElement('span', 'shelf-card__body');
   body.append(createElement('span', 'shelf-card__name', item.name));
 
-  if (showValues) {
-    const values = createElement('span', 'shelf-card__values');
-    values.append(
-      renderValue('temperature', 'T', 'Temperature', item.temperature),
-      renderValue('density', 'D', 'Density', item.density),
-      renderValue('magic', 'MP', 'Magic Power', item.magicPower)
-    );
-    body.append(values);
-  }
+  const values = createElement('span', 'shelf-card__values');
+  values.append(
+    renderValue('temperature', 'T', 'Temperature', item.temperature),
+    renderValue('density', 'D', 'Density', item.density),
+    renderValue('magic', 'MP', 'Magic Power', item.magicPower)
+  );
+  body.append(values);
 
   const badge = createElement('span', 'shelf-card__stock', String(Math.max(0, item.stock)));
   badge.setAttribute('aria-hidden', 'true');
@@ -69,13 +69,14 @@ function renderCard(item: IShelfItemView, isBlocked: boolean, showValues: boolea
 export function renderShelf(container: HTMLElement, view: IShelfView): void {
   const panel = createElement('div', 'shelf panel panel--wood');
   panel.classList.toggle('shelf--blocked', view.isBlocked);
+  panel.classList.toggle('shelf--values-touch-only', view.showValues === 'touch-only');
   panel.append(createElement('h2', 'panel-title shelf__title', 'Ingredients'));
 
   if (view.items.length === 0) {
     panel.append(createElement('p', 'shelf__empty', 'The shelf fills up when a game starts.'));
   } else {
     const list = createElement('ul', 'shelf__list');
-    list.append(...view.items.map((item) => renderCard(item, view.isBlocked, view.showValues)));
+    list.append(...view.items.map((item) => renderCard(item, view.isBlocked)));
     panel.append(list);
   }
 

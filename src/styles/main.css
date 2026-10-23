@@ -1800,6 +1800,125 @@ button:disabled {
   }
 }
 
+/* Level 3: with a mouse the numbers live in the tooltip; touch screens (no hover) keep them on the card. */
+@media (hover: hover) {
+  .shelf--values-touch-only .shelf-card__values {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Ingredient tooltip
+   ========================================================================== */
+
+.tooltip {
+  position: fixed;
+  z-index: var(--z-tooltip);
+  width: min(260px, calc(100vw - 16px));
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  pointer-events: none;
+  background: var(--texture-stone);
+  border: var(--frame-width) solid var(--color-frame);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 12px 30px rgb(0 0 0 / 65%),
+    0 0 18px rgb(143 220 74 / 12%);
+}
+
+.tooltip[hidden] {
+  display: none;
+}
+
+/* Arrow pointing at the card: left edge by default, right edge when opened to the left. */
+.tooltip::before {
+  position: absolute;
+  top: 18px;
+  left: -7px;
+  width: 12px;
+  height: 12px;
+  content: '';
+  background: var(--color-surface-raised);
+  border-bottom: var(--frame-width) solid var(--color-frame);
+  border-left: var(--frame-width) solid var(--color-frame);
+  transform: rotate(45deg);
+}
+
+.tooltip--left::before {
+  right: -7px;
+  left: auto;
+  transform: rotate(-135deg);
+}
+
+.tooltip--up::before {
+  top: auto;
+  bottom: 18px;
+}
+
+.tooltip__title {
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  color: var(--color-heading);
+  border-bottom: var(--border-width) solid rgb(168 136 79 / 35%);
+}
+
+.tooltip__values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.tooltip__row {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.tooltip__icon {
+  width: 18px;
+  height: 18px;
+}
+
+.tooltip__label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.tooltip__value {
+  font-family: var(--font-numeric);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltip__row--temperature .tooltip__icon,
+.tooltip__row--temperature .tooltip__value {
+  color: var(--color-temperature);
+}
+
+.tooltip__row--density .tooltip__icon,
+.tooltip__row--density .tooltip__value {
+  color: var(--color-density);
+}
+
+.tooltip__row--magic .tooltip__icon,
+.tooltip__row--magic .tooltip__value {
+  color: var(--color-magic);
+}
+
+.tooltip__description {
+  padding-top: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--fs-sm);
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+  border-top: var(--border-width) solid rgb(168 136 79 / 35%);
+}
+
 /* ==========================================================================
    Drag & drop
    ========================================================================== */

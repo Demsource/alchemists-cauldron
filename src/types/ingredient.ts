@@ -20,4 +20,5 @@ export interface IIngredient extends IParameters {
   id: IngredientId;
   name: string;
   icon: IngredientIconName;
+  description: string; // short flavour line for the tooltip
 }
