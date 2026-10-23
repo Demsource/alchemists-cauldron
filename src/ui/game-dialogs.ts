@@ -101,7 +101,12 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
   return openDialog(root, { id: 'game-over-dialog', title: 'Game Over', content, actions });
 }
 
-const HELP_SECTIONS: { title: string; items: string[] }[] = [
+export interface IHelpSection {
+  title: string;
+  items: string[];
+}
+
+const HELP_SECTIONS: IHelpSection[] = [
   {
     title: 'Goal',
     items: [
@@ -144,8 +149,12 @@ const HELP_SECTIONS: { title: string; items: string[] }[] = [
   }
 ];
 
-export function openHelpDialog(root: HTMLElement): IDialogHandle {
-  const content = HELP_SECTIONS.map((section) => {
+// Extra sections (built from game data, e.g. reactions) are added after the fixed rules.
+export function openHelpDialog(
+  root: HTMLElement,
+  extraSections: IHelpSection[] = []
+): IDialogHandle {
+  const content = [...HELP_SECTIONS, ...extraSections].map((section) => {
     const block = createElement('section', 'help__section');
     const list = createElement('ul', 'help__list');
     list.append(...section.items.map((item) => createElement('li', 'help__item', item)));

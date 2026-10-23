@@ -16,6 +16,7 @@ import { clearSave, loadGame } from '../storage/save';
 import type { IGameState } from '../types/game';
 import type { IngredientId } from '../types/ingredient';
 import { showBrewMessage } from '../ui/brew-message';
+import { showReactionMessage } from '../ui/reaction-message';
 import { closeAllDialogs } from '../ui/dialogs';
 import { openPauseDialog } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
@@ -135,6 +136,8 @@ export function createGameFlow(
     if (outcome.state.timeLeft !== added.timeLeft) {
       syncTimer(outcome.state.timeLeft);
     }
+
+    showReactionMessage(layout.stage, outcome.fired);
 
     refocusCard(id);
   };

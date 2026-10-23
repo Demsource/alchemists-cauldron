@@ -1061,6 +1061,19 @@ button:disabled {
   color: #5b2f8c;
 }
 
+.recipe__reactions {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--fs-sm);
+  color: #5b2f8c;
+  background: rgb(91 47 140 / 10%);
+  border-left: 3px solid #5b2f8c;
+}
+
+.recipe__reactions-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
 .recipe__counter {
   display: flex;
   gap: var(--space-2);
@@ -1996,6 +2009,11 @@ button:disabled {
 .brew-message--fail {
   color: var(--color-danger);
   box-shadow: 0 0 18px var(--color-danger-glow);
+}
+
+.brew-message--reaction {
+  color: var(--color-magic);
+  box-shadow: 0 0 18px rgb(164 107 224 / 50%);
 }
 
 .brew-message__title {

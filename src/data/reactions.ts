@@ -20,6 +20,7 @@ export const REACTIONS: readonly IReaction[] = [
     id: 'bubbling',
     name: 'Bubbling',
     description: 'Magic Power +50%, −10 s',
+    trigger: 'Fairy Dust + Caustic Acid',
     difficulty: 'medium',
     isActive: (list) => hasAll(list, 'fairy-dust', 'caustic-acid'),
     apply: (v) => ({ ...v, magicPower: percent(v.magicPower, 50) }),
@@ -29,6 +30,7 @@ export const REACTIONS: readonly IReaction[] = [
     id: 'volatile-mix',
     name: 'Volatile Mix',
     description: '−1 life, the cauldron is cleared',
+    trigger: 'Phoenix Feather + Essence of the Void',
     difficulty: 'hard',
     isActive: (list) => hasAll(list, 'phoenix-feather', 'void-essence'),
     apply: (v) => v,
@@ -38,6 +40,7 @@ export const REACTIONS: readonly IReaction[] = [
     id: 'solar-frost',
     name: 'Solar Frost',
     description: 'Temperature set to 0, Density +20%',
+    trigger: 'Dragon Tears + Frost Lotus',
     difficulty: 'medium',
     isActive: (list) => hasAll(list, 'dragon-tears', 'frost-lotus'),
     apply: (v) => ({ ...v, temperature: 0, density: percent(v.density, 20) })
@@ -46,6 +49,7 @@ export const REACTIONS: readonly IReaction[] = [
     id: 'rooted-steam',
     name: 'Rooted Steam',
     description: 'Density +25%, Magic Power −10%',
+    trigger: 'Mandrake Root + Toad Slime',
     difficulty: 'hard',
     isActive: (list) => hasAll(list, 'mandrake-root', 'toad-slime'),
     apply: (v) => ({
@@ -79,6 +83,7 @@ export const REACTIONS: readonly IReaction[] = [
     id: 'pressure-spike',
     name: 'Pressure Spike',
     description: 'Density set to 70, Magic Power +10%',
+    trigger: 'Total Density 70 or more',
     difficulty: 'hard',
     isActive: (list) => sums(list).density >= 70,
     apply: (v) => ({ ...v, density: 70, magicPower: percent(v.magicPower, 10) })

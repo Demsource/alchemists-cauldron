@@ -12,6 +12,7 @@ export interface IReaction {
   id: string;
   name: string;
   description: string; // short player-facing effect text
+  trigger?: string; // player-facing trigger text, shown in Help for enabled reactions
   difficulty: Exclude<Difficulty, 'easy'> | null; // null: in the catalogue, not enabled
   isActive: (ingredients: IIngredient[]) => boolean;
   apply: (values: IParameters) => IParameters; // value effect, applied while active
