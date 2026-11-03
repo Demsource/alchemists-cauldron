@@ -1,6 +1,7 @@
 import { isIngredientId } from '../data/ingredients';
 import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
+import { t } from '../i18n';
 import { getShortcut } from '../logic/shortcuts';
 import { bindKeyboard } from '../ui/keyboard';
 import { DIFFICULTIES, getDifficultyLabel } from '../logic/difficulty';
@@ -30,17 +31,13 @@ function getReactionHelp(): IHelpSection {
             (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
           )
           .join('; ')
-      : 'no reactions';
+      : t('dialogs.help.reactions.none');
     return `${getDifficultyLabel(difficulty)} — ${list}.`;
   });
 
   return {
-    title: 'Reactions',
-    items: [
-      'Some combinations react in the cauldron and change the values, so watch more than the plain sums.',
-      'A reaction fires once when its combination appears; its value change lasts while the combination stays.',
-      ...items
-    ]
+    title: t('dialogs.help.reactions.title'),
+    items: [...t('dialogs.help.reactions.items', { returnObjects: true }), ...items]
   };
 }
 

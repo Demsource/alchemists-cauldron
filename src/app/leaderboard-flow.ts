@@ -1,6 +1,13 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
 import { DIFFICULTIES, getDifficulty, getDifficultyLabel, isDifficulty } from '../logic/difficulty';
-import { addEntry, isTopResult, validatePlayerName } from '../logic/leaderboard';
+import { t } from '../i18n';
+import {
+  addEntry,
+  isTopResult,
+  PLAYER_NAME_MAX,
+  PLAYER_NAME_MIN,
+  validatePlayerName
+} from '../logic/leaderboard';
 import { getState } from '../state/game-state';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard';
 import type { IGameState } from '../types/game';
@@ -99,8 +106,11 @@ export function createLeaderboardFlow(
 
     if (!validation.isValid) {
       input.setAttribute('aria-invalid', 'true');
-      if (error) {
-        error.textContent = validation.error;
+      if (error && validation.error) {
+        error.textContent = t(`dialogs.nameForm.errors.${validation.error}`, {
+          min: PLAYER_NAME_MIN,
+          max: PLAYER_NAME_MAX
+        });
       }
       input.focus();
       return;
@@ -124,9 +134,9 @@ export function createLeaderboardFlow(
 
     openConfirmDialog(layout.dialogRoot, {
       id: 'clear-leaderboard-dialog',
-      title: `Clear ${label} results?`,
-      message: `Every name and score on the ${label} leaderboard will be erased. This cannot be undone.`,
-      confirmLabel: 'Clear',
+      title: t('dialogs.clearLeaderboard.title', { difficulty: label }),
+      message: t('dialogs.clearLeaderboard.message', { difficulty: label }),
+      confirmLabel: t('dialogs.clearLeaderboard.confirm'),
       confirmAction: 'confirm-clear-leaderboard'
     });
   };

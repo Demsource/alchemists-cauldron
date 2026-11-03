@@ -45,5 +45,102 @@
     "startGame": "Start Game",
     "continueGame": "Continue Game",
     "pourOut": "Pour Out"
+  },
+  "dialogs": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "exitToMenu": "Exit to Menu",
+    "pause": {
+      "title": "Game Paused",
+      "text": "The cauldron simmers quietly. Take a breath.",
+      "resume": "Resume"
+    },
+    "gameOver": {
+      "title": "Game Over",
+      "reason": {
+        "time": "Time is up",
+        "lives": "No lives left",
+        "ingredients": "Out of ingredients"
+      },
+      "finalScore": "Final Score",
+      "notTop": "Not enough for the Top-10 this time. Brew again!",
+      "submitScore": "Submit Score",
+      "playAgain": "Play Again",
+      "leaderboard": "Leaderboard"
+    },
+    "nameForm": {
+      "label": "Enter your name ({{min}}–{{max}} chars):",
+      "placeholder": "Alchemist name…",
+      "hint": "Letters, digits, space, _ and - are allowed.",
+      "errors": {
+        "length": "Use {{min}}–{{max}} characters.",
+        "chars": "Only letters, digits, space, _ and - are allowed."
+      }
+    },
+    "clearLeaderboard": {
+      "title": "Clear {{difficulty}} results?",
+      "message": "Every name and score on the {{difficulty}} leaderboard will be erased. This cannot be undone.",
+      "confirm": "Clear"
+    },
+    "help": {
+      "title": "How to Brew",
+      "goal": {
+        "title": "Goal",
+        "items": [
+          "Brew the current recipe: move Temperature, Density and Magic Power into the green target zones.",
+          "Each correct brew gives points, bonus time and a new recipe."
+        ]
+      },
+      "howToPlay": {
+        "title": "How to play",
+        "items": [
+          "Click an ingredient on the shelf to add it to the cauldron.",
+          "The recipe shows how many ingredients you may use, e.g. Ingredients: 2 / 4.",
+          "Watch the 3 bars change after every ingredient.",
+          "Press Brew to check the mixture. A small tolerance is allowed around each target."
+        ]
+      },
+      "difficulty": {
+        "title": "Difficulty",
+        "items": [
+          "Choose Easy, Medium or Hard in the Menu before a game starts.",
+          "Harder levels put more ingredients on the shelf, allow a smaller tolerance and give less bonus time, but every brew is worth more points.",
+          "Each difficulty has its own Top-10 leaderboard."
+        ]
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "items": [
+          "1–8: add the ingredient at that shelf position.",
+          "{{brew}}: brew · {{pourOut}}: pour out · {{pause}} or Esc: pause.",
+          "Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.",
+          "Tab moves between buttons; Enter or Space presses the focused one."
+        ]
+      },
+      "stock": {
+        "title": "Stock",
+        "items": [
+          "Every ingredient has a limited stock shown in the round badge.",
+          "Used ingredients are spent — even when a brew fails.",
+          "An empty slot stays on the shelf but can no longer be used."
+        ]
+      },
+      "gameOver": {
+        "title": "Game over",
+        "items": [
+          "A failed brew costs one life.",
+          "The game ends when time runs out, all lives are lost, or you run out of ingredients.",
+          "Reach the Top-10 to write your name on the leaderboard."
+        ]
+      },
+      "reactions": {
+        "title": "Reactions",
+        "items": [
+          "Some combinations react in the cauldron and change the values, so watch more than the plain sums.",
+          "A reaction fires once when its combination appears; its value change lasts while the combination stays."
+        ],
+        "none": "no reactions"
+      }
+    }
   }
 }
