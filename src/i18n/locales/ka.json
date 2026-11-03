@@ -65,7 +65,7 @@
     "hint": "დაიწყეთ თამაში პირველი რეცეპტისთვის.",
     "ingredients": "ინგრედიენტები:",
     "activeReactions": "აქტიური რეაქციები:",
-    "hintButton": "Hint"
+    "hintButton": "მინიშნება"
   },
   "shelf": {
     "title": "ინგრედიენტები",
@@ -105,15 +105,15 @@
     "back": "უკან"
   },
   "hint": {
-    "title": "Hint",
-    "recipe": "How to brew {{recipe}}:",
-    "pourOutFirst": "First press Pour Out to empty the cauldron (−{{seconds}} s).",
-    "add": "Add these ingredients:",
-    "thenBrew": "Then press Brew.",
-    "brewNow": "The mixture is already right — press Brew.",
-    "result": "The bars will show:",
-    "none": "No winning mixture can be made from the ingredients left.",
-    "ok": "OK"
+    "title": "მინიშნება",
+    "recipe": "როგორ მოვხარშოთ „{{recipe}}“:",
+    "pourOutFirst": "ჯერ დააჭირეთ „დაღვრას“ ქვაბის დასაცლელად (−{{seconds}} წმ).",
+    "add": "დაამატეთ ეს ინგრედიენტები:",
+    "thenBrew": "შემდეგ დააჭირეთ „მოხარშვას“.",
+    "brewNow": "ნარევი უკვე მზადაა — დააჭირეთ „მოხარშვას“.",
+    "result": "შკალები აჩვენებს:",
+    "none": "დარჩენილი ინგრედიენტებით მომგებიანი ნარევის მომზადება შეუძლებელია.",
+    "ok": "კარგი"
   },
   "ingredients": {
     "dragon-tears": {
@@ -310,7 +310,7 @@
         "title": "კლავიატურა",
         "items": [
           "1–8: თაროზე ამ პოზიციაზე მდგომი ინგრედიენტის დამატება.",
-          "{{brew}}: მოხარშვა · {{pourOut}}: დაღვრა · {{hint}}: hint · {{pause}} ან Esc: პაუზა.",
+          "{{brew}}: მოხარშვა · {{pourOut}}: დაღვრა · {{hint}}: მინიშნება · {{pause}} ან Esc: პაუზა.",
           "მალსახმობები მხოლოდ თამაშის მსვლელობისას მუშაობს. პაუზისას Enter აგრძელებს თამაშს, Esc კი საწყის ეკრანზე გაბრუნებთ.",
           "Tab ღილაკებს შორის გადაადგილდება; Enter ან Space აჭერს არჩეულ ღილაკს."
         ]

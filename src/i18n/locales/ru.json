@@ -71,7 +71,7 @@
     "hint": "Начните игру, чтобы узнать первый рецепт.",
     "ingredients": "Ингредиенты:",
     "activeReactions": "Активные реакции:",
-    "hintButton": "Hint"
+    "hintButton": "Подсказка"
   },
   "shelf": {
     "title": "Ингредиенты",
@@ -113,15 +113,15 @@
     "back": "Назад"
   },
   "hint": {
-    "title": "Hint",
-    "recipe": "How to brew {{recipe}}:",
-    "pourOutFirst": "First press Pour Out to empty the cauldron (−{{seconds}} s).",
-    "add": "Add these ingredients:",
-    "thenBrew": "Then press Brew.",
-    "brewNow": "The mixture is already right — press Brew.",
-    "result": "The bars will show:",
-    "none": "No winning mixture can be made from the ingredients left.",
-    "ok": "OK"
+    "title": "Подсказка",
+    "recipe": "Как сварить «{{recipe}}»:",
+    "pourOutFirst": "Сначала нажмите «Вылить», чтобы опустошить котёл (−{{seconds}} с).",
+    "add": "Добавьте эти ингредиенты:",
+    "thenBrew": "Затем нажмите «Сварить».",
+    "brewNow": "Смесь уже готова — нажмите «Сварить».",
+    "result": "Шкалы покажут:",
+    "none": "Из оставшихся ингредиентов нельзя приготовить выигрышную смесь.",
+    "ok": "ОК"
   },
   "ingredients": {
     "dragon-tears": {
@@ -318,7 +318,7 @@
         "title": "Клавиатура",
         "items": [
           "1–8: добавить ингредиент с этой позиции на полке.",
-          "{{brew}}: сварить · {{pourOut}}: вылить · {{hint}}: hint · {{pause}} или Esc: пауза.",
+          "{{brew}}: сварить · {{pourOut}}: вылить · {{hint}}: подсказка · {{pause}} или Esc: пауза.",
           "Горячие клавиши работают только во время игры. На паузе Enter продолжает игру, а Esc возвращает на стартовый экран.",
           "Tab переходит между кнопками; Enter или Space нажимает выбранную."
         ]
