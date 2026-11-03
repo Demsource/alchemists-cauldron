@@ -1102,6 +1102,27 @@ button:disabled {
   color: #a2261b;
 }
 
+/* Half the usual button height: the recipe panel sets the board's row height, so a full-size
+   button here pushes the page into a vertical scroll. */
+.recipe__hint-btn {
+  gap: var(--space-1);
+  align-self: center;
+  min-height: 22px;
+  padding: 0 var(--space-2);
+  font-size: var(--fs-xs);
+  line-height: 1;
+}
+
+.recipe__hint-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.recipe__hint-btn .actions__key {
+  height: 1.4em;
+  font-size: 0.65rem;
+}
+
 .recipe--empty .recipe__row-range {
   color: var(--color-ink-muted);
 }

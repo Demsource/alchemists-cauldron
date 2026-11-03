@@ -1,5 +1,6 @@
 import { bindEvents } from './app/events';
 import { createGameFlow } from './app/game-flow';
+import { createHintFlow } from './app/hint-flow';
 import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
 import { createSaveFlow } from './app/save-flow';
@@ -25,7 +26,9 @@ if (mount) {
     onGameOver: leaderboard.showGameOver
   });
 
-  bindEvents(layout, { game, menu, leaderboard });
+  const hint = createHintFlow(layout, game);
+
+  bindEvents(layout, { game, menu, leaderboard, hint });
   bindTooltip(layout);
 
   // The game-over check must run before saving and rendering, so it subscribes first.

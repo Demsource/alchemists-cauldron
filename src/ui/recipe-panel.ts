@@ -1,5 +1,6 @@
 import { SCENE_ICONS, UI_ICONS } from '../assets/icons';
 import { t } from '../i18n';
+import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import { createElement, createIcon } from './dom';
 
 interface IRangeView {
@@ -18,6 +19,24 @@ export interface IRecipePanelView {
   capacity: number;
   difficultyLabel: string;
   activeReactions: string[]; // names of reactions changing the values right now
+  canHint: boolean; // only during a running game
+}
+
+// Compact on purpose: the recipe panel sets the board's row height.
+function renderHintButton(canHint: boolean): HTMLButtonElement {
+  const label = t('recipe.hintButton');
+  const key = SHORTCUT_KEYS.hint;
+  const button = createElement('button', 'btn recipe__hint-btn');
+  button.type = 'button';
+  button.dataset.action = 'hint';
+  button.disabled = !canHint;
+  button.setAttribute('aria-label', `${label} (${key})`);
+  button.setAttribute('aria-keyshortcuts', key);
+
+  const hint = createElement('kbd', 'actions__key', key);
+  hint.setAttribute('aria-hidden', 'true');
+  button.append(createIcon(UI_ICONS.hint, 'icon recipe__hint-icon'), label, hint);
+  return button;
 }
 
 const formatNumber = (value: number): string => (value < 0 ? `−${Math.abs(value)}` : String(value));
@@ -86,6 +105,10 @@ export function renderRecipePanel(container: HTMLElement, view: IRecipePanelView
     createIcon(SCENE_ICONS.divider, 'icon recipe__divider'),
     ranges
   );
+
+  if (recipe) {
+    panel.append(renderHintButton(view.canHint));
+  }
 
   // Tells the player why a value is not a plain sum.
   if (view.activeReactions.length > 0) {
