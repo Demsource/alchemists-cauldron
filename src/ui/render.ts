@@ -62,7 +62,15 @@ function getBars(state: IGameState): IBarView[] {
 }
 
 // Last rendered view per container, as JSON (views are plain data).
-const lastViews = new WeakMap<HTMLElement, string>();
+let lastViews = new WeakMap<HTMLElement, string>();
+
+// After a language change every section must rebuild its text: forget the cached views
+// and drop the parts that are built once (HUD frame, bars) so the next render recreates them.
+export function resetRenderedViews(layout: ILayoutRefs): void {
+  lastViews = new WeakMap();
+  layout.hud.replaceChildren();
+  layout.bars.replaceChildren();
+}
 
 function renderIfChanged<T>(
   container: HTMLElement,

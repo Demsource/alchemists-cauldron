@@ -111,7 +111,15 @@ export interface IHelpSection {
 }
 
 // Fixed rules, in display order; text lives in dialogs.help.<section> in the locale files.
-const HELP_SECTIONS = ['goal', 'howToPlay', 'difficulty', 'keyboard', 'stock', 'gameOver'] as const;
+const HELP_SECTIONS = [
+  'language',
+  'goal',
+  'howToPlay',
+  'difficulty',
+  'keyboard',
+  'stock',
+  'gameOver'
+] as const;
 
 // Built on open, so the text follows the current language.
 function getHelpSections(): IHelpSection[] {

@@ -22,6 +22,8 @@
   "menu": {
     "title": "Menu",
     "nav": "Game menu",
+    "language": "Language",
+    "languageLocked": "Language can only be changed before a game starts.",
     "difficulty": "Difficulty",
     "difficultyLocked": "Difficulty can only be changed before a game starts.",
     "continueGame": "Continue Game",
@@ -260,6 +262,14 @@
     },
     "help": {
       "title": "How to Brew",
+      "language": {
+        "title": "Language",
+        "items": [
+          "The game is available in English (EN), Georgian (KA) and Russian (RU).",
+          "Choose a language in the Menu before a game starts or after Game Over — it cannot be changed during a game.",
+          "Your choice is remembered the next time you open the game."
+        ]
+      },
       "goal": {
         "title": "Goal",
         "items": [

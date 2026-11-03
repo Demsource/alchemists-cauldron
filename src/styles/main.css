@@ -1709,6 +1709,12 @@ button:disabled {
   opacity: 0.45;
 }
 
+.menu__language-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
 .menu__note {
   font-size: var(--fs-sm);
   font-style: italic;

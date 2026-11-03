@@ -42,22 +42,14 @@ function renderStageDecor(): HTMLDivElement {
 export function renderLayout(mount: HTMLElement): ILayoutRefs {
   const root = createElement('div', 'app');
   const hud = createElement('section', 'hud');
-  hud.setAttribute('aria-label', t('layout.hud'));
-
   const board = createElement('main', 'board');
-
   const shelf = createElement('aside', 'board__shelf');
-  shelf.setAttribute('aria-label', t('layout.shelf'));
 
   const stage = createElement('section', 'board__stage');
-  stage.setAttribute('aria-label', t('layout.stage'));
   stage.append(renderStageDecor());
 
   const recipe = createElement('aside', 'board__recipe');
-  recipe.setAttribute('aria-label', t('layout.recipe'));
-
   const bars = createElement('section', 'board__bars');
-  bars.setAttribute('aria-label', t('layout.bars'));
 
   board.append(shelf, stage, recipe, bars);
 
@@ -67,5 +59,21 @@ export function renderLayout(mount: HTMLElement): ILayoutRefs {
   root.append(renderHeader(), hud, board, actions, dialogRoot);
   mount.replaceChildren(root);
 
-  return { root, hud, shelf, stage, recipe, bars, actions, dialogRoot };
+  const layout = { root, hud, shelf, stage, recipe, bars, actions, dialogRoot };
+  updateLayoutText(layout);
+  return layout;
+}
+
+// The layout is built once, so a language change patches its text in place.
+export function updateLayoutText(layout: ILayoutRefs): void {
+  const title = layout.root.querySelector('.app-title__text');
+  if (title) {
+    title.textContent = t('app.title');
+  }
+
+  layout.hud.setAttribute('aria-label', t('layout.hud'));
+  layout.shelf.setAttribute('aria-label', t('layout.shelf'));
+  layout.stage.setAttribute('aria-label', t('layout.stage'));
+  layout.recipe.setAttribute('aria-label', t('layout.recipe'));
+  layout.bars.setAttribute('aria-label', t('layout.bars'));
 }

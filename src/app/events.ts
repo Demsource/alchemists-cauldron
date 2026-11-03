@@ -129,6 +129,9 @@ function bindDialogs(layout: ILayoutRefs, { game, menu, leaderboard }: IFlows): 
       case 'set-difficulty':
         menu.chooseDifficulty(button?.dataset.difficulty);
         break;
+      case 'set-locale':
+        menu.chooseLocale(button?.dataset.locale);
+        break;
       case 'open-leaderboard':
         leaderboard.showLeaderboard();
         break;

@@ -1,5 +1,5 @@
 import { UI_ICONS } from '../assets/icons';
-import { t } from '../i18n';
+import { LOCALE_LABELS, LOCALES, t, type Locale } from '../i18n';
 import type { Difficulty } from '../types/recipe';
 import { createElement, createIcon } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -11,6 +11,7 @@ export interface IDifficultyOptionView {
 }
 
 export interface IMenuView {
+  locale: Locale;
   difficulty: Difficulty;
   options: IDifficultyOptionView[];
   canChangeDifficulty: boolean;
@@ -56,6 +57,35 @@ function renderDifficulty(view: IMenuView): HTMLElement {
   return group;
 }
 
+// Locked by the same rule as difficulty (canChangeDifficulty), with the same look.
+function renderLanguage(view: IMenuView): HTMLElement {
+  const group = createElement('fieldset', 'menu__difficulty menu__language');
+  group.disabled = !view.canChangeDifficulty;
+  group.append(createElement('legend', 'menu__legend', t('menu.language')));
+
+  const options = createElement('div', 'menu__language-options');
+  options.append(
+    ...LOCALES.map((locale) => {
+      const { short, name } = LOCALE_LABELS[locale];
+      const button = createElement('button', 'btn menu__difficulty-btn', short);
+      button.type = 'button';
+      button.lang = locale;
+      button.dataset.action = 'set-locale';
+      button.dataset.locale = locale;
+      button.setAttribute('aria-label', name);
+      button.setAttribute('aria-pressed', String(locale === view.locale));
+      return button;
+    })
+  );
+  group.append(options);
+
+  if (!view.canChangeDifficulty) {
+    group.append(createElement('p', 'menu__note', t('menu.languageLocked')));
+  }
+
+  return group;
+}
+
 function renderMenuButton(
   label: string,
   action: string,
@@ -85,7 +115,7 @@ export function openMenuDialog(root: HTMLElement, view: IMenuView): IDialogHandl
     id: 'menu-dialog',
     title: t('menu.title'),
     dismissible: true,
-    content: [renderDifficulty(view), nav],
+    content: [renderLanguage(view), renderDifficulty(view), nav],
     actions: [createDialogButton(t('menu.close'), 'close-dialog')]
   });
 }

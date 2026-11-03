@@ -1,4 +1,5 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
+import { getLocale, isLocale, setLocale } from '../i18n';
 import {
   canChangeDifficulty,
   DIFFICULTIES,
@@ -10,7 +11,7 @@ import {
   setDifficulty
 } from '../logic/difficulty';
 import { createInitialState, getState, setState } from '../state/game-state';
-import { loadDifficulty, saveDifficulty } from '../storage/preferences';
+import { loadDifficulty, saveDifficulty, saveLocale } from '../storage/preferences';
 import { hasSave } from '../storage/save';
 import { closeAllDialogs } from '../ui/dialogs';
 import type { ILayoutRefs } from '../ui/layout';
@@ -19,6 +20,7 @@ import { openMenuDialog, updateMenuDifficulty } from '../ui/menu';
 export interface IMenuFlow {
   showMenu: () => void;
   chooseDifficulty: (value: string | undefined) => void;
+  chooseLocale: (value: string | undefined) => void;
   restoreDifficulty: () => void;
 }
 
@@ -28,6 +30,7 @@ export function createMenuFlow(layout: ILayoutRefs): IMenuFlow {
     const state = getState();
 
     openMenuDialog(layout.dialogRoot, {
+      locale: getLocale(),
       difficulty: getDifficulty(state),
       options: DIFFICULTIES.map((difficulty) => ({
         difficulty,
@@ -58,10 +61,24 @@ export function createMenuFlow(layout: ILayoutRefs): IMenuFlow {
     }
   };
 
+  // Same rule as difficulty: only outside a run, so a running game never changes language.
+  const chooseLocale = (value: string | undefined): void => {
+    if (!isLocale(value) || value === getLocale() || !canChangeDifficulty(getState())) {
+      return;
+    }
+
+    saveLocale(value);
+    void setLocale(value).then(() => {
+      // Reopen so the menu itself is rebuilt in the new language; focus stays on the choice.
+      showMenu();
+      layout.dialogRoot.querySelector<HTMLButtonElement>(`button[data-locale="${value}"]`)?.focus();
+    });
+  };
+
   // Start on the difficulty the player chose last time (Medium when nothing is saved).
   const restoreDifficulty = (): void => {
     setState(setDifficulty(getState(), loadDifficulty(DEFAULT_DIFFICULTY)));
   };
 
-  return { showMenu, chooseDifficulty, restoreDifficulty };
+  return { showMenu, chooseDifficulty, chooseLocale, restoreDifficulty };
 }
