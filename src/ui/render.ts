@@ -1,6 +1,7 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
 import { t } from '../i18n';
+import { getIngredientName, getReactionName, getRecipeName } from '../i18n/game-text';
 import { getDifficultyLabel } from '../logic/difficulty';
 import { isInRange } from '../logic/calculate-cauldron';
 import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
@@ -24,7 +25,7 @@ function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelf
 
   return getShelfIngredients(settings).map((ingredient) => ({
     id: ingredient.id,
-    name: ingredient.name,
+    name: getIngredientName(ingredient.id),
     temperature: ingredient.temperature,
     density: ingredient.density,
     magicPower: ingredient.magicPower,
@@ -113,19 +114,22 @@ export function renderGame(
   });
 
   renderIfChanged(layout.stage, renderCauldron, {
-    ingredients: state.cauldronIngredients.map(({ id, name }) => ({ id, name })),
+    ingredients: state.cauldronIngredients.map(({ id }) => ({ id, name: getIngredientName(id) })),
     capacity: settings.maxCauldronIngredients
   });
 
   renderIfChanged(layout.recipe, renderRecipePanel, {
-    recipe: state.activeRecipe,
+    recipe: state.activeRecipe && {
+      ...state.activeRecipe,
+      name: getRecipeName(state.activeRecipe.id)
+    },
     added: state.cauldronIngredients.length,
     capacity: settings.maxCauldronIngredients,
     difficultyLabel: getDifficultyLabel(state.difficulty ?? DEFAULT_DIFFICULTY),
     activeReactions: getActiveReactions(
       state.cauldronIngredients,
       getReactionsFor(state.difficulty ?? DEFAULT_DIFFICULTY)
-    ).map((reaction) => reaction.name)
+    ).map((reaction) => getReactionName(reaction.id))
   });
 
   renderIfChanged(layout.actions, renderActions, {

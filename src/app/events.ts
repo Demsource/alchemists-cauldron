@@ -2,6 +2,7 @@ import { isIngredientId } from '../data/ingredients';
 import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
 import { t } from '../i18n';
+import { getReactionDescription, getReactionName, getReactionTrigger } from '../i18n/game-text';
 import { getShortcut } from '../logic/shortcuts';
 import { bindKeyboard } from '../ui/keyboard';
 import { DIFFICULTIES, getDifficultyLabel } from '../logic/difficulty';
@@ -28,7 +29,8 @@ function getReactionHelp(): IHelpSection {
     const list = reactions.length
       ? reactions
           .map(
-            (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
+            (reaction) =>
+              `${getReactionName(reaction.id)} (${getReactionTrigger(reaction)}): ${getReactionDescription(reaction.id)}`
           )
           .join('; ')
       : t('dialogs.help.reactions.none');

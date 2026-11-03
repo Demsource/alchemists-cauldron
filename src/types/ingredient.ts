@@ -16,9 +16,8 @@ export interface IParameters {
   magicPower: number;
 }
 
+// Name and tooltip description live in the locale files (ingredients.<id>).
 export interface IIngredient extends IParameters {
   id: IngredientId;
-  name: string;
   icon: IngredientIconName;
-  description: string; // short flavour line for the tooltip
 }

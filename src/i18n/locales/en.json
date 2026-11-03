@@ -86,6 +86,127 @@
     "pourOut": "Cauldron poured out",
     "pourOutDetails": "−{{seconds}} s · no life lost"
   },
+  "ingredients": {
+    "dragon-tears": {
+      "name": "Dragon Tears",
+      "description": "Wept by an old dragon. Warm to the touch and faintly glowing."
+    },
+    "fairy-dust": {
+      "name": "Fairy Dust",
+      "description": "Glittering powder from fairy wings. Light, lively and a little mischievous."
+    },
+    "frost-lotus": {
+      "name": "Frost Lotus",
+      "description": "A flower that blooms only on frozen lakes. It cools any brew."
+    },
+    "mandrake-root": {
+      "name": "Mandrake Root",
+      "description": "A grumpy root that thickens the mixture. Handle with earmuffs."
+    },
+    "caustic-acid": {
+      "name": "Caustic Acid",
+      "description": "Bubbling green acid. Strong, heavy and full of raw power."
+    },
+    "void-essence": {
+      "name": "Essence of the Void",
+      "description": "A drop of pure darkness. It chills and thins the brew but floods it with magic."
+    },
+    "phoenix-feather": {
+      "name": "Phoenix Feather",
+      "description": "Still smouldering from rebirth. Fierce heat and bright magic."
+    },
+    "toad-slime": {
+      "name": "Toad Slime",
+      "description": "Thick swamp slime. Makes any potion heavy, but holds no magic at all."
+    }
+  },
+  "reactions": {
+    "bubbling": {
+      "name": "Bubbling",
+      "description": "Magic Power +50%, −10 s"
+    },
+    "volatile-mix": {
+      "name": "Volatile Mix",
+      "description": "−1 life, the cauldron is cleared"
+    },
+    "solar-frost": {
+      "name": "Solar Frost",
+      "description": "Temperature set to 0, Density +20%"
+    },
+    "rooted-steam": {
+      "name": "Rooted Steam",
+      "description": "Density +25%, Magic Power −10%"
+    },
+    "ashen-bloom": {
+      "name": "Ashen Bloom",
+      "description": "Temperature +10, Magic Power +25%"
+    },
+    "annihilation": {
+      "name": "Annihilation",
+      "description": "Temperature set to 0, Density doubled"
+    },
+    "pressure-spike": {
+      "name": "Pressure Spike",
+      "description": "Density set to 70, Magic Power +10%"
+    },
+    "magma-flux": {
+      "name": "Magma Flux",
+      "description": "Magic Power +20%, Density −10%"
+    },
+    "deep-freeze": {
+      "name": "Deep Freeze",
+      "description": "Density +15%, Magic Power −15%"
+    },
+    "arcane-saturation": {
+      "name": "Arcane Saturation",
+      "description": "Magic Power set to 80, Temperature +5"
+    },
+    "steam-burst": {
+      "name": "Steam Burst",
+      "description": "Temperature +10, −5 s"
+    },
+    "black-ice": {
+      "name": "Black Ice",
+      "description": "Temperature −10, Magic Power +20%"
+    },
+    "heavy-spark": {
+      "name": "Heavy Spark",
+      "description": "Density +20%, Magic Power +10%"
+    },
+    "burning-root": {
+      "name": "Burning Root",
+      "description": "Temperature +15, Density −10%"
+    },
+    "void-resonance": {
+      "name": "Void Resonance",
+      "description": "Magic Power +30%, Temperature −5"
+    }
+  },
+  "reactionTriggers": {
+    "pressure-spike": "Total Density 70 or more"
+  },
+  "recipes": {
+    "moon-mist": "Moon Mist",
+    "root-bloom": "Root Bloom",
+    "frost-steam": "Frost Steam",
+    "quiet-swirl": "Quiet Swirl",
+    "bright-dew": "Bright Dew",
+    "snow-dust": "Snow Dust",
+    "acid-spark": "Acid Spark",
+    "void-ember": "Void Ember",
+    "heavy-acid": "Heavy Acid",
+    "frost-acid": "Frost Acid",
+    "dusty-void": "Dusty Void",
+    "dragon-void": "Dragon Void",
+    "rooted-night": "Rooted Night",
+    "phoenix-pulse": "Phoenix Pulse",
+    "slime-crown": "Slime Crown",
+    "void-flame": "Void Flame",
+    "acid-bog": "Acid Bog",
+    "frozen-ash": "Frozen Ash",
+    "triple-eclipse": "Triple Eclipse",
+    "ember-soup": "Ember Soup"
+  },
   "dialogs": {
     "close": "Close",
     "cancel": "Cancel",

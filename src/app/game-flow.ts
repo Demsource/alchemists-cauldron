@@ -19,6 +19,7 @@ import { playFailureEffect, playSuccessEffect } from '../ui/brew-effects';
 import { showBrewMessage } from '../ui/brew-message';
 import { showPourOutMessage } from '../ui/pour-out-message';
 import { showReactionMessage } from '../ui/reaction-message';
+import { getReactionDescription, getReactionName } from '../i18n/game-text';
 import { closeAllDialogs } from '../ui/dialogs';
 import { openPauseDialog } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
@@ -171,7 +172,13 @@ export function createGameFlow(
       syncTimer(outcome.state.timeLeft);
     }
 
-    showReactionMessage(layout.stage, outcome.fired);
+    showReactionMessage(
+      layout.stage,
+      outcome.fired.map(({ id }) => ({
+        name: getReactionName(id),
+        description: getReactionDescription(id)
+      }))
+    );
 
     refocusCard(id);
   };
