@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import en from './locales/en.json';
+import kaJson from './locales/ka.json';
 
 export { t } from 'i18next';
 
@@ -41,9 +42,14 @@ export function onLocaleChange(listener: () => void): void {
   i18next.on('languageChanged', listener);
 }
 
-// English is the source of keys; ka / ru are added with the translations.
+// English is the source of keys. Typing each translation as `typeof en` makes a missing
+// key a build error; extra keys (e.g. Russian _few / _many plural forms) are allowed.
+type Translation = typeof en;
+const ka: Translation = kaJson;
+
 const resources = {
-  en: { translation: en }
+  en: { translation: en },
+  ka: { translation: ka }
 } as const;
 
 // Resources are bundled, so init finishes synchronously and the first render is translated.
