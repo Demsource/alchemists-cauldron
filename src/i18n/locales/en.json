@@ -46,6 +46,46 @@
     "continueGame": "Continue Game",
     "pourOut": "Pour Out"
   },
+  "params": {
+    "temperature": "Temperature",
+    "density": "Density",
+    "magicPower": "Magic Power",
+    "short": {
+      "temperature": "T",
+      "density": "D",
+      "magicPower": "MP"
+    }
+  },
+  "recipe": {
+    "mode": "{{difficulty}} mode",
+    "kicker": "Current recipe",
+    "none": "No recipe yet",
+    "hint": "Start a game to reveal your first recipe.",
+    "ingredients": "Ingredients:",
+    "activeReactions": "Active reactions:"
+  },
+  "shelf": {
+    "title": "Ingredients",
+    "empty": "The shelf fills up when a game starts.",
+    "add_one": "Add {{name}}, {{count}} left",
+    "add_other": "Add {{name}}, {{count}} left"
+  },
+  "cauldron": {
+    "slots": "Ingredients in the cauldron",
+    "empty": "The cauldron is empty."
+  },
+  "bars": {
+    "target": "Target {{min}} – {{max}}",
+    "noTarget": "Target —"
+  },
+  "messages": {
+    "brewSuccess": "Perfect brew!",
+    "brewSuccessDetails": "+{{points}} points · +{{seconds}}s",
+    "brewFail": "The mixture failed…",
+    "brewFailDetails": "Off target: {{params}} · −1 life",
+    "pourOut": "Cauldron poured out",
+    "pourOutDetails": "−{{seconds}} s · no life lost"
+  },
   "dialogs": {
     "close": "Close",
     "cancel": "Cancel",

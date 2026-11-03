@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { createElement } from './dom';
 
 // Same short-lived banner as the brew and reaction messages (CSS fade-out, removed on animationend).
@@ -7,8 +8,12 @@ export function showPourOutMessage(container: HTMLElement, penalty: number): voi
   const message = createElement('div', 'brew-message brew-message--pour-out');
   message.setAttribute('role', 'status');
   message.append(
-    createElement('strong', 'brew-message__title', 'Cauldron poured out'),
-    createElement('span', 'brew-message__details', `−${penalty} s · no life lost`)
+    createElement('strong', 'brew-message__title', t('messages.pourOut')),
+    createElement(
+      'span',
+      'brew-message__details',
+      t('messages.pourOutDetails', { seconds: penalty })
+    )
   );
 
   message.addEventListener('animationend', () => message.remove());

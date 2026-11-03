@@ -1,5 +1,6 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
+import { t } from '../i18n';
 import { getDifficultyLabel } from '../logic/difficulty';
 import { isInRange } from '../logic/calculate-cauldron';
 import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
@@ -31,10 +32,10 @@ function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelf
   }));
 }
 
-const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters; label: string }[] = [
-  { key: 'temperature', parameter: 'temperature', label: 'Temperature' },
-  { key: 'density', parameter: 'density', label: 'Density' },
-  { key: 'magic', parameter: 'magicPower', label: 'Magic Power' }
+const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters }[] = [
+  { key: 'temperature', parameter: 'temperature' },
+  { key: 'density', parameter: 'density' },
+  { key: 'magic', parameter: 'magicPower' }
 ];
 
 function getBars(state: IGameState): IBarView[] {
@@ -44,13 +45,13 @@ function getBars(state: IGameState): IBarView[] {
   );
   const recipe = state.activeRecipe;
 
-  return BAR_DEFINITIONS.map(({ key, parameter, label }) => {
+  return BAR_DEFINITIONS.map(({ key, parameter }) => {
     const value = values[parameter];
     const target = recipe ? recipe[parameter] : null;
 
     return {
       key,
-      label,
+      label: t(`params.${parameter}`),
       value,
       ...BAR_SCALES[parameter],
       target,
