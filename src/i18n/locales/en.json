@@ -103,6 +103,17 @@
     "clear": "Clear Leaderboard",
     "back": "Back"
   },
+  "hint": {
+    "title": "Hint",
+    "recipe": "How to brew {{recipe}}:",
+    "pourOutFirst": "First press Pour Out to empty the cauldron (−{{seconds}} s).",
+    "add": "Add these ingredients:",
+    "thenBrew": "Then press Brew.",
+    "brewNow": "The mixture is already right — press Brew.",
+    "result": "The bars will show:",
+    "none": "No winning mixture can be made from the ingredients left.",
+    "ok": "OK"
+  },
   "ingredients": {
     "dragon-tears": {
       "name": "Dragon Tears",
