@@ -3,7 +3,7 @@ import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
 import { getShortcut } from '../logic/shortcuts';
 import { bindKeyboard } from '../ui/keyboard';
-import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
+import { DIFFICULTIES, getDifficultyLabel } from '../logic/difficulty';
 import { getReactionsFor } from '../logic/reactions-logic';
 import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
@@ -31,7 +31,7 @@ function getReactionHelp(): IHelpSection {
           )
           .join('; ')
       : 'no reactions';
-    return `${DIFFICULTY_LABELS[difficulty]} — ${list}.`;
+    return `${getDifficultyLabel(difficulty)} — ${list}.`;
   });
 
   return {

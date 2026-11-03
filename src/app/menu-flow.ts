@@ -2,8 +2,8 @@ import { DEFAULT_DIFFICULTY } from '../data/difficulty';
 import {
   canChangeDifficulty,
   DIFFICULTIES,
-  DIFFICULTY_LABELS,
   getDifficulty,
+  getDifficultyLabel,
   getDifficultySettings,
   getDifficultySummary,
   isDifficulty,
@@ -31,7 +31,7 @@ export function createMenuFlow(layout: ILayoutRefs): IMenuFlow {
       difficulty: getDifficulty(state),
       options: DIFFICULTIES.map((difficulty) => ({
         difficulty,
-        label: DIFFICULTY_LABELS[difficulty],
+        label: getDifficultyLabel(difficulty),
         summary: getDifficultySummary(getDifficultySettings(difficulty))
       })),
       canChangeDifficulty: canChangeDifficulty(state),

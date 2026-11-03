@@ -1,6 +1,6 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
-import { DIFFICULTY_LABELS } from '../logic/difficulty';
+import { getDifficultyLabel } from '../logic/difficulty';
 import { isInRange } from '../logic/calculate-cauldron';
 import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
 import { canPourOut, isCauldronFull } from '../logic/cauldron';
@@ -120,7 +120,7 @@ export function renderGame(
     recipe: state.activeRecipe,
     added: state.cauldronIngredients.length,
     capacity: settings.maxCauldronIngredients,
-    difficultyLabel: DIFFICULTY_LABELS[state.difficulty ?? DEFAULT_DIFFICULTY],
+    difficultyLabel: getDifficultyLabel(state.difficulty ?? DEFAULT_DIFFICULTY),
     activeReactions: getActiveReactions(
       state.cauldronIngredients,
       getReactionsFor(state.difficulty ?? DEFAULT_DIFFICULTY)

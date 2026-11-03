@@ -1,4 +1,5 @@
 import { UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import type { Difficulty } from '../types/recipe';
 import { createElement, createIcon } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
@@ -38,7 +39,7 @@ function renderDifficultyButton(
 function renderDifficulty(view: IMenuView): HTMLElement {
   const group = createElement('fieldset', 'menu__difficulty');
   group.disabled = !view.canChangeDifficulty;
-  group.append(createElement('legend', 'menu__legend', 'Difficulty'));
+  group.append(createElement('legend', 'menu__legend', t('menu.difficulty')));
 
   const options = createElement('div', 'menu__difficulty-options');
   options.append(
@@ -49,9 +50,7 @@ function renderDifficulty(view: IMenuView): HTMLElement {
   group.append(options);
 
   if (!view.canChangeDifficulty) {
-    group.append(
-      createElement('p', 'menu__note', 'Difficulty can only be changed before a game starts.')
-    );
+    group.append(createElement('p', 'menu__note', t('menu.difficultyLocked')));
   }
 
   return group;
@@ -71,23 +70,23 @@ function renderMenuButton(
 
 export function openMenuDialog(root: HTMLElement, view: IMenuView): IDialogHandle {
   const nav = createElement('nav', 'menu__list');
-  nav.setAttribute('aria-label', 'Game menu');
+  nav.setAttribute('aria-label', t('menu.nav'));
 
   if (view.canContinue) {
-    nav.append(renderMenuButton('Continue Game', 'continue-game', UI_ICONS.play, true));
+    nav.append(renderMenuButton(t('menu.continueGame'), 'continue-game', UI_ICONS.play, true));
   }
 
   nav.append(
-    renderMenuButton('New Game', 'new-game', UI_ICONS.flask, !view.canContinue),
-    renderMenuButton('Leaderboard', 'open-leaderboard', UI_ICONS.trophy)
+    renderMenuButton(t('menu.newGame'), 'new-game', UI_ICONS.flask, !view.canContinue),
+    renderMenuButton(t('menu.leaderboard'), 'open-leaderboard', UI_ICONS.trophy)
   );
 
   return openDialog(root, {
     id: 'menu-dialog',
-    title: 'Menu',
+    title: t('menu.title'),
     dismissible: true,
     content: [renderDifficulty(view), nav],
-    actions: [createDialogButton('Close', 'close-dialog')]
+    actions: [createDialogButton(t('menu.close'), 'close-dialog')]
   });
 }
 

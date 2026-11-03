@@ -1,4 +1,5 @@
 import { UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { formatTime } from '../utils/format';
 import { createElement, createIcon } from './dom';
 
@@ -19,7 +20,7 @@ function renderScore(score: number): HTMLDivElement {
 
   block.append(
     createIcon(UI_ICONS.score, 'icon hud__icon'),
-    createElement('span', 'hud__label', 'Score'),
+    createElement('span', 'hud__label', t('hud.score')),
     value
   );
   return block;
@@ -33,7 +34,7 @@ function renderTimer(): HTMLDivElement {
   time.setAttribute('role', 'timer');
   row.append(
     createIcon(UI_ICONS.clock, 'icon hud__icon'),
-    createElement('span', 'hud__label', 'Time'),
+    createElement('span', 'hud__label', t('hud.time')),
     time
   );
 
@@ -63,7 +64,10 @@ function renderLives({ isActive, lives, maxLives }: IHudView): HTMLDivElement {
   const block = createElement('div', 'hud__block hud__block--lives');
   const hearts = createElement('div', 'hud__hearts');
   hearts.setAttribute('role', 'img');
-  hearts.setAttribute('aria-label', isActive ? `${lives} of ${maxLives} lives left` : 'No lives');
+  hearts.setAttribute(
+    'aria-label',
+    isActive ? t('hud.livesLeft', { count: lives, max: maxLives }) : t('hud.noLives')
+  );
 
   if (isActive) {
     for (let index = 0; index < maxLives; index += 1) {
@@ -79,7 +83,7 @@ function renderLives({ isActive, lives, maxLives }: IHudView): HTMLDivElement {
     hearts.append(createElement('span', 'hud__placeholder', '—'));
   }
 
-  block.append(createElement('span', 'hud__label', 'Lives'), hearts);
+  block.append(createElement('span', 'hud__label', t('hud.lives')), hearts);
   return block;
 }
 

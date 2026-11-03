@@ -1,14 +1,14 @@
 import { DEFAULT_DIFFICULTY, DIFFICULTY_SETTINGS } from '../data/difficulty';
+import { t } from '../i18n';
 import type { IDifficultySettings, IGameState } from '../types/game';
 import type { Difficulty } from '../types/recipe';
 
 export const DIFFICULTIES: readonly Difficulty[] = ['easy', 'medium', 'hard'];
 
-export const DIFFICULTY_LABELS: Readonly<Record<Difficulty, string>> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard'
-};
+// A function, not a constant, so the label follows the current language.
+export function getDifficultyLabel(difficulty: Difficulty): string {
+  return t(`difficulty.${difficulty}`);
+}
 
 export function getDifficulty(state: IGameState): Difficulty {
   return state.difficulty ?? DEFAULT_DIFFICULTY;
@@ -35,10 +35,10 @@ export function setDifficulty(state: IGameState, difficulty: Difficulty): IGameS
 // Short button text, built from the same settings the game uses.
 export function getDifficultySummary(settings: IDifficultySettings): string {
   return [
-    `${settings.shelfSize} ingredients`,
-    `${settings.startTime} s`,
+    t('difficulty.ingredients', { count: settings.shelfSize }),
+    t('difficulty.seconds', { count: settings.startTime }),
     `±${settings.tolerance}`,
-    `${settings.lives} lives`
+    t('difficulty.lives', { count: settings.lives })
   ].join(' · ');
 }
 

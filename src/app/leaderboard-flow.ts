@@ -1,5 +1,5 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
-import { DIFFICULTIES, DIFFICULTY_LABELS, getDifficulty, isDifficulty } from '../logic/difficulty';
+import { DIFFICULTIES, getDifficulty, getDifficultyLabel, isDifficulty } from '../logic/difficulty';
 import { addEntry, isTopResult, validatePlayerName } from '../logic/leaderboard';
 import { getState } from '../state/game-state';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard';
@@ -71,10 +71,10 @@ export function createLeaderboardFlow(
 
     const leaderboard = openLeaderboardDialog(layout.dialogRoot, {
       difficulty,
-      tabs: DIFFICULTIES.map((item) => ({ difficulty: item, label: DIFFICULTY_LABELS[item] })),
+      tabs: DIFFICULTIES.map((item) => ({ difficulty: item, label: getDifficultyLabel(item) })),
       rows: loadLeaderboard(difficulty).map((entry) => ({
         ...entry,
-        difficultyLabel: DIFFICULTY_LABELS[entry.difficulty]
+        difficultyLabel: getDifficultyLabel(entry.difficulty)
       }))
     });
     leaderboard.element.addEventListener('close', returnFromLeaderboard);
@@ -120,7 +120,7 @@ export function createLeaderboardFlow(
   };
 
   const askToClear = (): void => {
-    const label = DIFFICULTY_LABELS[leaderboardDifficulty];
+    const label = getDifficultyLabel(leaderboardDifficulty);
 
     openConfirmDialog(layout.dialogRoot, {
       id: 'clear-leaderboard-dialog',

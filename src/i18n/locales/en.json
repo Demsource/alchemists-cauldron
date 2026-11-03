@@ -1,5 +1,49 @@
 {
   "app": {
     "title": "Alchemist's Cauldron"
+  },
+  "layout": {
+    "hud": "Game status",
+    "shelf": "Ingredient shelf",
+    "stage": "Cauldron",
+    "recipe": "Current recipe",
+    "bars": "Cauldron parameters"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "ingredients_one": "{{count}} ingredient",
+    "ingredients_other": "{{count}} ingredients",
+    "seconds": "{{count}} s",
+    "lives_one": "{{count}} life",
+    "lives_other": "{{count}} lives"
+  },
+  "menu": {
+    "title": "Menu",
+    "nav": "Game menu",
+    "difficulty": "Difficulty",
+    "difficultyLocked": "Difficulty can only be changed before a game starts.",
+    "continueGame": "Continue Game",
+    "newGame": "New Game",
+    "leaderboard": "Leaderboard",
+    "close": "Close"
+  },
+  "hud": {
+    "score": "Score",
+    "time": "Time",
+    "lives": "Lives",
+    "livesLeft_one": "{{count}} of {{max}} lives left",
+    "livesLeft_other": "{{count}} of {{max}} lives left",
+    "noLives": "No lives"
+  },
+  "actions": {
+    "help": "Help",
+    "menu": "Menu",
+    "pause": "Pause",
+    "brew": "Brew",
+    "startGame": "Start Game",
+    "continueGame": "Continue Game",
+    "pourOut": "Pour Out"
   }
 }

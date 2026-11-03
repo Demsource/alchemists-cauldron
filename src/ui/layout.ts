@@ -1,4 +1,5 @@
 import { SCENE_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { createElement, createIcon } from './dom';
 
 export interface ILayoutRefs {
@@ -18,7 +19,7 @@ function renderHeader(): HTMLElement {
 
   title.append(
     createIcon(SCENE_ICONS.hexagram, 'app-title__ornament'),
-    createElement('span', 'app-title__text', "Alchemist's Cauldron"),
+    createElement('span', 'app-title__text', t('app.title')),
     createIcon(SCENE_ICONS.hexagram, 'app-title__ornament')
   );
 
@@ -41,22 +42,22 @@ function renderStageDecor(): HTMLDivElement {
 export function renderLayout(mount: HTMLElement): ILayoutRefs {
   const root = createElement('div', 'app');
   const hud = createElement('section', 'hud');
-  hud.setAttribute('aria-label', 'Game status');
+  hud.setAttribute('aria-label', t('layout.hud'));
 
   const board = createElement('main', 'board');
 
   const shelf = createElement('aside', 'board__shelf');
-  shelf.setAttribute('aria-label', 'Ingredient shelf');
+  shelf.setAttribute('aria-label', t('layout.shelf'));
 
   const stage = createElement('section', 'board__stage');
-  stage.setAttribute('aria-label', 'Cauldron');
+  stage.setAttribute('aria-label', t('layout.stage'));
   stage.append(renderStageDecor());
 
   const recipe = createElement('aside', 'board__recipe');
-  recipe.setAttribute('aria-label', 'Current recipe');
+  recipe.setAttribute('aria-label', t('layout.recipe'));
 
   const bars = createElement('section', 'board__bars');
-  bars.setAttribute('aria-label', 'Cauldron parameters');
+  bars.setAttribute('aria-label', t('layout.bars'));
 
   board.append(shelf, stage, recipe, bars);
 
