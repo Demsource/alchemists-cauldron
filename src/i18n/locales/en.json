@@ -64,7 +64,8 @@
     "none": "No recipe yet",
     "hint": "Start a game to reveal your first recipe.",
     "ingredients": "Ingredients:",
-    "activeReactions": "Active reactions:"
+    "activeReactions": "Active reactions:",
+    "hintButton": "Hint"
   },
   "shelf": {
     "title": "Ingredients",
@@ -102,6 +103,17 @@
     },
     "clear": "Clear Leaderboard",
     "back": "Back"
+  },
+  "hint": {
+    "title": "Hint",
+    "recipe": "How to brew {{recipe}}:",
+    "pourOutFirst": "First press Pour Out to empty the cauldron (−{{seconds}} s).",
+    "add": "Add these ingredients:",
+    "thenBrew": "Then press Brew.",
+    "brewNow": "The mixture is already right — press Brew.",
+    "result": "The bars will show:",
+    "none": "No winning mixture can be made from the ingredients left.",
+    "ok": "OK"
   },
   "ingredients": {
     "dragon-tears": {
@@ -286,6 +298,14 @@
           "Press Brew to check the mixture. A small tolerance is allowed around each target."
         ]
       },
+      "hint": {
+        "title": "Hint",
+        "items": [
+          "During a game, press Hint on the recipe panel (or {{hint}}) to see a winning mix for the current recipe.",
+          "The hint builds on what is already in the cauldron; if that cannot work, it tells you to Pour Out first.",
+          "The game is paused while the hint is open. Hints are free — use them only if you want to."
+        ]
+      },
       "difficulty": {
         "title": "Difficulty",
         "items": [
@@ -298,7 +318,7 @@
         "title": "Keyboard",
         "items": [
           "1–8: add the ingredient at that shelf position.",
-          "{{brew}}: brew · {{pourOut}}: pour out · {{pause}} or Esc: pause.",
+          "{{brew}}: brew · {{pourOut}}: pour out · {{hint}}: hint · {{pause}} or Esc: pause.",
           "Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.",
           "Tab moves between buttons; Enter or Space presses the focused one."
         ]

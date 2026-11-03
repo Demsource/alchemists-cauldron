@@ -115,6 +115,7 @@ const HELP_SECTIONS = [
   'language',
   'goal',
   'howToPlay',
+  'hint',
   'difficulty',
   'keyboard',
   'stock',

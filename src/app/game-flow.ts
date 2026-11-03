@@ -28,6 +28,7 @@ export interface IGameFlow {
   startGame: () => void;
   continueGame: () => void;
   exitToMenu: () => void;
+  freeze: () => boolean;
   pause: () => void;
   resume: () => void;
   brewMixture: () => void;
@@ -85,18 +86,25 @@ export function createGameFlow(
     openPauseDialog(layout.dialogRoot, leaveToStartScreen);
   };
 
-  const pause = (): void => {
+  // Pauses without the Pause dialog (e.g. while the hint is open). False when nothing runs.
+  const freeze = (): boolean => {
     // Keep the exact remaining time, then freeze it.
     const state = withCurrentTime(getState());
     const paused = pauseGame(state);
 
     if (paused === state) {
-      return;
+      return false;
     }
 
     stopTimer();
     setState(paused);
-    openPauseDialog(layout.dialogRoot, leaveToStartScreen);
+    return true;
+  };
+
+  const pause = (): void => {
+    if (freeze()) {
+      openPauseDialog(layout.dialogRoot, leaveToStartScreen);
+    }
   };
 
   const resume = (): void => {
@@ -202,6 +210,7 @@ export function createGameFlow(
     startGame,
     continueGame,
     exitToMenu,
+    freeze,
     pause,
     resume,
     brewMixture,

@@ -137,7 +137,8 @@ export function renderGame(
     activeReactions: getActiveReactions(
       state.cauldronIngredients,
       getReactionsFor(state.difficulty ?? DEFAULT_DIFFICULTY)
-    ).map((reaction) => getReactionName(reaction.id))
+    ).map((reaction) => getReactionName(reaction.id)),
+    canHint: state.status === 'playing'
   });
 
   renderIfChanged(layout.actions, renderActions, {

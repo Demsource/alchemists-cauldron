@@ -4,6 +4,7 @@ export type ShortcutAction =
   | { type: 'add'; index: number } // shelf position, 0-based
   | { type: 'brew' }
   | { type: 'pour-out' }
+  | { type: 'hint' }
   | { type: 'pause' };
 
 // What the handler needs to know about a key press (a plain object, so this stays pure).
@@ -25,6 +26,7 @@ const KEY_MAP: Readonly<Record<string, ShortcutAction>> = {
   ),
   b: { type: 'brew' },
   o: { type: 'pour-out' },
+  h: { type: 'hint' },
   p: { type: 'pause' },
   escape: { type: 'pause' }
 };
@@ -32,6 +34,7 @@ const KEY_MAP: Readonly<Record<string, ShortcutAction>> = {
 export const SHORTCUT_KEYS = {
   brew: 'B',
   pourOut: 'O',
+  hint: 'H',
   pause: 'P'
 } as const;
 

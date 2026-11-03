@@ -13,6 +13,7 @@ import { bindDragAndDrop } from '../ui/drag-drop';
 import { openHelpDialog, type IHelpSection } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import type { IGameFlow } from './game-flow';
+import type { IHintFlow } from './hint-flow';
 import type { ILeaderboardFlow } from './leaderboard-flow';
 import type { IMenuFlow } from './menu-flow';
 
@@ -20,6 +21,7 @@ interface IFlows {
   game: IGameFlow;
   menu: IMenuFlow;
   leaderboard: ILeaderboardFlow;
+  hint: IHintFlow;
 }
 
 // Help lists the enabled reactions per difficulty, straight from the reaction data.
@@ -188,8 +190,18 @@ function bindVisibility({ game }: IFlows): void {
   });
 }
 
+function bindRecipe(layout: ILayoutRefs, { hint }: IFlows): void {
+  layout.recipe.addEventListener('click', (event) => {
+    const button = findActionButton(event);
+
+    if (button?.dataset.action === 'hint' && !button.disabled) {
+      hint.showHint();
+    }
+  });
+}
+
 // One keyboard handler, gated by the game state inside getShortcut (playing only).
-function bindShortcuts({ game }: IFlows): void {
+function bindShortcuts({ game, hint }: IFlows): void {
   bindKeyboard((input) => {
     const state = getState();
     const shortcut = getShortcut(input, state.status);
@@ -209,6 +221,9 @@ function bindShortcuts({ game }: IFlows): void {
       case 'pour-out':
         game.pourOutMixture();
         return true;
+      case 'hint':
+        hint.showHint();
+        return true;
       case 'pause':
         game.pause();
         return true;
@@ -222,6 +237,7 @@ export function bindEvents(layout: ILayoutRefs, flows: IFlows): void {
   bindShelf(layout, flows);
   bindDrag(layout, flows);
   bindShortcuts(flows);
+  bindRecipe(layout, flows);
   bindFooter(layout, flows);
   bindDialogs(layout, flows);
   bindVisibility(flows);
