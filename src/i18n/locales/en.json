@@ -298,6 +298,14 @@
           "Press Brew to check the mixture. A small tolerance is allowed around each target."
         ]
       },
+      "hint": {
+        "title": "Hint",
+        "items": [
+          "During a game, press Hint on the recipe panel (or {{hint}}) to see a winning mix for the current recipe.",
+          "The hint builds on what is already in the cauldron; if that cannot work, it tells you to Pour Out first.",
+          "The game is paused while the hint is open. Hints are free — use them only if you want to."
+        ]
+      },
       "difficulty": {
         "title": "Difficulty",
         "items": [

@@ -57,6 +57,7 @@ The task is split into four stages with a maximum of **393 points**:
   - [x] **US 3.5** Visual feedback — a correct brew flashes the cauldron and bursts sparkles, with `+score` and `+10s` floating up from the HUD; a failed brew shows an explosion with smoke and a short shake of the HUD and play field; ingredient icons float inside the cauldron and the newest one drops in; the parameter bars move smoothly. All effects are CSS animations cleaned up on `animationend` (no `setTimeout` / `setInterval`), and with reduced motion only short colour flashes remain.
   - [x] **US 3.6** Keyboard shortcuts — one `keydown` handler gated by the game state: shortcuts run only while playing (never on the start, pause or Game Over screens, never while typing, with modifier keys or on key repeat); `1`–`8` add the ingredient at that shelf position, `B` brews, `O` pours out, `P` / `Esc` pause; on the pause dialog Resume is focused, so Enter resumes; all controls stay real buttons with native Enter / Space; key hints are shown on cards, buttons and in Help.
 - [x] **Localization** — the whole game in English, Georgian and Russian with i18next: every on-screen and screen-reader text, ingredient, reaction and recipe names, plural forms and `Intl` dates and numbers; an **EN / KA / RU** switcher in the Menu, locked during a run like difficulty and remembered after reload; switching redraws the screen without touching the game state; fonts with Georgian and Cyrillic letters.
+- [x] **Recipe hints** — a **Hint** button on the recipe panel (and `H`) opens a free hint with a winning plan for the current recipe: the ingredients to add (building on what is already in the cauldron, or after Pour Out when that cannot work) and the resulting values. The plan respects stock, cauldron size and reactions, never fires a reaction that costs a life or empties the cauldron, and always passes the brew check. The game is paused while the hint is open.
 
 ---
 
@@ -76,6 +77,7 @@ The task is split into four stages with a maximum of **393 points**:
 5. **Add ingredients** — click a card on the shelf, or drag it with the mouse and drop it on the cauldron (it glows when the drop is allowed). Each one puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 6. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
    On Medium and Hard some combinations cause a **reaction** (listed in **Help**): a purple message shows what happened, the recipe panel lists the active reactions, and the bars already include their effect. Some reactions also cost time or a life, or empty the cauldron.
+   Stuck? Press **Hint** on the recipe panel (or `H`): the game pauses and shows which ingredients to add for a winning brew. Hints are free and optional; **OK** continues the game.
 7. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked. If the mixture is clearly wrong, press **Pour Out** instead: it empties the cauldron for 10 seconds and you keep your lives (the poured ingredients are not returned).
 8. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
 9. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
@@ -92,6 +94,7 @@ Shortcuts work only during a running game (not on the start, pause or Game Over 
 | `1`–`8`                  | Add the ingredient at that shelf position     |
 | `B`                      | Brew                                          |
 | `O`                      | Pour Out                                      |
+| `H`                      | Hint (pauses the game while it is open)       |
 | `P` / `Esc`              | Pause                                         |
 | `Enter`                  | On the pause dialog: Resume (it has focus)    |
 | `Esc`                    | On the pause dialog: back to the start screen |
@@ -163,9 +166,9 @@ src/
   assets/     SVG icons (one separate asset per game element)
   data/       ingredients, recipes, difficulty settings, bar scales (ids and numbers only)
   i18n/       i18next setup, game-data text lookup and the locale files (en, ka, ru)
-  logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard
+  logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard, hint solver
   state/      game state store and the countdown timer
-  app/        game flows (game, menu, leaderboard, save) and event wiring
+  app/        game flows (game, menu, leaderboard, save, hint) and event wiring
   storage/    localStorage access (leaderboard, game save, difficulty and language preferences)
   types/      TypeScript interfaces and types
   ui/         DOM rendering: layout, HUD, shelf, cauldron, bars, recipe panel, dialogs
