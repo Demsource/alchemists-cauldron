@@ -1334,6 +1334,12 @@ button:disabled {
   min-width: min(360px, 100%);
 }
 
+/* One line in every language, so Start Game and Brew keep the same height and a two-word
+   label (e.g. Georgian "თამაშის დაწყება") never grows the footer into a page scroll. */
+.actions__primary-label {
+  white-space: nowrap;
+}
+
 .actions__ornament {
   width: 22px;
   height: 22px;
@@ -2349,6 +2355,61 @@ button:disabled {
     height: 44px;
     padding: 8px;
   }
+}
+
+/* ==========================================================================
+   Languages
+   ========================================================================== */
+
+/* Cinzel has no Cyrillic or Georgian letters and Cormorant Garamond no Georgian, so these
+   languages swap the font tokens. Google Fonts serves them by unicode-range: English
+   players never download them. */
+:root:lang(ka) {
+  --font-display: 'Noto Serif Georgian', Georgia, serif;
+  --font-body: 'Noto Serif Georgian', Georgia, serif;
+}
+
+:root:lang(ru) {
+  --font-display: 'Cormorant SC', 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Georgian has no letter case in running text (Mtavruli capitals are for rare emphasis) and
+   its letters are already wide, so the uppercase, letter-spaced English label style is off. */
+:lang(ka)
+  :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    .btn,
+    .panel-title,
+    .hud__label,
+    .recipe__kicker,
+    .bar__label,
+    .actions__icon-label,
+    .game-over__reason,
+    .menu__legend,
+    .recipe__difficulty,
+    .leaderboard__head,
+    .brew-message__title
+  ) {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Georgian letters are wider and taller than Cormorant at the same size. The recipe panel sets
+   the board's row height, so a two-line recipe name there would push the page into a scroll. */
+:lang(ka) .recipe__name {
+  font-size: var(--fs-lg);
+}
+
+/* Georgian and Russian words are longer than English ones: let long words in buttons and
+   titles wrap instead of pushing out of their box. */
+:is(:lang(ka), :lang(ru))
+  :is(.btn, .dialog__title, .panel-title, .recipe__name, .app-title__text, .leaderboard__head) {
+  /* break-word (not anywhere): it does not shrink a flex item's minimum width. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 /* ==========================================================================
