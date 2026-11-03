@@ -4,8 +4,9 @@ import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
 import { createSaveFlow } from './app/save-flow';
 import { bindTooltip } from './app/tooltip-flow';
-import { initI18n } from './i18n';
+import { DEFAULT_LOCALE, initI18n } from './i18n';
 import { getSettings, getState, subscribe } from './state/game-state';
+import { loadLocale } from './storage/preferences';
 import { hasSave } from './storage/save';
 import { renderLayout } from './ui/layout';
 import { renderGame } from './ui/render';
@@ -13,8 +14,8 @@ import { renderGame } from './ui/render';
 const mount = document.querySelector<HTMLDivElement>('#app');
 
 if (mount) {
-  // Before any rendering, so every t() call has its resources.
-  initI18n();
+  // Before any rendering, so every t() call has its resources and the saved language.
+  initI18n(loadLocale(DEFAULT_LOCALE));
   const layout = renderLayout(mount);
 
   const menu = createMenuFlow(layout);
