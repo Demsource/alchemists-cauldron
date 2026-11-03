@@ -1,5 +1,6 @@
+import { t } from '../i18n';
 import type { Difficulty } from '../types/recipe';
-import { formatDate } from '../utils/format';
+import { formatDate, formatNumber } from '../utils/format';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
 
@@ -21,13 +22,13 @@ export interface ILeaderboardView {
   rows: ILeaderboardRowView[];
 }
 
-const COLUMNS = ['Rank', 'Name', 'Score', 'Difficulty', 'Date'];
+const COLUMNS = ['rank', 'name', 'score', 'difficulty', 'date'] as const;
 const MEDALS = ['gold', 'silver', 'bronze'];
 
 function renderTabs(view: ILeaderboardView): HTMLElement {
   const tabs = createElement('div', 'leaderboard__tabs');
   tabs.setAttribute('role', 'group');
-  tabs.setAttribute('aria-label', 'Difficulty');
+  tabs.setAttribute('aria-label', t('leaderboard.tabs'));
 
   tabs.append(
     ...view.tabs.map((tab) => {
@@ -69,7 +70,7 @@ function renderRow(row: ILeaderboardRowView, index: number): HTMLTableRowElement
   tr.append(
     renderRank(index),
     createElement('td', 'leaderboard__name', row.name),
-    createElement('td', 'leaderboard__score', String(row.score)),
+    createElement('td', 'leaderboard__score', formatNumber(row.score)),
     createElement('td', 'leaderboard__difficulty', row.difficultyLabel),
     dateCell
   );
@@ -78,17 +79,17 @@ function renderRow(row: ILeaderboardRowView, index: number): HTMLTableRowElement
 
 function renderTable(rows: ILeaderboardRowView[]): HTMLElement {
   if (rows.length === 0) {
-    return createElement('p', 'leaderboard__empty', 'No alchemist has brewed a result yet.');
+    return createElement('p', 'leaderboard__empty', t('leaderboard.empty'));
   }
 
   const wrapper = createElement('div', 'leaderboard__scroll');
   const table = createElement('table', 'leaderboard');
-  table.append(createElement('caption', 'visually-hidden', 'Top 10 results'));
+  table.append(createElement('caption', 'visually-hidden', t('leaderboard.caption')));
 
   const headRow = createElement('tr');
   headRow.append(
     ...COLUMNS.map((column) => {
-      const th = createElement('th', 'leaderboard__head', column);
+      const th = createElement('th', 'leaderboard__head', t(`leaderboard.columns.${column}`));
       th.scope = 'col';
       return th;
     })
@@ -105,16 +106,16 @@ function renderTable(rows: ILeaderboardRowView[]): HTMLElement {
 }
 
 export function openLeaderboardDialog(root: HTMLElement, view: ILeaderboardView): IDialogHandle {
-  const clear = createDialogButton('Clear Leaderboard', 'clear-leaderboard', 'danger');
+  const clear = createDialogButton(t('leaderboard.clear'), 'clear-leaderboard', 'danger');
   clear.disabled = view.rows.length === 0;
 
   return openDialog(root, {
     id: 'leaderboard-dialog',
-    title: 'Top Alchemists',
+    title: t('leaderboard.title'),
     variant: 'parchment',
     dismissible: true,
     wide: true,
     content: [renderTabs(view), renderTable(view.rows)],
-    actions: [clear, createDialogButton('Back', 'close-dialog', 'primary')]
+    actions: [clear, createDialogButton(t('leaderboard.back'), 'close-dialog', 'primary')]
   });
 }

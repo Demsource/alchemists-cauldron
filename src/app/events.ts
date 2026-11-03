@@ -1,9 +1,11 @@
 import { isIngredientId } from '../data/ingredients';
 import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
+import { t } from '../i18n';
+import { getReactionDescription, getReactionName, getReactionTrigger } from '../i18n/game-text';
 import { getShortcut } from '../logic/shortcuts';
 import { bindKeyboard } from '../ui/keyboard';
-import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
+import { DIFFICULTIES, getDifficultyLabel } from '../logic/difficulty';
 import { getReactionsFor } from '../logic/reactions-logic';
 import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
@@ -27,20 +29,17 @@ function getReactionHelp(): IHelpSection {
     const list = reactions.length
       ? reactions
           .map(
-            (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
+            (reaction) =>
+              `${getReactionName(reaction.id)} (${getReactionTrigger(reaction)}): ${getReactionDescription(reaction.id)}`
           )
           .join('; ')
-      : 'no reactions';
-    return `${DIFFICULTY_LABELS[difficulty]} — ${list}.`;
+      : t('dialogs.help.reactions.none');
+    return `${getDifficultyLabel(difficulty)} — ${list}.`;
   });
 
   return {
-    title: 'Reactions',
-    items: [
-      'Some combinations react in the cauldron and change the values, so watch more than the plain sums.',
-      'A reaction fires once when its combination appears; its value change lasts while the combination stays.',
-      ...items
-    ]
+    title: t('dialogs.help.reactions.title'),
+    items: [...t('dialogs.help.reactions.items', { returnObjects: true }), ...items]
   };
 }
 
@@ -129,6 +128,9 @@ function bindDialogs(layout: ILayoutRefs, { game, menu, leaderboard }: IFlows): 
         break;
       case 'set-difficulty':
         menu.chooseDifficulty(button?.dataset.difficulty);
+        break;
+      case 'set-locale':
+        menu.chooseLocale(button?.dataset.locale);
         break;
       case 'open-leaderboard':
         leaderboard.showLeaderboard();

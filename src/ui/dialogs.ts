@@ -1,4 +1,5 @@
 import { SCENE_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { createElement, createIcon } from './dom';
 
 export type DialogVariant = 'stone' | 'parchment';
@@ -123,7 +124,7 @@ export function openConfirmDialog(root: HTMLElement, options: IConfirmOptions): 
     content: [createElement('p', 'dialog__text', options.message)],
     actions: [
       createDialogButton(options.confirmLabel, options.confirmAction, 'danger'),
-      createDialogButton('Cancel', 'close-dialog', 'primary')
+      createDialogButton(t('dialogs.cancel'), 'close-dialog', 'primary')
     ]
   });
 }

@@ -1,4 +1,5 @@
 import { INGREDIENTS } from '../data/ingredients';
+import { getIngredientDescription, getIngredientName } from '../i18n/game-text';
 import { getState, subscribe } from '../state/game-state';
 import type { ILayoutRefs } from '../ui/layout';
 import { createTooltip } from '../ui/tooltip';
@@ -26,7 +27,11 @@ export function bindTooltip(layout: ILayoutRefs): void {
 
     if (card !== current) {
       current = card;
-      tooltip.show(card, ingredient);
+      tooltip.show(card, {
+        ...ingredient,
+        name: getIngredientName(ingredient.id),
+        description: getIngredientDescription(ingredient.id)
+      });
     }
   };
 

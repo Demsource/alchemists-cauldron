@@ -1,0 +1,332 @@
+{
+  "app": {
+    "title": "Alchemist's Cauldron"
+  },
+  "layout": {
+    "hud": "Game status",
+    "shelf": "Ingredient shelf",
+    "stage": "Cauldron",
+    "recipe": "Current recipe",
+    "bars": "Cauldron parameters"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "ingredients_one": "{{count}} ingredient",
+    "ingredients_other": "{{count}} ingredients",
+    "seconds": "{{count}} s",
+    "lives_one": "{{count}} life",
+    "lives_other": "{{count}} lives"
+  },
+  "menu": {
+    "title": "Menu",
+    "nav": "Game menu",
+    "language": "Language",
+    "languageLocked": "Language can only be changed before a game starts.",
+    "difficulty": "Difficulty",
+    "difficultyLocked": "Difficulty can only be changed before a game starts.",
+    "continueGame": "Continue Game",
+    "newGame": "New Game",
+    "leaderboard": "Leaderboard",
+    "close": "Close"
+  },
+  "hud": {
+    "score": "Score",
+    "time": "Time",
+    "lives": "Lives",
+    "livesLeft_one": "{{count}} of {{max}} lives left",
+    "livesLeft_other": "{{count}} of {{max}} lives left",
+    "noLives": "No lives"
+  },
+  "actions": {
+    "help": "Help",
+    "menu": "Menu",
+    "pause": "Pause",
+    "brew": "Brew",
+    "startGame": "Start Game",
+    "continueGame": "Continue Game",
+    "pourOut": "Pour Out"
+  },
+  "params": {
+    "temperature": "Temperature",
+    "density": "Density",
+    "magicPower": "Magic Power",
+    "short": {
+      "temperature": "T",
+      "density": "D",
+      "magicPower": "MP"
+    }
+  },
+  "recipe": {
+    "mode": "{{difficulty}} mode",
+    "kicker": "Current recipe",
+    "none": "No recipe yet",
+    "hint": "Start a game to reveal your first recipe.",
+    "ingredients": "Ingredients:",
+    "activeReactions": "Active reactions:"
+  },
+  "shelf": {
+    "title": "Ingredients",
+    "empty": "The shelf fills up when a game starts.",
+    "add_one": "Add {{name}}, {{count}} left",
+    "add_other": "Add {{name}}, {{count}} left"
+  },
+  "cauldron": {
+    "slots": "Ingredients in the cauldron",
+    "empty": "The cauldron is empty."
+  },
+  "bars": {
+    "target": "Target {{min}} – {{max}}",
+    "noTarget": "Target —"
+  },
+  "messages": {
+    "brewSuccess": "Perfect brew!",
+    "brewSuccessDetails": "+{{points}} points · +{{seconds}}s",
+    "brewFail": "The mixture failed…",
+    "brewFailDetails": "Off target: {{params}} · −1 life",
+    "pourOut": "Cauldron poured out",
+    "pourOutDetails": "−{{seconds}} s · no life lost"
+  },
+  "leaderboard": {
+    "title": "Top Alchemists",
+    "tabs": "Difficulty",
+    "caption": "Top 10 results",
+    "empty": "No alchemist has brewed a result yet.",
+    "columns": {
+      "rank": "Rank",
+      "name": "Name",
+      "score": "Score",
+      "difficulty": "Difficulty",
+      "date": "Date"
+    },
+    "clear": "Clear Leaderboard",
+    "back": "Back"
+  },
+  "ingredients": {
+    "dragon-tears": {
+      "name": "Dragon Tears",
+      "description": "Wept by an old dragon. Warm to the touch and faintly glowing."
+    },
+    "fairy-dust": {
+      "name": "Fairy Dust",
+      "description": "Glittering powder from fairy wings. Light, lively and a little mischievous."
+    },
+    "frost-lotus": {
+      "name": "Frost Lotus",
+      "description": "A flower that blooms only on frozen lakes. It cools any brew."
+    },
+    "mandrake-root": {
+      "name": "Mandrake Root",
+      "description": "A grumpy root that thickens the mixture. Handle with earmuffs."
+    },
+    "caustic-acid": {
+      "name": "Caustic Acid",
+      "description": "Bubbling green acid. Strong, heavy and full of raw power."
+    },
+    "void-essence": {
+      "name": "Essence of the Void",
+      "description": "A drop of pure darkness. It chills and thins the brew but floods it with magic."
+    },
+    "phoenix-feather": {
+      "name": "Phoenix Feather",
+      "description": "Still smouldering from rebirth. Fierce heat and bright magic."
+    },
+    "toad-slime": {
+      "name": "Toad Slime",
+      "description": "Thick swamp slime. Makes any potion heavy, but holds no magic at all."
+    }
+  },
+  "reactions": {
+    "bubbling": {
+      "name": "Bubbling",
+      "description": "Magic Power +50%, −10 s"
+    },
+    "volatile-mix": {
+      "name": "Volatile Mix",
+      "description": "−1 life, the cauldron is cleared"
+    },
+    "solar-frost": {
+      "name": "Solar Frost",
+      "description": "Temperature set to 0, Density +20%"
+    },
+    "rooted-steam": {
+      "name": "Rooted Steam",
+      "description": "Density +25%, Magic Power −10%"
+    },
+    "ashen-bloom": {
+      "name": "Ashen Bloom",
+      "description": "Temperature +10, Magic Power +25%"
+    },
+    "annihilation": {
+      "name": "Annihilation",
+      "description": "Temperature set to 0, Density doubled"
+    },
+    "pressure-spike": {
+      "name": "Pressure Spike",
+      "description": "Density set to 70, Magic Power +10%"
+    },
+    "magma-flux": {
+      "name": "Magma Flux",
+      "description": "Magic Power +20%, Density −10%"
+    },
+    "deep-freeze": {
+      "name": "Deep Freeze",
+      "description": "Density +15%, Magic Power −15%"
+    },
+    "arcane-saturation": {
+      "name": "Arcane Saturation",
+      "description": "Magic Power set to 80, Temperature +5"
+    },
+    "steam-burst": {
+      "name": "Steam Burst",
+      "description": "Temperature +10, −5 s"
+    },
+    "black-ice": {
+      "name": "Black Ice",
+      "description": "Temperature −10, Magic Power +20%"
+    },
+    "heavy-spark": {
+      "name": "Heavy Spark",
+      "description": "Density +20%, Magic Power +10%"
+    },
+    "burning-root": {
+      "name": "Burning Root",
+      "description": "Temperature +15, Density −10%"
+    },
+    "void-resonance": {
+      "name": "Void Resonance",
+      "description": "Magic Power +30%, Temperature −5"
+    }
+  },
+  "reactionTriggers": {
+    "pressure-spike": "Total Density 70 or more"
+  },
+  "recipes": {
+    "moon-mist": "Moon Mist",
+    "root-bloom": "Root Bloom",
+    "frost-steam": "Frost Steam",
+    "quiet-swirl": "Quiet Swirl",
+    "bright-dew": "Bright Dew",
+    "snow-dust": "Snow Dust",
+    "acid-spark": "Acid Spark",
+    "void-ember": "Void Ember",
+    "heavy-acid": "Heavy Acid",
+    "frost-acid": "Frost Acid",
+    "dusty-void": "Dusty Void",
+    "dragon-void": "Dragon Void",
+    "rooted-night": "Rooted Night",
+    "phoenix-pulse": "Phoenix Pulse",
+    "slime-crown": "Slime Crown",
+    "void-flame": "Void Flame",
+    "acid-bog": "Acid Bog",
+    "frozen-ash": "Frozen Ash",
+    "triple-eclipse": "Triple Eclipse",
+    "ember-soup": "Ember Soup"
+  },
+  "dialogs": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "exitToMenu": "Exit to Menu",
+    "pause": {
+      "title": "Game Paused",
+      "text": "The cauldron simmers quietly. Take a breath.",
+      "resume": "Resume"
+    },
+    "gameOver": {
+      "title": "Game Over",
+      "reason": {
+        "time": "Time is up",
+        "lives": "No lives left",
+        "ingredients": "Out of ingredients"
+      },
+      "finalScore": "Final Score",
+      "notTop": "Not enough for the Top-10 this time. Brew again!",
+      "submitScore": "Submit Score",
+      "playAgain": "Play Again",
+      "leaderboard": "Leaderboard"
+    },
+    "nameForm": {
+      "label": "Enter your name ({{min}}–{{max}} chars):",
+      "placeholder": "Alchemist name…",
+      "hint": "Letters, digits, space, _ and - are allowed.",
+      "errors": {
+        "length": "Use {{min}}–{{max}} characters.",
+        "chars": "Only letters, digits, space, _ and - are allowed."
+      }
+    },
+    "clearLeaderboard": {
+      "title": "Clear {{difficulty}} results?",
+      "message": "Every name and score on the {{difficulty}} leaderboard will be erased. This cannot be undone.",
+      "confirm": "Clear"
+    },
+    "help": {
+      "title": "How to Brew",
+      "language": {
+        "title": "Language",
+        "items": [
+          "The game is available in English (EN), Georgian (KA) and Russian (RU).",
+          "Choose a language in the Menu before a game starts or after Game Over — it cannot be changed during a game.",
+          "Your choice is remembered the next time you open the game."
+        ]
+      },
+      "goal": {
+        "title": "Goal",
+        "items": [
+          "Brew the current recipe: move Temperature, Density and Magic Power into the green target zones.",
+          "Each correct brew gives points, bonus time and a new recipe."
+        ]
+      },
+      "howToPlay": {
+        "title": "How to play",
+        "items": [
+          "Click an ingredient on the shelf to add it to the cauldron.",
+          "The recipe shows how many ingredients you may use, e.g. Ingredients: 2 / 4.",
+          "Watch the 3 bars change after every ingredient.",
+          "Press Brew to check the mixture. A small tolerance is allowed around each target."
+        ]
+      },
+      "difficulty": {
+        "title": "Difficulty",
+        "items": [
+          "Choose Easy, Medium or Hard in the Menu before a game starts.",
+          "Harder levels put more ingredients on the shelf, allow a smaller tolerance and give less bonus time, but every brew is worth more points.",
+          "Each difficulty has its own Top-10 leaderboard."
+        ]
+      },
+      "keyboard": {
+        "title": "Keyboard",
+        "items": [
+          "1–8: add the ingredient at that shelf position.",
+          "{{brew}}: brew · {{pourOut}}: pour out · {{pause}} or Esc: pause.",
+          "Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.",
+          "Tab moves between buttons; Enter or Space presses the focused one."
+        ]
+      },
+      "stock": {
+        "title": "Stock",
+        "items": [
+          "Every ingredient has a limited stock shown in the round badge.",
+          "Used ingredients are spent — even when a brew fails.",
+          "An empty slot stays on the shelf but can no longer be used."
+        ]
+      },
+      "gameOver": {
+        "title": "Game over",
+        "items": [
+          "A failed brew costs one life.",
+          "The game ends when time runs out, all lives are lost, or you run out of ingredients.",
+          "Reach the Top-10 to write your name on the leaderboard."
+        ]
+      },
+      "reactions": {
+        "title": "Reactions",
+        "items": [
+          "Some combinations react in the cauldron and change the values, so watch more than the plain sums.",
+          "A reaction fires once when its combination appears; its value change lasts while the combination stays."
+        ],
+        "none": "no reactions"
+      }
+    }
+  }
+}

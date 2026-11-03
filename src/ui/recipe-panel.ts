@@ -1,4 +1,5 @@
 import { SCENE_ICONS, UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { createElement, createIcon } from './dom';
 
 interface IRangeView {
@@ -50,27 +51,31 @@ export function renderRecipePanel(container: HTMLElement, view: IRecipePanelView
 
   const heading = createElement('header', 'recipe__header');
   heading.append(
-    createElement('p', 'recipe__difficulty', `${view.difficultyLabel} mode`),
-    createElement('p', 'recipe__kicker', 'Current recipe'),
+    createElement(
+      'p',
+      'recipe__difficulty',
+      t('recipe.mode', { difficulty: view.difficultyLabel })
+    ),
+    createElement('p', 'recipe__kicker', t('recipe.kicker')),
     createIcon(UI_ICONS.flask, 'icon recipe__flask'),
-    createElement('h2', 'recipe__name', recipe ? recipe.name : 'No recipe yet')
+    createElement('h2', 'recipe__name', recipe ? recipe.name : t('recipe.none'))
   );
 
   if (!recipe) {
-    heading.append(createElement('p', 'recipe__hint', 'Start a game to reveal your first recipe.'));
+    heading.append(createElement('p', 'recipe__hint', t('recipe.hint')));
   }
 
   const ranges = createElement('dl', 'recipe__ranges');
   ranges.append(
-    renderRow('temperature', UI_ICONS.temperature, 'Temperature', recipe?.temperature),
-    renderRow('density', UI_ICONS.density, 'Density', recipe?.density),
-    renderRow('magic', UI_ICONS.magic, 'Magic Power', recipe?.magicPower)
+    renderRow('temperature', UI_ICONS.temperature, t('params.temperature'), recipe?.temperature),
+    renderRow('density', UI_ICONS.density, t('params.density'), recipe?.density),
+    renderRow('magic', UI_ICONS.magic, t('params.magicPower'), recipe?.magicPower)
   );
 
   const counter = createElement('p', 'recipe__counter');
   counter.setAttribute('aria-live', 'polite');
   counter.append(
-    createElement('span', 'recipe__counter-label', 'Ingredients:'),
+    createElement('span', 'recipe__counter-label', t('recipe.ingredients')),
     createElement('strong', 'recipe__counter-value', `${view.added} / ${view.capacity}`)
   );
   counter.classList.toggle('recipe__counter--full', view.added >= view.capacity);
@@ -86,7 +91,7 @@ export function renderRecipePanel(container: HTMLElement, view: IRecipePanelView
   if (view.activeReactions.length > 0) {
     const reactions = createElement('p', 'recipe__reactions');
     reactions.append(
-      createElement('span', 'recipe__reactions-label', 'Active reactions:'),
+      createElement('span', 'recipe__reactions-label', t('recipe.activeReactions')),
       ` ${view.activeReactions.join(', ')}`
     );
     panel.append(reactions);

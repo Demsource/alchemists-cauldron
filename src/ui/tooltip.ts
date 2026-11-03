@@ -1,4 +1,5 @@
 import { UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { formatSigned } from '../utils/format';
 import { createElement, createIcon } from './dom';
 
@@ -32,9 +33,9 @@ function renderRow(modifier: string, icon: string, label: string, value: number)
 function renderContent(view: ITooltipView): HTMLElement[] {
   const values = createElement('dl', 'tooltip__values');
   values.append(
-    renderRow('temperature', UI_ICONS.temperature, 'Temperature', view.temperature),
-    renderRow('density', UI_ICONS.density, 'Density', view.density),
-    renderRow('magic', UI_ICONS.magic, 'Magic Power', view.magicPower)
+    renderRow('temperature', UI_ICONS.temperature, t('params.temperature'), view.temperature),
+    renderRow('density', UI_ICONS.density, t('params.density'), view.density),
+    renderRow('magic', UI_ICONS.magic, t('params.magicPower'), view.magicPower)
   );
 
   return [

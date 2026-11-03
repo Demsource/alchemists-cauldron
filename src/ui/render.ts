@@ -1,6 +1,8 @@
 import { BAR_SCALES } from '../data/bar-scales';
 import { DEFAULT_DIFFICULTY, getShelfIngredients } from '../data/difficulty';
-import { DIFFICULTY_LABELS } from '../logic/difficulty';
+import { t } from '../i18n';
+import { getIngredientName, getReactionName, getRecipeName } from '../i18n/game-text';
+import { getDifficultyLabel } from '../logic/difficulty';
 import { isInRange } from '../logic/calculate-cauldron';
 import { getActiveReactions, getCauldronValues, getReactionsFor } from '../logic/reactions-logic';
 import { canPourOut, isCauldronFull } from '../logic/cauldron';
@@ -23,7 +25,7 @@ function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelf
 
   return getShelfIngredients(settings).map((ingredient) => ({
     id: ingredient.id,
-    name: ingredient.name,
+    name: getIngredientName(ingredient.id),
     temperature: ingredient.temperature,
     density: ingredient.density,
     magicPower: ingredient.magicPower,
@@ -31,10 +33,10 @@ function getShelfItems(state: IGameState, settings: IDifficultySettings): IShelf
   }));
 }
 
-const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters; label: string }[] = [
-  { key: 'temperature', parameter: 'temperature', label: 'Temperature' },
-  { key: 'density', parameter: 'density', label: 'Density' },
-  { key: 'magic', parameter: 'magicPower', label: 'Magic Power' }
+const BAR_DEFINITIONS: { key: BarKey; parameter: keyof IParameters }[] = [
+  { key: 'temperature', parameter: 'temperature' },
+  { key: 'density', parameter: 'density' },
+  { key: 'magic', parameter: 'magicPower' }
 ];
 
 function getBars(state: IGameState): IBarView[] {
@@ -44,13 +46,13 @@ function getBars(state: IGameState): IBarView[] {
   );
   const recipe = state.activeRecipe;
 
-  return BAR_DEFINITIONS.map(({ key, parameter, label }) => {
+  return BAR_DEFINITIONS.map(({ key, parameter }) => {
     const value = values[parameter];
     const target = recipe ? recipe[parameter] : null;
 
     return {
       key,
-      label,
+      label: t(`params.${parameter}`),
       value,
       ...BAR_SCALES[parameter],
       target,
@@ -60,7 +62,15 @@ function getBars(state: IGameState): IBarView[] {
 }
 
 // Last rendered view per container, as JSON (views are plain data).
-const lastViews = new WeakMap<HTMLElement, string>();
+let lastViews = new WeakMap<HTMLElement, string>();
+
+// After a language change every section must rebuild its text: forget the cached views
+// and drop the parts that are built once (HUD frame, bars) so the next render recreates them.
+export function resetRenderedViews(layout: ILayoutRefs): void {
+  lastViews = new WeakMap();
+  layout.hud.replaceChildren();
+  layout.bars.replaceChildren();
+}
 
 function renderIfChanged<T>(
   container: HTMLElement,
@@ -112,19 +122,22 @@ export function renderGame(
   });
 
   renderIfChanged(layout.stage, renderCauldron, {
-    ingredients: state.cauldronIngredients.map(({ id, name }) => ({ id, name })),
+    ingredients: state.cauldronIngredients.map(({ id }) => ({ id, name: getIngredientName(id) })),
     capacity: settings.maxCauldronIngredients
   });
 
   renderIfChanged(layout.recipe, renderRecipePanel, {
-    recipe: state.activeRecipe,
+    recipe: state.activeRecipe && {
+      ...state.activeRecipe,
+      name: getRecipeName(state.activeRecipe.id)
+    },
     added: state.cauldronIngredients.length,
     capacity: settings.maxCauldronIngredients,
-    difficultyLabel: DIFFICULTY_LABELS[state.difficulty ?? DEFAULT_DIFFICULTY],
+    difficultyLabel: getDifficultyLabel(state.difficulty ?? DEFAULT_DIFFICULTY),
     activeReactions: getActiveReactions(
       state.cauldronIngredients,
       getReactionsFor(state.difficulty ?? DEFAULT_DIFFICULTY)
-    ).map((reaction) => reaction.name)
+    ).map((reaction) => getReactionName(reaction.id))
   });
 
   renderIfChanged(layout.actions, renderActions, {

@@ -1,6 +1,13 @@
 import { DEFAULT_DIFFICULTY } from '../data/difficulty';
-import { DIFFICULTIES, DIFFICULTY_LABELS, getDifficulty, isDifficulty } from '../logic/difficulty';
-import { addEntry, isTopResult, validatePlayerName } from '../logic/leaderboard';
+import { DIFFICULTIES, getDifficulty, getDifficultyLabel, isDifficulty } from '../logic/difficulty';
+import { t } from '../i18n';
+import {
+  addEntry,
+  isTopResult,
+  PLAYER_NAME_MAX,
+  PLAYER_NAME_MIN,
+  validatePlayerName
+} from '../logic/leaderboard';
 import { getState } from '../state/game-state';
 import { clearLeaderboard, loadLeaderboard, saveLeaderboard } from '../storage/leaderboard';
 import type { IGameState } from '../types/game';
@@ -71,10 +78,10 @@ export function createLeaderboardFlow(
 
     const leaderboard = openLeaderboardDialog(layout.dialogRoot, {
       difficulty,
-      tabs: DIFFICULTIES.map((item) => ({ difficulty: item, label: DIFFICULTY_LABELS[item] })),
+      tabs: DIFFICULTIES.map((item) => ({ difficulty: item, label: getDifficultyLabel(item) })),
       rows: loadLeaderboard(difficulty).map((entry) => ({
         ...entry,
-        difficultyLabel: DIFFICULTY_LABELS[entry.difficulty]
+        difficultyLabel: getDifficultyLabel(entry.difficulty)
       }))
     });
     leaderboard.element.addEventListener('close', returnFromLeaderboard);
@@ -99,8 +106,11 @@ export function createLeaderboardFlow(
 
     if (!validation.isValid) {
       input.setAttribute('aria-invalid', 'true');
-      if (error) {
-        error.textContent = validation.error;
+      if (error && validation.error) {
+        error.textContent = t(`dialogs.nameForm.errors.${validation.error}`, {
+          min: PLAYER_NAME_MIN,
+          max: PLAYER_NAME_MAX
+        });
       }
       input.focus();
       return;
@@ -120,13 +130,13 @@ export function createLeaderboardFlow(
   };
 
   const askToClear = (): void => {
-    const label = DIFFICULTY_LABELS[leaderboardDifficulty];
+    const label = getDifficultyLabel(leaderboardDifficulty);
 
     openConfirmDialog(layout.dialogRoot, {
       id: 'clear-leaderboard-dialog',
-      title: `Clear ${label} results?`,
-      message: `Every name and score on the ${label} leaderboard will be erased. This cannot be undone.`,
-      confirmLabel: 'Clear',
+      title: t('dialogs.clearLeaderboard.title', { difficulty: label }),
+      message: t('dialogs.clearLeaderboard.message', { difficulty: label }),
+      confirmLabel: t('dialogs.clearLeaderboard.confirm'),
       confirmAction: 'confirm-clear-leaderboard'
     });
   };

@@ -1,4 +1,5 @@
 import { INGREDIENT_ICONS, type IngredientIconName } from '../assets/icons';
+import { t } from '../i18n';
 import { formatSigned } from '../utils/format';
 import { createElement, createIcon } from './dom';
 
@@ -40,7 +41,7 @@ function renderCard(item: IShelfItemView, isBlocked: boolean, index: number): HT
   card.disabled = isEmpty || isBlocked;
   // Only a usable card can be dragged: never at stock 0, while blocked or paused.
   card.draggable = !card.disabled;
-  card.setAttribute('aria-label', `Add ${item.name}, ${item.stock} left`);
+  card.setAttribute('aria-label', t('shelf.add', { name: item.name, count: item.stock }));
   // Keyboard shortcut: the shelf position (1–8).
   const shortcut = String(index + 1);
   card.setAttribute('aria-keyshortcuts', shortcut);
@@ -55,9 +56,14 @@ function renderCard(item: IShelfItemView, isBlocked: boolean, index: number): HT
 
   const values = createElement('span', 'shelf-card__values');
   values.append(
-    renderValue('temperature', 'T', 'Temperature', item.temperature),
-    renderValue('density', 'D', 'Density', item.density),
-    renderValue('magic', 'MP', 'Magic Power', item.magicPower)
+    renderValue(
+      'temperature',
+      t('params.short.temperature'),
+      t('params.temperature'),
+      item.temperature
+    ),
+    renderValue('density', t('params.short.density'), t('params.density'), item.density),
+    renderValue('magic', t('params.short.magicPower'), t('params.magicPower'), item.magicPower)
   );
   body.append(values);
 
@@ -76,10 +82,10 @@ export function renderShelf(container: HTMLElement, view: IShelfView): void {
   const panel = createElement('div', 'shelf panel panel--wood');
   panel.classList.toggle('shelf--blocked', view.isBlocked);
   panel.classList.toggle('shelf--values-touch-only', view.showValues === 'touch-only');
-  panel.append(createElement('h2', 'panel-title shelf__title', 'Ingredients'));
+  panel.append(createElement('h2', 'panel-title shelf__title', t('shelf.title')));
 
   if (view.items.length === 0) {
-    panel.append(createElement('p', 'shelf__empty', 'The shelf fills up when a game starts.'));
+    panel.append(createElement('p', 'shelf__empty', t('shelf.empty')));
   } else {
     const list = createElement('ul', 'shelf__list');
     list.append(...view.items.map((item, index) => renderCard(item, view.isBlocked, index)));

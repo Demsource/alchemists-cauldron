@@ -7,22 +7,25 @@ export const PLAYER_NAME_MAX = 15;
 // Letters (any alphabet), digits, space, "_" and "-".
 const PLAYER_NAME_PATTERN = /^[\p{L}\d _-]+$/u;
 
+// A code, not text: the UI translates it.
+export type NameError = 'length' | 'chars';
+
 export interface INameValidation {
   isValid: boolean;
   name: string; // trimmed name to save
-  error: string | null;
+  error: NameError | null;
 }
 
 export function validatePlayerName(rawName: string): INameValidation {
   const name = rawName.trim();
-  const invalid = (error: string): INameValidation => ({ isValid: false, name, error });
+  const invalid = (error: NameError): INameValidation => ({ isValid: false, name, error });
 
   if (name.length < PLAYER_NAME_MIN || name.length > PLAYER_NAME_MAX) {
-    return invalid(`Use ${PLAYER_NAME_MIN}–${PLAYER_NAME_MAX} characters.`);
+    return invalid('length');
   }
 
   if (!PLAYER_NAME_PATTERN.test(name)) {
-    return invalid('Only letters, digits, space, _ and - are allowed.');
+    return invalid('chars');
   }
 
   return { isValid: true, name, error: null };
