@@ -12,6 +12,13 @@ export function isLocale(value: unknown): value is Locale {
   return LOCALES.some((locale) => locale === value);
 }
 
+// Locale for Intl formatting. English uses en-GB to keep the day-first date order.
+const INTL_LOCALES: Record<Locale, string> = { en: 'en-GB', ka: 'ka-GE', ru: 'ru-RU' };
+
+export function getIntlLocale(): string {
+  return isLocale(i18next.language) ? INTL_LOCALES[i18next.language] : INTL_LOCALES.en;
+}
+
 // English is the source of keys; ka / ru are added with the translations.
 const resources = {
   en: { translation: en }

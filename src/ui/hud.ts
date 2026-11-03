@@ -1,6 +1,6 @@
 import { UI_ICONS } from '../assets/icons';
 import { t } from '../i18n';
-import { formatTime } from '../utils/format';
+import { formatNumber, formatTime } from '../utils/format';
 import { createElement, createIcon } from './dom';
 
 const LOW_TIME_THRESHOLD = 15;
@@ -16,7 +16,7 @@ export interface IHudView {
 
 function renderScore(score: number): HTMLDivElement {
   const block = createElement('div', 'hud__block hud__block--score');
-  const value = createElement('span', 'hud__value', String(score));
+  const value = createElement('span', 'hud__value', formatNumber(score));
 
   block.append(
     createIcon(UI_ICONS.score, 'icon hud__icon'),

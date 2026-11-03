@@ -2,6 +2,7 @@ import { t } from '../i18n';
 import { PLAYER_NAME_MAX, PLAYER_NAME_MIN } from '../logic/leaderboard';
 import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import type { GameOverReason } from '../types/game';
+import { formatNumber } from '../utils/format';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
 
@@ -70,7 +71,7 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
   const scoreBlock = createElement('div', 'game-over__score');
   scoreBlock.append(
     createElement('span', 'game-over__score-label', t('dialogs.gameOver.finalScore')),
-    createElement('strong', 'game-over__score-value', String(view.score))
+    createElement('strong', 'game-over__score-value', formatNumber(view.score))
   );
 
   const content: Node[] = [reason, scoreBlock];

@@ -86,6 +86,21 @@
     "pourOut": "Cauldron poured out",
     "pourOutDetails": "−{{seconds}} s · no life lost"
   },
+  "leaderboard": {
+    "title": "Top Alchemists",
+    "tabs": "Difficulty",
+    "caption": "Top 10 results",
+    "empty": "No alchemist has brewed a result yet.",
+    "columns": {
+      "rank": "Rank",
+      "name": "Name",
+      "score": "Score",
+      "difficulty": "Difficulty",
+      "date": "Date"
+    },
+    "clear": "Clear Leaderboard",
+    "back": "Back"
+  },
   "ingredients": {
     "dragon-tears": {
       "name": "Dragon Tears",
