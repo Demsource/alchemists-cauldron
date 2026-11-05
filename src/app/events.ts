@@ -1,9 +1,11 @@
 import { isIngredientId } from '../data/ingredients';
 import { getShelfIngredients } from '../data/difficulty';
 import { canAddIngredient } from '../logic/cauldron';
+import { t } from '../i18n';
+import { getReactionDescription, getReactionName, getReactionTrigger } from '../i18n/game-text';
 import { getShortcut } from '../logic/shortcuts';
 import { bindKeyboard } from '../ui/keyboard';
-import { DIFFICULTIES, DIFFICULTY_LABELS } from '../logic/difficulty';
+import { DIFFICULTIES, getDifficultyLabel } from '../logic/difficulty';
 import { getReactionsFor } from '../logic/reactions-logic';
 import { getSettings, getState } from '../state/game-state';
 import { closeDialog } from '../ui/dialogs';
@@ -11,6 +13,7 @@ import { bindDragAndDrop } from '../ui/drag-drop';
 import { openHelpDialog, type IHelpSection } from '../ui/game-dialogs';
 import type { ILayoutRefs } from '../ui/layout';
 import type { IGameFlow } from './game-flow';
+import type { IHintFlow } from './hint-flow';
 import type { ILeaderboardFlow } from './leaderboard-flow';
 import type { IMenuFlow } from './menu-flow';
 
@@ -18,6 +21,7 @@ interface IFlows {
   game: IGameFlow;
   menu: IMenuFlow;
   leaderboard: ILeaderboardFlow;
+  hint: IHintFlow;
 }
 
 // Help lists the enabled reactions per difficulty, straight from the reaction data.
@@ -27,20 +31,17 @@ function getReactionHelp(): IHelpSection {
     const list = reactions.length
       ? reactions
           .map(
-            (reaction) => `${reaction.name} (${reaction.trigger ?? ''}): ${reaction.description}`
+            (reaction) =>
+              `${getReactionName(reaction.id)} (${getReactionTrigger(reaction)}): ${getReactionDescription(reaction.id)}`
           )
           .join('; ')
-      : 'no reactions';
-    return `${DIFFICULTY_LABELS[difficulty]} — ${list}.`;
+      : t('dialogs.help.reactions.none');
+    return `${getDifficultyLabel(difficulty)} — ${list}.`;
   });
 
   return {
-    title: 'Reactions',
-    items: [
-      'Some combinations react in the cauldron and change the values, so watch more than the plain sums.',
-      'A reaction fires once when its combination appears; its value change lasts while the combination stays.',
-      ...items
-    ]
+    title: t('dialogs.help.reactions.title'),
+    items: [...t('dialogs.help.reactions.items', { returnObjects: true }), ...items]
   };
 }
 
@@ -130,6 +131,9 @@ function bindDialogs(layout: ILayoutRefs, { game, menu, leaderboard }: IFlows): 
       case 'set-difficulty':
         menu.chooseDifficulty(button?.dataset.difficulty);
         break;
+      case 'set-locale':
+        menu.chooseLocale(button?.dataset.locale);
+        break;
       case 'open-leaderboard':
         leaderboard.showLeaderboard();
         break;
@@ -186,8 +190,18 @@ function bindVisibility({ game }: IFlows): void {
   });
 }
 
+function bindRecipe(layout: ILayoutRefs, { hint }: IFlows): void {
+  layout.recipe.addEventListener('click', (event) => {
+    const button = findActionButton(event);
+
+    if (button?.dataset.action === 'hint' && !button.disabled) {
+      hint.showHint();
+    }
+  });
+}
+
 // One keyboard handler, gated by the game state inside getShortcut (playing only).
-function bindShortcuts({ game }: IFlows): void {
+function bindShortcuts({ game, hint }: IFlows): void {
   bindKeyboard((input) => {
     const state = getState();
     const shortcut = getShortcut(input, state.status);
@@ -207,6 +221,9 @@ function bindShortcuts({ game }: IFlows): void {
       case 'pour-out':
         game.pourOutMixture();
         return true;
+      case 'hint':
+        hint.showHint();
+        return true;
       case 'pause':
         game.pause();
         return true;
@@ -220,6 +237,7 @@ export function bindEvents(layout: ILayoutRefs, flows: IFlows): void {
   bindShelf(layout, flows);
   bindDrag(layout, flows);
   bindShortcuts(flows);
+  bindRecipe(layout, flows);
   bindFooter(layout, flows);
   bindDialogs(layout, flows);
   bindVisibility(flows);

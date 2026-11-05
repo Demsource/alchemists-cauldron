@@ -1,4 +1,5 @@
 import { INGREDIENT_ICONS, SCENE_ICONS, type IngredientIconName } from '../assets/icons';
+import { t } from '../i18n';
 import { createElement, createIcon } from './dom';
 
 export interface ICauldronItemView {
@@ -49,7 +50,7 @@ export function renderCauldron(container: HTMLElement, view: ICauldronView): voi
   vessel.append(createIcon(SCENE_ICONS.cauldron, 'icon cauldron__art'), floating);
 
   const slots = createElement('ol', 'cauldron__slots');
-  slots.setAttribute('aria-label', 'Ingredients in the cauldron');
+  slots.setAttribute('aria-label', t('cauldron.slots'));
   for (let index = 0; index < view.capacity; index += 1) {
     slots.append(renderSlot(index, view.ingredients[index]));
   }
@@ -58,7 +59,7 @@ export function renderCauldron(container: HTMLElement, view: ICauldronView): voi
     'p',
     'cauldron__status',
     view.ingredients.length === 0
-      ? 'The cauldron is empty.'
+      ? t('cauldron.empty')
       : view.ingredients.map((item) => item.name).join(' · ')
   );
 

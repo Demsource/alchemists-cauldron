@@ -45,7 +45,7 @@ The task is split into four stages with a maximum of **393 points**:
   - [x] **US 1.3** Recipe & brewing check — 20 fixed recipes, a random Medium recipe per game and after each success, an ingredient counter (`Ingredients: 2 / 4`), the Brew check with ±8 tolerance and a short result message.
   - [x] **US 1.4** Timer & Game Over — `MM:SS` timer with a shrinking bar, calculated from timestamps; red pulsing timer under 15 s; the Game Over screen shows the reason and the final score.
   - [x] **US 1.5** Pause — Pause button, blurred play field, Resume / Exit to Menu dialog, automatic pause when the tab is hidden.
-  - [x] **US 1.6** Leaderboard — Top-10 in `localStorage`, name entry with validation, sorting with ties kept in order, `DD.MM.YYYY HH:MM` dates, Clear Leaderboard with an in-app confirmation; broken saved data never crashes the game.
+  - [x] **US 1.6** Leaderboard — Top-10 in `localStorage`, name entry with validation, sorting with ties kept in order, dates formatted for the current language, Clear Leaderboard with an in-app confirmation; broken saved data never crashes the game.
 - [x] **Level 2 — Extended**
   - [x] **US 2.1** Difficulty selection — Help button with the game rules; Easy / Medium / Hard in the Menu, each with a short summary; all values from the difficulty table (shelf size, cauldron limit, start time, tolerance, lives, score per brew, time bonus); recipes picked from the chosen difficulty; difficulty locked during a run and remembered after reload; one Top-10 leaderboard per difficulty with tabs and a Difficulty column.
   - [x] **US 2.2** Auto-save & Continue Game — the running game (difficulty, score, time left, lives, recipe, cauldron, shelf stock, status) is saved to `localStorage` after every change, on pause and when the page closes; **Continue Game** appears on the start screen and in the Menu only for a valid unfinished save and opens it paused with the saved stock; a new game overwrites the save, while Game Over and Exit to Menu remove it; broken or edited saves are validated, deleted and never crash the game.
@@ -56,13 +56,15 @@ The task is split into four stages with a maximum of **393 points**:
   - [x] **US 3.4** Pour Out — a **Pour Out** button next to **Brew** clears the whole cauldron for 10 seconds without losing a life; it is disabled when the cauldron is empty; the poured ingredients stay spent and every other value is unchanged; a short message confirms it.
   - [x] **US 3.5** Visual feedback — a correct brew flashes the cauldron and bursts sparkles, with `+score` and `+10s` floating up from the HUD; a failed brew shows an explosion with smoke and a short shake of the HUD and play field; ingredient icons float inside the cauldron and the newest one drops in; the parameter bars move smoothly. All effects are CSS animations cleaned up on `animationend` (no `setTimeout` / `setInterval`), and with reduced motion only short colour flashes remain.
   - [x] **US 3.6** Keyboard shortcuts — one `keydown` handler gated by the game state: shortcuts run only while playing (never on the start, pause or Game Over screens, never while typing, with modifier keys or on key repeat); `1`–`8` add the ingredient at that shelf position, `B` brews, `O` pours out, `P` / `Esc` pause; on the pause dialog Resume is focused, so Enter resumes; all controls stay real buttons with native Enter / Space; key hints are shown on cards, buttons and in Help.
+- [x] **Localization** — the whole game in English, Georgian and Russian with i18next: every on-screen and screen-reader text, ingredient, reaction and recipe names, plural forms and `Intl` dates and numbers; an **EN / KA / RU** switcher in the Menu, locked during a run like difficulty and remembered after reload; switching redraws the screen without touching the game state; fonts with Georgian and Cyrillic letters.
+- [x] **Recipe hints** — a **Hint** button on the recipe panel (and `H`) opens a free hint with a winning plan for the current recipe: the ingredients to add (building on what is already in the cauldron, or after Pour Out when that cannot work) and the resulting values. The plan respects stock, cauldron size and reactions, never fires a reaction that costs a life or empties the cauldron, and always passes the brew check. The game is paused while the hint is open.
 
 ---
 
 ## 🎮 How to Play
 
 1. **Start screen** — the shelf and cauldron are empty, score and time are `0`. Press **Start Game** in the centre, or **Help** (book button) to read the rules.
-2. **Menu** (cog button) — choose the difficulty, start a **New Game** or open the **Leaderboard**. The menu is available on the start screen and after a game ends.
+2. **Menu** (cog button) — choose the language (**EN / KA / RU**) and the difficulty, start a **New Game** or open the **Leaderboard**. The menu is available on the start screen and after a game ends.
 
    | Difficulty | Ingredients | Cauldron | Time  | Tolerance | Lives | Score / brew | Time bonus |
    | ---------- | :---------: | :------: | :---: | :-------: | :---: | :----------: | :--------: |
@@ -75,6 +77,7 @@ The task is split into four stages with a maximum of **393 points**:
 5. **Add ingredients** — click a card on the shelf, or drag it with the mouse and drop it on the cauldron (it glows when the drop is allowed). Each one puts one portion into the cauldron and lowers the number in the round badge. When the cauldron reaches its limit, the shelf is blocked.
 6. **Watch the bars** — Temperature, Density and Magic Power change after every ingredient. The green zone is the recipe target, and it glows when the value is inside it.
    On Medium and Hard some combinations cause a **reaction** (listed in **Help**): a purple message shows what happened, the recipe panel lists the active reactions, and the bars already include their effect. Some reactions also cost time or a life, or empty the cauldron.
+   Stuck? Press **Hint** on the recipe panel (or `H`): the game pauses and shows which ingredients to add for a winning brew. Hints are free and optional; **OK** continues the game.
 7. **Brew** — press **Brew** (enabled when the cauldron has at least one ingredient). A message shows whether the potion worked. If the mixture is clearly wrong, press **Pour Out** instead: it empties the cauldron for 10 seconds and you keep your lives (the poured ingredients are not returned).
 8. **Pause** — press **Pause** during a run, or switch to another tab. Choose **Resume** to continue or **Exit to Menu** to leave the run (this also deletes its save).
 9. **Continue later** — the game saves itself while you play. After a reload or when you come back, press **Continue Game** (next to **Start Game** or in the Menu). The run opens paused, exactly where you left it; press **Resume** to go on. Starting a new game replaces the saved one.
@@ -91,10 +94,38 @@ Shortcuts work only during a running game (not on the start, pause or Game Over 
 | `1`–`8`                  | Add the ingredient at that shelf position     |
 | `B`                      | Brew                                          |
 | `O`                      | Pour Out                                      |
+| `H`                      | Hint (pauses the game while it is open)       |
 | `P` / `Esc`              | Pause                                         |
 | `Enter`                  | On the pause dialog: Resume (it has focus)    |
 | `Esc`                    | On the pause dialog: back to the start screen |
 | `Tab`, `Enter` / `Space` | Move between buttons and press them           |
+
+---
+
+## 🌐 Languages
+
+The game is available in **English (EN)**, **Georgian (KA)** and **Russian (RU)**.
+
+- Choose the language in the **Menu**, on the start screen or after Game Over. Like the difficulty, it is locked during a run.
+- The choice is saved in `localStorage` (`alchemists-cauldron:locale`) and restored on the next visit. Without a saved choice the game starts in English.
+- Switching redraws every text on screen at once; the game state and the save are not touched.
+
+### Translation files
+
+All texts live in one place: `src/i18n/locales/` — `en.json`, `ka.json` and `ru.json`. The three files have the same keys in the same order, grouped by screen (`menu`, `hud`, `dialogs`, `ingredients`, `recipes`, …), so they can be compared side by side. Game data in `src/data/` holds only ids and numbers; names and descriptions are looked up by id (`src/i18n/game-text.ts`).
+
+- **English is the source.** Keys are typed from `en.json`, so `t('menu.typo')` and a key missing from `ka.json` or `ru.json` both fail `npm run build`.
+- **Placeholders** use `{{name}}`, e.g. `"Target {{min}} – {{max}}"`; keep them unchanged in every language.
+- **Plurals** use i18next suffixes and are picked by `count`: English and Georgian need `_one` and `_other`; Russian also needs `_few` and `_many` (1 жизнь, 3 жизни, 5 жизней).
+- **Help** sections are arrays of bullets, so a language may phrase a section with more or fewer bullets.
+- Untranslated keys fall back to English at runtime.
+
+### Adding a language
+
+1. Copy `en.json` to `src/i18n/locales/<code>.json` and translate the values.
+2. In `src/i18n/index.ts`, add the code to `LOCALES`, a label to `LOCALE_LABELS`, an `Intl` locale to `INTL_LOCALES`, and register the file in `resources` (typed as `Translation`, like `ka` and `ru`).
+3. If the default fonts lack its letters, add a font for it in `index.html` and override the font tokens under `:root:lang(<code>)` in `src/styles/main.css`.
+4. Run `npm run build` — it reports any missing key.
 
 ---
 
@@ -133,11 +164,12 @@ npm install
 ```text
 src/
   assets/     SVG icons (one separate asset per game element)
-  data/       ingredients, recipes, difficulty settings, bar scales
-  logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard
+  data/       ingredients, recipes, difficulty settings, bar scales (ids and numbers only)
+  i18n/       i18next setup, game-data text lookup and the locale files (en, ka, ru)
+  logic/      pure game rules: stock, cauldron sums, brew check, score, timer, game over, leaderboard, hint solver
   state/      game state store and the countdown timer
-  app/        game flows (game, menu, leaderboard, save) and event wiring
-  storage/    localStorage access (leaderboard, game save, difficulty preference)
+  app/        game flows (game, menu, leaderboard, save, hint) and event wiring
+  storage/    localStorage access (leaderboard, game save, difficulty and language preferences)
   types/      TypeScript interfaces and types
   ui/         DOM rendering: layout, HUD, shelf, cauldron, bars, recipe panel, dialogs
   utils/      formatting and scale helpers

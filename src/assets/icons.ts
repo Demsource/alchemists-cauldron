@@ -44,6 +44,10 @@ export const UI_ICONS = {
     '0 0 24 24',
     '<path d="M3 5.5C6 4 9 4 12 6c3-2 6-2 9-.5V19c-3-1.5-6-1.5-9 .5-3-2-6-2-9-.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6v13.5" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 9h4M5.5 12h4M14.5 9h4M14.5 12h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".7"/>'
   ),
+  hint: svg(
+    '0 0 24 24',
+    '<path d="M9 17.5h6M10 21h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 2.5a6.5 6.5 0 00-3.8 11.8c.5.4.8 1 .8 1.6v1.6h6v-1.6c0-.6.3-1.2.8-1.6A6.5 6.5 0 0012 2.5z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5a3 3 0 00-3 3" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity=".7"/>'
+  ),
   settings: svg(
     '0 0 24 24',
     '<path d="M10.3 2h3.4l.5 2.6 1.8.8 2.2-1.5 2.4 2.4-1.5 2.2.8 1.8 2.6.5v3.4l-2.6.5-.8 1.8 1.5 2.2-2.4 2.4-2.2-1.5-1.8.8-.5 2.6h-3.4l-.5-2.6-1.8-.8-2.2 1.5-2.4-2.4 1.5-2.2-.8-1.8L2 13.7v-3.4l2.6-.5.8-1.8-1.5-2.2 2.4-2.4 2.2 1.5 1.8-.8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.3" fill="none" stroke="currentColor" stroke-width="1.5"/>'

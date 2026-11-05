@@ -1,17 +1,22 @@
 import { bindEvents } from './app/events';
 import { createGameFlow } from './app/game-flow';
+import { createHintFlow } from './app/hint-flow';
 import { createLeaderboardFlow } from './app/leaderboard-flow';
 import { createMenuFlow } from './app/menu-flow';
 import { createSaveFlow } from './app/save-flow';
 import { bindTooltip } from './app/tooltip-flow';
+import { DEFAULT_LOCALE, initI18n, onLocaleChange } from './i18n';
 import { getSettings, getState, subscribe } from './state/game-state';
+import { loadLocale } from './storage/preferences';
 import { hasSave } from './storage/save';
-import { renderLayout } from './ui/layout';
-import { renderGame } from './ui/render';
+import { renderLayout, updateLayoutText } from './ui/layout';
+import { renderGame, resetRenderedViews } from './ui/render';
 
 const mount = document.querySelector<HTMLDivElement>('#app');
 
 if (mount) {
+  // Before any rendering, so every t() call has its resources and the saved language.
+  initI18n(loadLocale(DEFAULT_LOCALE));
   const layout = renderLayout(mount);
 
   const menu = createMenuFlow(layout);
@@ -21,7 +26,9 @@ if (mount) {
     onGameOver: leaderboard.showGameOver
   });
 
-  bindEvents(layout, { game, menu, leaderboard });
+  const hint = createHintFlow(layout, game);
+
+  bindEvents(layout, { game, menu, leaderboard, hint });
   bindTooltip(layout);
 
   // The game-over check must run before saving and rendering, so it subscribes first.
@@ -39,4 +46,11 @@ if (mount) {
 
   subscribe(render);
   render();
+
+  // A language change keeps the state but redraws every text on screen.
+  onLocaleChange(() => {
+    updateLayoutText(layout);
+    resetRenderedViews(layout);
+    render();
+  });
 }

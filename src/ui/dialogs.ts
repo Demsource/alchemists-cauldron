@@ -1,4 +1,5 @@
 import { SCENE_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { createElement, createIcon } from './dom';
 
 export type DialogVariant = 'stone' | 'parchment';
@@ -13,6 +14,8 @@ export interface IDialogOptions {
   wide?: boolean;
   // What Escape does for a dialog that is not simply closable (e.g. leave the paused game).
   onDismiss?: () => void;
+  // Never closed by Escape, even when the browser forces the close (e.g. game over).
+  persistent?: boolean;
 }
 
 export interface IDialogHandle {
@@ -91,9 +94,15 @@ export function openDialog(root: HTMLElement, options: IDialogOptions): IDialogH
   });
 
   // The browser may still close a modal itself (Chrome ignores a repeated preventDefault
-  // on Escape). Whatever closed it, remove it and the page blur, so no overlay is left behind.
+  // on Escape). Our own close removes the dialog first, so a connected dialog here was closed
+  // by the browser: reopen a dialog that must stay (game over), otherwise clean it up.
   dialog.addEventListener('close', () => {
-    if (dialog.isConnected) {
+    if (!dialog.isConnected) {
+      return;
+    }
+    if (options.persistent) {
+      dialog.showModal();
+    } else {
       closeDialog(dialog);
     }
   });
@@ -123,7 +132,7 @@ export function openConfirmDialog(root: HTMLElement, options: IConfirmOptions): 
     content: [createElement('p', 'dialog__text', options.message)],
     actions: [
       createDialogButton(options.confirmLabel, options.confirmAction, 'danger'),
-      createDialogButton('Cancel', 'close-dialog', 'primary')
+      createDialogButton(t('dialogs.cancel'), 'close-dialog', 'primary')
     ]
   });
 }

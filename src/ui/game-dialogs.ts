@@ -1,6 +1,8 @@
+import { t } from '../i18n';
 import { PLAYER_NAME_MAX, PLAYER_NAME_MIN } from '../logic/leaderboard';
 import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import type { GameOverReason } from '../types/game';
+import { formatNumber } from '../utils/format';
 import { createElement } from './dom';
 import { createDialogButton, openDialog, type IDialogHandle } from './dialogs';
 
@@ -10,25 +12,19 @@ export interface IGameOverView {
   isTopResult?: boolean; // undefined: leaderboard not checked, no name prompt or hint
 }
 
-const REASON_TEXT: Record<GameOverReason, string> = {
-  time: 'Time is up',
-  lives: 'No lives left',
-  ingredients: 'Out of ingredients'
-};
-
 // onDismiss: what Escape does (the dialog itself never just closes over a paused game).
 export function openPauseDialog(root: HTMLElement, onDismiss?: () => void): IDialogHandle {
   // Focus starts on Resume, so Enter / Space resume with the native button behaviour
   // (no game shortcut runs while paused).
-  const resume = createDialogButton('Resume', 'resume', 'primary');
+  const resume = createDialogButton(t('dialogs.pause.resume'), 'resume', 'primary');
   resume.autofocus = true;
 
   return openDialog(root, {
     id: 'pause-dialog',
-    title: 'Game Paused',
+    title: t('dialogs.pause.title'),
     onDismiss,
-    content: [createElement('p', 'dialog__text', 'The cauldron simmers quietly. Take a breath.')],
-    actions: [resume, createDialogButton('Exit to Menu', 'exit-to-menu')]
+    content: [createElement('p', 'dialog__text', t('dialogs.pause.text'))],
+    actions: [resume, createDialogButton(t('dialogs.exitToMenu'), 'exit-to-menu')]
   });
 }
 
@@ -40,7 +36,7 @@ function renderNameField(): HTMLFormElement {
   const label = createElement(
     'label',
     'name-form__label',
-    `Enter your name (${PLAYER_NAME_MIN}–${PLAYER_NAME_MAX} chars):`
+    t('dialogs.nameForm.label', { min: PLAYER_NAME_MIN, max: PLAYER_NAME_MAX })
   );
   label.htmlFor = 'player-name';
 
@@ -49,17 +45,13 @@ function renderNameField(): HTMLFormElement {
   input.name = 'playerName';
   input.type = 'text';
   input.setAttribute('autocomplete', 'nickname');
-  input.placeholder = 'Alchemist name…';
+  input.placeholder = t('dialogs.nameForm.placeholder');
   input.minLength = PLAYER_NAME_MIN;
   input.maxLength = PLAYER_NAME_MAX;
   input.required = true;
   input.setAttribute('aria-describedby', 'player-name-hint player-name-error');
 
-  const hint = createElement(
-    'p',
-    'name-form__hint',
-    'Letters, digits, space, _ and - are allowed.'
-  );
+  const hint = createElement('p', 'name-form__hint', t('dialogs.nameForm.hint'));
   hint.id = 'player-name-hint';
 
   const error = createElement('p', 'name-form__error');
@@ -71,11 +63,15 @@ function renderNameField(): HTMLFormElement {
 }
 
 export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDialogHandle {
-  const reason = createElement('p', 'game-over__reason', REASON_TEXT[view.reason]);
+  const reason = createElement(
+    'p',
+    'game-over__reason',
+    t(`dialogs.gameOver.reason.${view.reason}`)
+  );
   const scoreBlock = createElement('div', 'game-over__score');
   scoreBlock.append(
-    createElement('span', 'game-over__score-label', 'Final Score'),
-    createElement('strong', 'game-over__score-value', String(view.score))
+    createElement('span', 'game-over__score-label', t('dialogs.gameOver.finalScore')),
+    createElement('strong', 'game-over__score-value', formatNumber(view.score))
   );
 
   const content: Node[] = [reason, scoreBlock];
@@ -83,27 +79,31 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
 
   if (view.isTopResult) {
     content.push(renderNameField());
-    const submit = createDialogButton('Submit Score', 'submit-score', 'primary');
+    const submit = createDialogButton(t('dialogs.gameOver.submitScore'), 'submit-score', 'primary');
     submit.type = 'submit';
     submit.setAttribute('form', 'player-name-form');
     actions.push(submit);
   } else if (view.isTopResult === false) {
-    content.push(
-      createElement('p', 'dialog__text', 'Not enough for the Top-10 this time. Brew again!')
-    );
+    content.push(createElement('p', 'dialog__text', t('dialogs.gameOver.notTop')));
   }
 
   actions.push(
     createDialogButton(
-      'Play Again',
+      t('dialogs.gameOver.playAgain'),
       'play-again',
       view.isTopResult === true ? 'default' : 'primary'
     ),
-    createDialogButton('Leaderboard', 'open-leaderboard'),
-    createDialogButton('Exit to Menu', 'exit-to-menu')
+    createDialogButton(t('dialogs.gameOver.leaderboard'), 'open-leaderboard'),
+    createDialogButton(t('dialogs.exitToMenu'), 'exit-to-menu')
   );
 
-  return openDialog(root, { id: 'game-over-dialog', title: 'Game Over', content, actions });
+  return openDialog(root, {
+    id: 'game-over-dialog',
+    title: t('dialogs.gameOver.title'),
+    content,
+    actions,
+    persistent: true
+  });
 }
 
 export interface IHelpSection {
@@ -111,64 +111,32 @@ export interface IHelpSection {
   items: string[];
 }
 
-const HELP_SECTIONS: IHelpSection[] = [
-  {
-    title: 'Goal',
-    items: [
-      'Brew the current recipe: move Temperature, Density and Magic Power into the green target zones.',
-      'Each correct brew gives points, bonus time and a new recipe.'
-    ]
-  },
-  {
-    title: 'How to play',
-    items: [
-      'Click an ingredient on the shelf to add it to the cauldron.',
-      'The recipe shows how many ingredients you may use, e.g. Ingredients: 2 / 4.',
-      'Watch the 3 bars change after every ingredient.',
-      'Press Brew to check the mixture. A small tolerance is allowed around each target.'
-    ]
-  },
-  {
-    title: 'Difficulty',
-    items: [
-      'Choose Easy, Medium or Hard in the Menu before a game starts.',
-      'Harder levels put more ingredients on the shelf, allow a smaller tolerance and give less bonus time, but every brew is worth more points.',
-      'Each difficulty has its own Top-10 leaderboard.'
-    ]
-  },
-  {
-    title: 'Keyboard',
-    items: [
-      `1–8: add the ingredient at that shelf position.`,
-      `${SHORTCUT_KEYS.brew}: brew · ${SHORTCUT_KEYS.pourOut}: pour out · ${SHORTCUT_KEYS.pause} or Esc: pause.`,
-      'Shortcuts work only during a running game. While paused, Enter resumes and Esc returns to the start screen.',
-      'Tab moves between buttons; Enter or Space presses the focused one.'
-    ]
-  },
-  {
-    title: 'Stock',
-    items: [
-      'Every ingredient has a limited stock shown in the round badge.',
-      'Used ingredients are spent — even when a brew fails.',
-      'An empty slot stays on the shelf but can no longer be used.'
-    ]
-  },
-  {
-    title: 'Game over',
-    items: [
-      'A failed brew costs one life.',
-      'The game ends when time runs out, all lives are lost, or you run out of ingredients.',
-      'Reach the Top-10 to write your name on the leaderboard.'
-    ]
-  }
-];
+// Fixed rules, in display order; text lives in dialogs.help.<section> in the locale files.
+const HELP_SECTIONS = [
+  'language',
+  'goal',
+  'howToPlay',
+  'hint',
+  'difficulty',
+  'keyboard',
+  'stock',
+  'gameOver'
+] as const;
+
+// Built on open, so the text follows the current language.
+function getHelpSections(): IHelpSection[] {
+  return HELP_SECTIONS.map((section) => ({
+    title: t(`dialogs.help.${section}.title`),
+    items: t(`dialogs.help.${section}.items`, { returnObjects: true, ...SHORTCUT_KEYS })
+  }));
+}
 
 // Extra sections (built from game data, e.g. reactions) are added after the fixed rules.
 export function openHelpDialog(
   root: HTMLElement,
   extraSections: IHelpSection[] = []
 ): IDialogHandle {
-  const content = [...HELP_SECTIONS, ...extraSections].map((section) => {
+  const content = [...getHelpSections(), ...extraSections].map((section) => {
     const block = createElement('section', 'help__section');
     const list = createElement('ul', 'help__list');
     list.append(...section.items.map((item) => createElement('li', 'help__item', item)));
@@ -178,11 +146,11 @@ export function openHelpDialog(
 
   return openDialog(root, {
     id: 'help-dialog',
-    title: 'How to Brew',
+    title: t('dialogs.help.title'),
     variant: 'parchment',
     dismissible: true,
     wide: true,
     content,
-    actions: [createDialogButton('Close', 'close-dialog', 'primary')]
+    actions: [createDialogButton(t('dialogs.close'), 'close-dialog', 'primary')]
   });
 }

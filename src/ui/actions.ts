@@ -1,4 +1,5 @@
 import { SCENE_ICONS, UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { SHORTCUT_KEYS } from '../logic/shortcuts';
 import { createElement, createIcon } from './dom';
 
@@ -54,7 +55,7 @@ function renderIconButton(
 
 function renderPrimary(view: IActionsView): HTMLButtonElement {
   const action: ActionName = view.isPlaying ? 'brew' : 'start';
-  const label = view.isPlaying ? 'Brew' : 'Start Game';
+  const label = view.isPlaying ? t('actions.brew') : t('actions.startGame');
   const button = createActionButton(action, 'btn btn--primary btn--large actions__primary', label);
   button.disabled = view.isPlaying && !view.canBrew;
   button.append(
@@ -69,26 +70,28 @@ function renderPrimary(view: IActionsView): HTMLButtonElement {
 }
 
 function renderPourOut(view: IActionsView): HTMLButtonElement {
-  const button = createActionButton('pour-out', 'btn actions__pour-out', 'Pour Out');
+  const label = t('actions.pourOut');
+  const button = createActionButton('pour-out', 'btn actions__pour-out', label);
   button.disabled = !view.canPourOut;
   button.append(
     createIcon(UI_ICONS.pourOut, 'icon actions__btn-icon'),
-    'Pour Out',
-    addShortcutHint(button, 'Pour Out', SHORTCUT_KEYS.pourOut)
+    label,
+    addShortcutHint(button, label, SHORTCUT_KEYS.pourOut)
   );
   return button;
 }
 
 export function renderActions(container: HTMLElement, view: IActionsView): void {
   const left = createElement('div', 'actions__side actions__side--left');
-  const help = renderIconButton('help', UI_ICONS.help, 'Help');
+  const help = renderIconButton('help', UI_ICONS.help, t('actions.help'));
   help.disabled = !view.canOpenHelp;
   left.append(help);
 
   const center = createElement('div', 'actions__center');
   if (!view.isPlaying && view.canContinue) {
-    const resume = createActionButton('continue-game', 'btn actions__continue', 'Continue Game');
-    resume.append(createIcon(UI_ICONS.play, 'icon actions__btn-icon'), 'Continue Game');
+    const label = t('actions.continueGame');
+    const resume = createActionButton('continue-game', 'btn actions__continue', label);
+    resume.append(createIcon(UI_ICONS.play, 'icon actions__btn-icon'), label);
     center.append(resume);
   }
   center.append(renderPrimary(view));
@@ -99,9 +102,11 @@ export function renderActions(container: HTMLElement, view: IActionsView): void 
 
   const right = createElement('div', 'actions__side actions__side--right');
   if (view.canPause) {
-    right.append(renderIconButton('pause', UI_ICONS.pause, 'Pause', SHORTCUT_KEYS.pause));
+    right.append(
+      renderIconButton('pause', UI_ICONS.pause, t('actions.pause'), SHORTCUT_KEYS.pause)
+    );
   }
-  const menu = renderIconButton('menu', UI_ICONS.settings, 'Menu');
+  const menu = renderIconButton('menu', UI_ICONS.settings, t('actions.menu'));
   menu.disabled = !view.canOpenMenu;
   right.append(menu);
 

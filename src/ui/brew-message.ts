@@ -1,18 +1,13 @@
+import { t } from '../i18n';
 import type { IBrewCheck } from '../logic/brew-check';
 import type { IDifficultySettings } from '../types/game';
 import type { IParameters } from '../types/ingredient';
 import { createElement } from './dom';
 
-const PARAMETER_LABELS: Record<keyof IParameters, string> = {
-  temperature: 'Temperature',
-  density: 'Density',
-  magicPower: 'Magic Power'
-};
-
 function getFailedLabels(check: IBrewCheck): string[] {
   return (Object.keys(check.passed) as (keyof IParameters)[])
     .filter((parameter) => !check.passed[parameter])
-    .map((parameter) => PARAMETER_LABELS[parameter]);
+    .map((parameter) => t(`params.${parameter}`));
 }
 
 // Short-lived message; it fades out with a CSS animation and removes itself on animationend.
@@ -29,20 +24,23 @@ export function showBrewMessage(
 
   if (check.isSuccess) {
     message.append(
-      createElement('strong', 'brew-message__title', 'Perfect brew!'),
+      createElement('strong', 'brew-message__title', t('messages.brewSuccess')),
       createElement(
         'span',
         'brew-message__details',
-        `+${settings.scorePerBrew} points · +${settings.timeBonus}s`
+        t('messages.brewSuccessDetails', {
+          points: settings.scorePerBrew,
+          seconds: settings.timeBonus
+        })
       )
     );
   } else {
     message.append(
-      createElement('strong', 'brew-message__title', 'The mixture failed…'),
+      createElement('strong', 'brew-message__title', t('messages.brewFail')),
       createElement(
         'span',
         'brew-message__details',
-        `Off target: ${getFailedLabels(check).join(', ')} · −1 life`
+        t('messages.brewFailDetails', { params: getFailedLabels(check).join(', ') })
       )
     );
   }

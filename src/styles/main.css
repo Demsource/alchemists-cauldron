@@ -424,11 +424,11 @@ button:disabled {
 .app {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   width: 100%;
   max-width: var(--app-max-width);
   min-height: 100dvh;
-  padding: var(--space-4) var(--gutter) var(--space-5);
+  padding: var(--space-3) var(--gutter) var(--space-4);
   margin: 0 auto;
 }
 
@@ -442,7 +442,7 @@ button:disabled {
   display: flex;
   gap: var(--space-3);
   align-items: center;
-  font-size: var(--fs-2xl);
+  font-size: calc(var(--fs-2xl) * 0.7);
   color: var(--color-accent-strong);
   text-align: center;
   text-shadow: var(--glow-text);
@@ -1102,6 +1102,27 @@ button:disabled {
   color: #a2261b;
 }
 
+/* Half the usual button height: the recipe panel sets the board's row height, so a full-size
+   button here pushes the page into a vertical scroll. */
+.recipe__hint-btn {
+  gap: var(--space-1);
+  align-self: center;
+  min-height: 22px;
+  padding: 0 var(--space-2);
+  font-size: var(--fs-xs);
+  line-height: 1;
+}
+
+.recipe__hint-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.recipe__hint-btn .actions__key {
+  height: 1.4em;
+  font-size: 0.65rem;
+}
+
 .recipe--empty .recipe__row-range {
   color: var(--color-ink-muted);
 }
@@ -1332,6 +1353,12 @@ button:disabled {
 
 .actions__primary {
   min-width: min(360px, 100%);
+}
+
+/* One line in every language, so Start Game and Brew keep the same height and a two-word
+   label (e.g. Georgian "თამაშის დაწყება") never grows the footer into a page scroll. */
+.actions__primary-label {
+  white-space: nowrap;
 }
 
 .actions__ornament {
@@ -1707,6 +1734,12 @@ button:disabled {
 
 .menu__difficulty:disabled .menu__difficulty-btn {
   opacity: 0.45;
+}
+
+.menu__language-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
 }
 
 .menu__note {
@@ -2343,6 +2376,122 @@ button:disabled {
     height: 44px;
     padding: 8px;
   }
+}
+
+/* ==========================================================================
+   Hint dialog
+   ========================================================================== */
+
+.hint__recipe {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-align: center;
+}
+
+.hint__pour-out {
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.hint__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  margin: var(--space-2) 0;
+  list-style: decimal;
+}
+
+.hint__step {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.hint__icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+}
+
+.hint__name {
+  font-weight: 600;
+}
+
+.hint__count {
+  font-family: var(--font-numeric);
+  font-weight: 700;
+}
+
+.hint__result-label {
+  margin-top: var(--space-3);
+}
+
+.hint__values {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--space-1) var(--space-4);
+  justify-content: start;
+}
+
+.hint__value {
+  font-family: var(--font-numeric);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Languages
+   ========================================================================== */
+
+/* Cinzel has no Cyrillic or Georgian letters and Cormorant Garamond no Georgian, so these
+   languages swap the font tokens. Google Fonts serves them by unicode-range: English
+   players never download them. */
+:root:lang(ka) {
+  --font-display: 'Noto Serif Georgian', Georgia, serif;
+  --font-body: 'Noto Serif Georgian', Georgia, serif;
+}
+
+:root:lang(ru) {
+  --font-display: 'Cormorant SC', 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Georgian has no letter case in running text (Mtavruli capitals are for rare emphasis) and
+   its letters are already wide, so the uppercase, letter-spaced English label style is off. */
+:lang(ka)
+  :is(
+    h1,
+    h2,
+    h3,
+    h4,
+    .btn,
+    .panel-title,
+    .hud__label,
+    .recipe__kicker,
+    .bar__label,
+    .actions__icon-label,
+    .game-over__reason,
+    .menu__legend,
+    .recipe__difficulty,
+    .leaderboard__head,
+    .brew-message__title
+  ) {
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Georgian letters are wider and taller than Cormorant at the same size. The recipe panel sets
+   the board's row height, so a two-line recipe name there would push the page into a scroll. */
+:lang(ka) .recipe__name {
+  font-size: var(--fs-lg);
+}
+
+/* Georgian and Russian words are longer than English ones: let long words in buttons and
+   titles wrap instead of pushing out of their box. */
+:is(:lang(ka), :lang(ru))
+  :is(.btn, .dialog__title, .panel-title, .recipe__name, .app-title__text, .leaderboard__head) {
+  /* break-word (not anywhere): it does not shrink a flex item's minimum width. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 /* ==========================================================================

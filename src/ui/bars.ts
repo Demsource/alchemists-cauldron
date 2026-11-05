@@ -1,4 +1,5 @@
 import { UI_ICONS } from '../assets/icons';
+import { t } from '../i18n';
 import { formatSigned } from '../utils/format';
 import { toPercent } from '../utils/scale';
 import { createElement, createIcon } from './dom';
@@ -107,9 +108,12 @@ function updateBar(card: HTMLElement, bar: IBarView): void {
     zone.style.setProperty('--zone-size', `${end - start}%`);
     setTick(query(card, '.bar__tick--target-min'), bar.target.min, bar);
     setTick(query(card, '.bar__tick--target-max'), bar.target.max, bar);
-    target.textContent = `Target ${formatTick(bar.target.min)} – ${formatTick(bar.target.max)}`;
+    target.textContent = t('bars.target', {
+      min: formatTick(bar.target.min),
+      max: formatTick(bar.target.max)
+    });
   } else {
-    target.textContent = 'Target —';
+    target.textContent = t('bars.noTarget');
   }
 }
 
