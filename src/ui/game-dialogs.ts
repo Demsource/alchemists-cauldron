@@ -101,7 +101,8 @@ export function openGameOverDialog(root: HTMLElement, view: IGameOverView): IDia
     id: 'game-over-dialog',
     title: t('dialogs.gameOver.title'),
     content,
-    actions
+    actions,
+    persistent: true
   });
 }
 
